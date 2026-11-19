@@ -8,15 +8,25 @@ loci <-
   mutate(population=as.character(population) |> gsub(pattern="\\w{4}$", replacement="") |> factor()) |>
   as.loci()
 
+Fst(loci)[, 2] |> 
+  as.double() |> 
+  hist(breaks=30)
+  
+Fst(loci)[, 2] |> 
+  as.double() |> 
+  mean(na.rm=TRUE)
+
 # loci$ots_isot <- NULL
 
 # loci$ots_u07_25_325 <- NULL
 
-A <- 
-  slice_sample(loci, prop=0.5)
+set.seed(7)
 
 B <- 
-  anti_join(x=loci, y=A)
+  slice_sample(loci, prop=0.5, by=population)
+
+A <- 
+  anti_join(x=loci, y=B)
 
 Fst_A <- 
   Fst(A)[, 2] |> 
@@ -53,6 +63,8 @@ permute2samplet <-
 
 permuteAB <- rep(NA, 1000)
 
+set.seed(13)
+
 for(i in 1:1000){permuteAB[i] <- permute2samplet(x=AB, n_loci=94)}
 
 obsAB <-
@@ -67,6 +79,9 @@ hist(c(permuteAB, obsAB), xlab=expression(italic(F)[ST]~differences), breaks=30,
 
 abline(v=obsAB, lty=2, col="blue")
 
+(c(permuteAB, obsAB) |> quantile(probs=c(0.025, 0.975), na.rm=TRUE))+mean(c(Fst_A, Fst_B), na.rm=TRUE)
+
+set.seed(2)
 
 C1 <- 
   filter(loci, population=="White_R_H") |> 
@@ -94,11 +109,13 @@ mean(Fst_B, na.rm=TRUE)
 
 mean(Fst_C, na.rm=TRUE)
 
+par(mfrow=c(3, 1))
+
 hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=mean(Fst_A, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
 
-hist(Fst_B, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
 
-hist(Fst_C, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=mean(Fst_C, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+hist(Fst_C, breaks=10, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=mean(Fst_C, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
 
 
 mean(Fst_C, na.rm=TRUE) - 
@@ -108,6 +125,8 @@ BC <-
   c(Fst_B, Fst_C)
 
 permuteBC <- rep(NA, 1000)
+
+set.seed(13)
 
 for(i in 1:1000){permuteBC[i] <- permute2samplet(x=BC, n_loci=94)}
 
@@ -119,7 +138,9 @@ obsBC <-
 # 2-tailed p-value
 mean(abs(c(permuteBC, obsBC)) >= abs(obsBC))
 
-hist(c(permuteBC, obsBC), xlab=expression(italic(F)[ST]~differences), breaks=30)
+par(mfrow=c(1, 1))
+
+hist(c(permuteBC, obsBC), xlab=expression(italic(F)[ST]~differences), breaks=30, main=paste("p-value:", mean(abs(c(permuteBC, obsBC)) >= abs(obsBC)) |> round(digits=5)))
 
 abline(v=obsBC, lty=2, col="blue")
 

@@ -69,11 +69,13 @@ There are 94 fish in Puyallup P sample and 91 in White R sample.
 Lets randomly divide this dataset into 2 datasets.
 
 ``` r
-A <- 
-  slice_sample(loci, prop=0.5, by=population)
+set.seed(7)
 
 B <- 
-  anti_join(x=loci, y=A)
+  slice_sample(loci, prop=0.5, by=population)
+
+A <- 
+  anti_join(x=loci, y=B)
 ```
 
     ## Joining with `by = join_by(population, ots_100884_287, ots_101119_381,
@@ -97,28 +99,23 @@ B <-
     ## ots_u2446_123, ots_unk526)`
 
 ``` r
-table(A$population)
-```
-
-    ## 
-    ## Puyallup_R  White_R_H 
-    ##         47         45
-
-``` r
-table(B$population)
+table(A$population); table(B$population)
 ```
 
     ## 
     ## Puyallup_R  White_R_H 
     ##         47         46
 
-Now we have 2 datasets. The 1st dataset (“A”) has about 47 fish in the
-Puyallup R sample and about 45 fish in White R sample. The 2nd dataset
-(“B”) has about 47 fish in the Puyallup R sample and about 46 fish in
-White R sample.
+    ## 
+    ## Puyallup_R  White_R_H 
+    ##         47         45
 
-The purpose of these 2 datasets is to simulate observations at different
-time points.
+Now we have 2 datasets. The 1st dataset (“A”) has 47 fish in the
+Puyallup R sample and 46 fish in White R sample. The 2nd dataset (“B”)
+has 47 fish in the Puyallup R sample and 45 fish in White R sample.
+
+The purpose of these 2 datasets is to simulate data from different time
+points.
 
 Now lets estimate FST at these 2 simulated timepoints. FST is estimated
 for each locus independently, so we’ll get n=94 FST estimates because
@@ -137,62 +134,59 @@ Fst_B <-
 ```
 
 We take the mean of the n=94 FST estimates to get the FST value for
-reporting. This is what is meant when we say “FST equals 0.03”.. it’s
-the mean FST from multiple loci.
+reporting. This is what is meant when we say “FST = 0.026”.. it’s the
+mean FST of multiple loci.
 
 ``` r
 mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] 0.02442945
+    ## [1] 0.0262805
 
 ``` r
 mean(Fst_B, na.rm=TRUE)
 ```
 
-    ## [1] 0.02074568
+    ## [1] 0.01868376
 
-Hopefully these FST are different. Let’s plot the distributions with the
-means below the x-axis.
+These FSTs are different just by chance alone. Let’s plot the
+distributions with the means below the x-axis.
 
 ``` r
-hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=mean(Fst_A, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+par(mfrow=c(2, 1))
+
+hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=paste("mean:", mean(Fst_A, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
+
+hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=paste("mean:", mean(Fst_B, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 ```
 
 ![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-``` r
-hist(Fst_B, breaks=30, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
-```
-
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
-
-These distributions and mean FSTs should look slightly different. But
-are they significantly different? We need a statistical test to answer
-that question. We define our test statistic as the difference in mean
-FST observed between these 2 simulated datasets:
+These distributions and mean FSTs look slightly different. Are they
+significantly different? We need a statistical test to answer that
+question. We define our test statistic as the difference in mean FST
+observed between these 2 simulated datasets:
 
 ``` r
 mean(Fst_B, na.rm=TRUE) - 
   mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] -0.003683772
+    ## [1] -0.007596733
 
-Hopefully this is negative and small, which would indicate a slight
-decrease of genetic divergence between White R and Puyallup River that
-would be expected to occur by chance alone.
+This is negative and small, which would indicate a slight decrease of
+genetic divergence between White R and Puyallup River that could be
+expected to occur by chance alone.
 
 Now let’s generate a null distribution of our test statistic. We do this
-by (1) shuffling the per-locus FSTs, (2) computing the mean FST of these
-shuffled samples, (3) computing the difference of the mean FSTs (i.e.,
-the permuted test statistic), and (4) repeating steps 1-3 at least 1,000
-times.
+by (1) shuffling the FSTs between populations, (2) computing the mean
+FSTs from these shuffled samples, (3) computing the difference of the
+mean FSTs (i.e., the permuted test statistic), and (4) repeating steps
+1-3 at least 1,000 times.
 
 ``` r
 AB <- 
   c(Fst_A, Fst_B)
-
 
 permute2samplet <- 
   function(x, n_loci){
@@ -204,18 +198,21 @@ permute2samplet <-
 
 permuteAB <- rep(NA, 1000)
 
+set.seed(13)
+
 for(i in 1:1000){permuteAB[i] <- permute2samplet(x=AB, n_loci=94)}
 
 obsAB <-
   mean(Fst_B, na.rm=TRUE) - 
   mean(Fst_A, na.rm=TRUE)
 
+par(mfrow=c(1, 1))
 
 # 2-tailed p-value
 mean(abs(c(permuteAB, obsAB)) >= abs(obsAB))
 ```
 
-    ## [1] 0.5094905
+    ## [1] 0.1898102
 
 ``` r
 hist(c(permuteAB, obsAB), xlab=expression(italic(F)[ST]~differences), breaks=30, main="Permutations")
@@ -226,6 +223,8 @@ abline(v=obsAB, lty=2, col="blue")
 ![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
+set.seed(2)
+
 C1 <- 
   filter(loci, population=="White_R_H") |> 
   slice_sample(prop=0.5) |> 
@@ -271,44 +270,38 @@ Fst_C <-
 mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] 0.02442945
+    ## [1] 0.0262805
 
 ``` r
 mean(Fst_B, na.rm=TRUE)
 ```
 
-    ## [1] 0.02074568
+    ## [1] 0.01868376
 
 ``` r
 mean(Fst_C, na.rm=TRUE)
 ```
 
-    ## [1] 0.0008845873
+    ## [1] 0.0007207086
 
 ``` r
+par(mfrow=c(3, 1))
+
 hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=mean(Fst_A, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+
+hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+
+hist(Fst_C, breaks=10, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=mean(Fst_C, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
 ```
 
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
-
-``` r
-hist(Fst_B, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
-```
-
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
-
-``` r
-hist(Fst_C, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=mean(Fst_C, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
-```
-
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 mean(Fst_C, na.rm=TRUE) - 
   mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] -0.02354486
+    ## [1] -0.02555979
 
 ``` r
 BC <- 
@@ -316,12 +309,17 @@ BC <-
 
 permuteBC <- rep(NA, 1000)
 
+set.seed(13)
+
 for(i in 1:1000){permuteBC[i] <- permute2samplet(x=BC, n_loci=94)}
 
 obsBC <-
   mean(Fst_C, na.rm=TRUE) - 
   mean(Fst_B, na.rm=TRUE)
+```
 
+``` r
+par(mfrow=c(1, 1))
 
 # 2-tailed p-value
 mean(abs(c(permuteBC, obsBC)) >= abs(obsBC))
@@ -330,9 +328,9 @@ mean(abs(c(permuteBC, obsBC)) >= abs(obsBC))
     ## [1] 0.000999001
 
 ``` r
-hist(c(permuteBC, obsBC), xlab=expression(italic(F)[ST]~differences), breaks=30)
+hist(c(permuteBC, obsBC), xlab=expression(italic(F)[ST]~differences), breaks=30, main=paste("p-value:", mean(abs(c(permuteBC, obsBC)) >= abs(obsBC)) |> round(digits=5)))
 
 abline(v=obsBC, lty=2, col="blue")
 ```
 
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
