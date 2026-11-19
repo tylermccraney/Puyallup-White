@@ -144,13 +144,13 @@ the mean FST from multiple loci.
 mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] 0.02446115
+    ## [1] 0.02442945
 
 ``` r
 mean(Fst_B, na.rm=TRUE)
 ```
 
-    ## [1] 0.02135876
+    ## [1] 0.02074568
 
 Hopefully these FST are different. Let’s plot the distributions with the
 means below the x-axis.
@@ -177,17 +177,17 @@ mean(Fst_B, na.rm=TRUE) -
   mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] -0.003102384
+    ## [1] -0.003683772
 
 Hopefully this is negative and small, which would indicate a slight
 decrease of genetic divergence between White R and Puyallup River that
 would be expected to occur by chance alone.
 
 Now let’s generate a null distribution of our test statistic. We do this
-by (1) shuffling the per-locus FSTs, (2) estimating FSTs from the
-shuffled samples, (3) computing the mean FST of these shuffled samples,
-(4) computing the difference of the 2 mean FSTs i.e., the permuted test
-statistic, and (5) repeat steps 1-4 1,000 times.
+by (1) shuffling the per-locus FSTs, (2) computing the mean FST of these
+shuffled samples, (3) computing the difference of the mean FSTs (i.e.,
+the permuted test statistic), and (4) repeating steps 1-3 at least 1,000
+times.
 
 ``` r
 AB <- 
@@ -215,7 +215,7 @@ obsAB <-
 mean(abs(c(permuteAB, obsAB)) >= abs(obsAB))
 ```
 
-    ## [1] 0.5894106
+    ## [1] 0.5094905
 
 ``` r
 hist(c(permuteAB, obsAB), xlab=expression(italic(F)[ST]~differences), breaks=30, main="Permutations")
@@ -271,19 +271,19 @@ Fst_C <-
 mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] 0.02446115
+    ## [1] 0.02442945
 
 ``` r
 mean(Fst_B, na.rm=TRUE)
 ```
 
-    ## [1] 0.02135876
+    ## [1] 0.02074568
 
 ``` r
 mean(Fst_C, na.rm=TRUE)
 ```
 
-    ## [1] -0.001330727
+    ## [1] 0.0008845873
 
 ``` r
 hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=mean(Fst_A, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
@@ -308,7 +308,7 @@ mean(Fst_C, na.rm=TRUE) -
   mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] -0.02579187
+    ## [1] -0.02354486
 
 ``` r
 BC <- 
