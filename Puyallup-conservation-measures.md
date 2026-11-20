@@ -1,18 +1,25 @@
-Puyallup Conservation Measures
+Puyallup Conservation Measures & Proposals
 ================
 
-Load packages.
+This is an exploratory analysis of one idea I have to test for
+hybridization w/ introgression of White River spring run and Puyallup
+River fall run Chinook salmon. It is based on a 2-sample permutation
+test of FST estimates of White River spring run and Puyallup River fall
+run from different time points. To demonstrate the test, I simulate
+genetic data sampled at 3 different time points: 2021, 2026, and 2031. I
+simulated the data so FST would decrease slightly (by chance alone) from
+2021 to 2026, and then decrease extremely from 2026 to 2031 to simulate
+a hypothetical scenario of hybridization of White River spring run and
+Puyallup River fall run w/ complete introgression.
+
+First we import Chinook salmon genotypes from Van Doornick et al. 2024,
+filter the White River and Puyallup River samples, edit the sample
+labels, and convert the format so we can estimate FST with `pegas`.
 
 ``` r
 library(tidyverse)
 library(pegas)
-```
 
-Import Chinook salmon genotypes from Van Doornick et al. 2024, filter
-White River and Puyallup River samples, edit sample labels, and convert
-format.
-
-``` r
 loci <- 
   read.loci(file="../../Chinook/loci.txt") |>
   filter(population %in% c("White_R_H_DFW", "Puyallup_R_DFW")) |>
@@ -35,9 +42,14 @@ table(loci$population)
     ## Puyallup_R  White_R_H 
     ##         94         91
 
-There are 94 fish in Puyallup P sample and 91 in White R sample.
+We see there are 94 fish in the Puyallup R sample and 91 fish in the
+White R sample.
 
-Lets randomly divide this dataset into 2 datasets.
+Lets randomly divide this data into 2 sets. This is random but I use
+`set.seed` so we always get 2 datasets that I know will be quite
+different (I tinkered with different seeds to find one that produced
+different genotypes). If I didn’t use `set.seed` then this result
+wouldn’t be reproducible.
 
 ``` r
 set.seed(7)
@@ -59,18 +71,17 @@ table(A$population); table(B$population)
     ## Puyallup_R  White_R_H 
     ##         47         45
 
-Now we have 2 datasets. The 1st dataset (“A”) has 47 fish in the
-Puyallup R sample and 46 fish in White R sample. The 2nd dataset (“B”)
-has 47 fish in the Puyallup R sample and 45 fish in White R sample.
+Okay, now we have 2 datasets. The 1st dataset “A” has 47 fish in the
+Puyallup R sample and 46 fish in White R sample. The 2nd dataset “B” has
+47 fish in the Puyallup R sample and 45 fish in White R sample.
+Remember, the purpose of these 2 datasets is to simulate data sampled
+from different time points.
 
-The purpose of these 2 datasets is to simulate data from different time
-points.
-
-Now lets estimate FST at these 2 simulated timepoints. FST is estimated
-for each locus independently, so we’ll get n=94 FST estimates because
-there are 94 SNPs. Some of these estimates will be `NA` just by chance
-since there are loci with very low minor allele frequencies, they will
-be fixed in the simulated datasets.
+Now lets estimate FST from data at these 2 simulated timepoints. FST is
+estimated for each locus independently, so we’ll get n=94 FST estimates.
+Some of these estimates will be `NA` just by chance, since there are
+loci with very low minor allele frequencies, they will likely be fixed
+in the simulated datasets.
 
 ``` r
 Fst_A <- 
@@ -80,11 +91,24 @@ Fst_A <-
 Fst_B <- 
   Fst(B)[, 2] |> 
   as.double()
+
+sum(is.na(Fst_A))
 ```
 
-We take the mean of the n=94 FST estimates to get the FST value for
-reporting. This is what is meant when we say “FST = 0.026”.. it’s the
-mean FST of multiple loci.
+    ## [1] 5
+
+``` r
+sum(is.na(Fst_B))
+```
+
+    ## [1] 4
+
+We see above that 5 SNPs were fixed in the “A” data and 4 in the “B”
+data. One nice thing about this permutation test is that it’s robust to
+missing data.
+
+Now let’s take the mean of the n=94 FST estimates to get the overall
+FST.
 
 ``` r
 mean(Fst_A, na.rm=TRUE)
@@ -99,7 +123,7 @@ mean(Fst_B, na.rm=TRUE)
     ## [1] 0.01868376
 
 These FSTs are different just by chance alone. Let’s plot the
-distributions with the means below the x-axis.
+distributions with the mean FST annotated below the x-axis labels.
 
 ``` r
 par(mfrow=c(2, 1))
@@ -109,29 +133,29 @@ hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A,
 hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=paste("mean:", mean(Fst_B, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 ```
 
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-These distributions and mean FSTs look slightly different. Are they
-significantly different? We need a statistical test to answer that
-question. We define our test statistic as the difference in mean FST
-observed between these 2 simulated datasets:
+These distributions and mean FSTs look kinda different. Are they
+significantly different? We need a statistical test to answer that!
+
+Let’s define our test statistic as the difference in mean FSTs estimated
+at 2 different timepoints.
 
 ``` r
-mean(Fst_B, na.rm=TRUE) - 
-  mean(Fst_A, na.rm=TRUE)
+mean(Fst_B, na.rm=TRUE) - mean(Fst_A, na.rm=TRUE)
 ```
 
     ## [1] -0.007596733
 
-This is negative and small, which would indicate a slight decrease of
-genetic divergence between White R and Puyallup River that could be
-expected to occur by chance alone.
+This is negative (by design), to simulate a noticible decrease of
+genetic differentiation between White R and Puyallup River that could be
+expected to happen by chance alone.
 
 Now let’s generate a null distribution of our test statistic. We do this
-by (1) shuffling the FSTs between populations, (2) computing the mean
-FSTs from these shuffled samples, (3) computing the difference of the
-mean FSTs (i.e., the permuted test statistic), and (4) repeating steps
-1-3 at least 1,000 times.
+with a 4 step routine: (1) shuffle FSTs between populations, (2) compute
+the mean FSTs from shuffled samples, (3) compute the difference of the
+mean FSTs (i.e., the permuted test statistic), and (4) repeat steps 1-3
+at least 1,000 times.
 
 ``` r
 AB <- 
@@ -150,7 +174,15 @@ permuteAB <- rep(NA, 1000)
 set.seed(13)
 
 for(i in 1:1000){permuteAB[i] <- permute2samplet(x=AB, n_loci=94)}
+```
 
+Okay now let’s compute a non-parametric “p-value” for the test. This is
+simply the proportion of the permuted test statistics that are more
+extreme than our observed test statistic. We use the absolute values of
+test statistics to make it 2-tailed, since we expect both FST increases
+and decreases to occur in nature just by chance alone.
+
+``` r
 obsAB <-
   mean(Fst_B, na.rm=TRUE) - 
   mean(Fst_A, na.rm=TRUE)
@@ -170,6 +202,21 @@ abline(v=obsAB, lty=2, col="blue")
 ```
 
 ![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+The observed test statistic is indicated by the blue dashed line. We see
+a fair portion of the null distribution of the test statistic is more
+extreme than the observed test statistic (we know that happened just by
+chance alone), which is quantified by the “p-value”.
+
+Now lets simulate a third dataset “C” that is designed to result in an
+extreme decrease in the FST estimate. Under the scenario of
+hybridization w/ introgression, the White R spring run and Puyallup R
+fall run would become a single population, and the distinctiveness of
+those 2 ancestral populations would be lost forever. Lets simulate that
+grim scenario by creating White and Puyallup data that is really only
+from the White R with half of the samples randomly labeled “Puyallup R”.
+We could do this vice-versa and it would simulate the same scenario but
+I am not going to show that.
 
 ``` r
 set.seed(2)
@@ -194,22 +241,19 @@ Fst_C <-
   Fst(C)[, 2] |> 
   as.double()
 
-mean(Fst_A, na.rm=TRUE)
+mean(Fst_A, na.rm=TRUE); mean(Fst_B, na.rm=TRUE); mean(Fst_C, na.rm=TRUE)
 ```
 
     ## [1] 0.0262805
 
-``` r
-mean(Fst_B, na.rm=TRUE)
-```
-
     ## [1] 0.01868376
 
-``` r
-mean(Fst_C, na.rm=TRUE)
-```
-
     ## [1] 0.0007207086
+
+We can see above that our simulated data produced the desired pattern in
+FST: slight decrease from t1 to t2 (e.g., 2021 to 2026) followed by an
+extreme decrease from t2 to t3 (e.g., 2026 to 2031). Now lets plot these
+distributions so we can see what that looks like.
 
 ``` r
 par(mfrow=c(3, 1))
@@ -221,14 +265,11 @@ hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c
 hist(Fst_C, breaks=10, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=paste("mean:", mean(Fst_C, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 ```
 
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-``` r
-mean(Fst_C, na.rm=TRUE) - 
-  mean(Fst_A, na.rm=TRUE)
-```
-
-    ## [1] -0.02555979
+The pattern is clear: FST declines to zero as would be expected under
+the scenario of hybridization w/ introgression. Now lets run the
+statistical test to demonstrate how to quantify significance.
 
 ``` r
 BC <- 
@@ -243,7 +284,16 @@ for(i in 1:1000){permuteBC[i] <- permute2samplet(x=BC, n_loci=94)}
 obsBC <-
   mean(Fst_C, na.rm=TRUE) - 
   mean(Fst_B, na.rm=TRUE)
+
+obsBC
 ```
+
+    ## [1] -0.01796306
+
+We see our observed test statistic above indicating a big decrease in
+FST. We compute the non-parametric “p-value” as in the same manner as
+before but we see a very small value this time which indicates a
+significant decrease in FST from t2 to t3.
 
 ``` r
 par(mfrow=c(1, 1))
@@ -260,4 +310,18 @@ hist(c(permuteBC, obsBC), xlab=expression(italic(F)[ST]~differences), breaks=30,
 abline(v=obsBC, lty=2, col="blue")
 ```
 
-![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+It’s clear in the figure above that none of the null distribution of the
+test statistic is more extreme than the observed test statistic (which
+we always include in the vector of null test statistics just to ensure
+our p-value doesn’t compute as 0).
+
+I hope this example will be easy to digest. One important thing would be
+to run through this test with the actual reference dataset used by DFW
+for this system. DFW has excellent reference data for the Puyallup-White
+Chinook, and using larger numbers of fish, say for example n=100 in each
+White R spring and Puyallup R fall, to estimate FST of the full 298 SNP
+panel will result in much less stochasticity of FST than the toy
+examples I presented here, which had only 94 SNPs and about n=45 fish
+per population.
