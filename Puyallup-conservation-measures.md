@@ -5,37 +5,8 @@ Load packages.
 
 ``` r
 library(tidyverse)
-```
-
-    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.2.1     ✔ readr     2.2.0
-    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
-    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
-    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-    ## ✔ purrr     1.2.2     
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
 library(pegas)
 ```
-
-    ## Loading required package: ape
-    ## 
-    ## Attaching package: 'ape'
-    ## 
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     where
-    ## 
-    ## 
-    ## Attaching package: 'pegas'
-    ## 
-    ## The following object is masked from 'package:ape':
-    ## 
-    ##     mst
 
 Import Chinook salmon genotypes from Van Doornick et al. 2024, filter
 White River and Puyallup River samples, edit sample labels, and convert
@@ -76,29 +47,7 @@ B <-
 
 A <- 
   anti_join(x=loci, y=B)
-```
 
-    ## Joining with `by = join_by(population, ots_100884_287, ots_101119_381,
-    ## ots_101554_407, ots_101704_143, ots_102457_132, ots_102801_308, ots_103041_52,
-    ## ots_103122_180, ots_104063_132, ots_104415_88, ots_105105_613, ots_106747_239,
-    ## ots_107074_284, ots_107285_93, ots_107806_821, ots_108007_208, ots_108390_329,
-    ## ots_108820_336, ots_109693_392, ots_110495_380, ots_110551_64, ots_110689_218,
-    ## ots_111681_657, ots_112301_43, ots_112820_284, ots_115987_325, ots_117242_136,
-    ## ots_117259_271, ots_118175_479, ots_122414_56, ots_123048_521, ots_124774_477,
-    ## ots_127760_569, ots_128757_61r, ots_129144_472, ots_129170_683, ots_129458_451,
-    ## ots_130720_99, ots_131460_584, ots_131906_141, ots_94857_232r, ots_94903_99r,
-    ## ots_96222_525, ots_96500_180, ots_96899_357r, ots_97077_179r, ots_99550_204,
-    ## ots_aldb1_122, ots_arnt, ots_arp_436, ots_aspat_196, ots_cirpa, ots_ddx5_171,
-    ## ots_est1363, ots_etif1a, ots_farsla_220, ots_gcsh, ots_gh2, ots_gpdh_338,
-    ## ots_gph_318, ots_gst_207, ots_gth2b_550, ots_hnrnpl_533, ots_hsp27b_150,
-    ## ots_igf_i_1_76, ots_il11, ots_isot, ots_lwsop_638, ots_mapkpr_151, ots_mhc2,
-    ## ots_mybp_85, ots_nelfd_163, ots_nkef_192, ots_ntl_255, ots_p53, ots_parp3_286,
-    ## ots_prl2, ots_redd1_187, ots_s7_1, ots_sclkf2r2_135, ots_sl, ots_stk6_516,
-    ## ots_sws1op_182, ots_tlr3, ots_tpx2_125, ots_txnip_321, ots_u07_18_378,
-    ## ots_u07_25_325, ots_u07_49_290, ots_u07_57_120, ots_u202_161, ots_u211_85,
-    ## ots_u2446_123, ots_unk526)`
-
-``` r
 table(A$population); table(B$population)
 ```
 
@@ -215,7 +164,7 @@ mean(abs(c(permuteAB, obsAB)) >= abs(obsAB))
     ## [1] 0.1898102
 
 ``` r
-hist(c(permuteAB, obsAB), xlab=expression(italic(F)[ST]~differences), breaks=30, main="Permutations")
+hist(c(permuteAB, obsAB), xlab=expression(italic(F)[ST]~differences), breaks=30, main=paste("p-value:", mean(abs(c(permuteAB, obsAB)) >= abs(obsAB)) |> round(digits=5)))
 
 abline(v=obsAB, lty=2, col="blue")
 ```
@@ -235,29 +184,7 @@ C2 <-
   anti_join(x=filter(loci, population=="White_R_H"), y=C1) |> 
   as_tibble() |> 
   mutate(population="Puyallup_R")
-```
 
-    ## Joining with `by = join_by(population, ots_100884_287, ots_101119_381,
-    ## ots_101554_407, ots_101704_143, ots_102457_132, ots_102801_308, ots_103041_52,
-    ## ots_103122_180, ots_104063_132, ots_104415_88, ots_105105_613, ots_106747_239,
-    ## ots_107074_284, ots_107285_93, ots_107806_821, ots_108007_208, ots_108390_329,
-    ## ots_108820_336, ots_109693_392, ots_110495_380, ots_110551_64, ots_110689_218,
-    ## ots_111681_657, ots_112301_43, ots_112820_284, ots_115987_325, ots_117242_136,
-    ## ots_117259_271, ots_118175_479, ots_122414_56, ots_123048_521, ots_124774_477,
-    ## ots_127760_569, ots_128757_61r, ots_129144_472, ots_129170_683, ots_129458_451,
-    ## ots_130720_99, ots_131460_584, ots_131906_141, ots_94857_232r, ots_94903_99r,
-    ## ots_96222_525, ots_96500_180, ots_96899_357r, ots_97077_179r, ots_99550_204,
-    ## ots_aldb1_122, ots_arnt, ots_arp_436, ots_aspat_196, ots_cirpa, ots_ddx5_171,
-    ## ots_est1363, ots_etif1a, ots_farsla_220, ots_gcsh, ots_gh2, ots_gpdh_338,
-    ## ots_gph_318, ots_gst_207, ots_gth2b_550, ots_hnrnpl_533, ots_hsp27b_150,
-    ## ots_igf_i_1_76, ots_il11, ots_isot, ots_lwsop_638, ots_mapkpr_151, ots_mhc2,
-    ## ots_mybp_85, ots_nelfd_163, ots_nkef_192, ots_ntl_255, ots_p53, ots_parp3_286,
-    ## ots_prl2, ots_redd1_187, ots_s7_1, ots_sclkf2r2_135, ots_sl, ots_stk6_516,
-    ## ots_sws1op_182, ots_tlr3, ots_tpx2_125, ots_txnip_321, ots_u07_18_378,
-    ## ots_u07_25_325, ots_u07_49_290, ots_u07_57_120, ots_u202_161, ots_u211_85,
-    ## ots_u2446_123, ots_unk526)`
-
-``` r
 C <- 
   bind_rows(C1, C2) |> 
   mutate(population=factor(population)) |>
@@ -287,11 +214,11 @@ mean(Fst_C, na.rm=TRUE)
 ``` r
 par(mfrow=c(3, 1))
 
-hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=mean(Fst_A, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+hist(Fst_A, breaks=30, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2021 (simulated)", sub=paste("mean:", mean(Fst_A, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 
-hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=mean(Fst_B, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+hist(Fst_B, breaks=20, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2026 (simulated)", sub=paste("mean:", mean(Fst_B, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 
-hist(Fst_C, breaks=10, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=mean(Fst_C, na.rm=TRUE) |> round(digits=4), xlab=expression(italic(F)[ST]))
+hist(Fst_C, breaks=10, xlim=c(min(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.2, max(c(Fst_A, Fst_B, Fst_C), na.rm=TRUE)*1.1), main="White R H vs. Puyallup R\n2031 (simulated)", sub=paste("mean:", mean(Fst_C, na.rm=TRUE) |> round(digits=4)), xlab=expression(italic(F)[ST]))
 ```
 
 ![](Puyallup-conservation-measures_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
