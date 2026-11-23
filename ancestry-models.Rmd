@@ -162,24 +162,23 @@ gsnps <-
   filter(value < 1) |> 
   filter(value >= 0.75)
 
-# gdatw <- 
-#   select(gdat, collection, id, gsnps$name) |> 
-#   separate_wider_position(cols=3:246, widths=c(a1=1, a2=1), names_sep="_")
-# 
-# 
-# gdatw <- 
-#   rename(gdatw, pop=collection, ID=id) |> 
-#   mutate(PaternalID=0, MaternalID=0, Sex=0, Phenotype=1) |> 
-#   relocate(491:494, .after=ID)
-# 
-# gdatw$pop <- 
-#   gsub(pattern="-", replacement="_", gdatw$pop)
-# 
-# write_delim(mutate(gdatw, ID=paste0("i", ID)), col_names=FALSE, file="../admixture/gdatw.ped", na="0")
-# 
-# data.frame(Chromosome=1, SNP=paste0("rs", 10001:10244), GD=0, POS=seq(1, 244000000, 1000000)) |>
-#   write_delim(col_names=FALSE, file="../admixture/gdatw.map")
+gdatw <- 
+  select(gdat, collection, id, gsnps$name) |> 
+  separate_wider_position(cols=3:246, widths=c(a1=1, a2=1), names_sep="_")
 
+
+gdatw <- 
+  rename(gdatw, pop=collection, ID=id) |> 
+  mutate(PaternalID=0, MaternalID=0, Sex=0, Phenotype=1) |> 
+  relocate(491:494, .after=ID)
+
+gdatw$pop <- 
+  gsub(pattern="-", replacement="_", gdatw$pop)
+
+write_delim(mutate(gdatw, ID=paste0("i", ID)), col_names=FALSE, file="../admixture/gdatw.ped", na="0")
+
+data.frame(Chromosome=1, SNP=paste0("rs", 10001:10244), GD=0, POS=seq(1, 244000000, 1000000)) |>
+  write_delim(col_names=FALSE, file="../admixture/gdatw.map")
 ```
 
 
