@@ -53,17 +53,32 @@ Baseline_FALL <-
   mutate(code=str_extract(string=population, pattern="\\d{2}\\w{2}")) |>
   relocate(code, .before=1)
 
+table(Baseline_FALL$code)
+
+Baseline_FALL_100 <- 
+  filter(Baseline_FALL, code!="98HB") |> 
+  slice_sample(n=100)
 
 nor_fall <- 
-  function(nor.code, fall.code, n){
+  function(nor.code, fall.code=NA, n){
     bind_rows(
-      NOR=filter(White_R_NOR, code %in% nor.code), 
-      FALL=filter(Baseline_FALL, code %in% fall.code), 
+      NOR=filter(White_R_NOR, code %in% nor.code) |> slice_sample(n=n, replace=FALSE), 
+      FALL=Baseline_FALL_100, 
       .id="group") |>
-      slice_sample(n=n, by=group, replace=FALSE) |>
       select(-group, -code) |>
       mutate(population=factor(population)) |>
       as.loci()}
+
+# nor_fall <- 
+#   function(nor.code, fall.code, n){
+#     bind_rows(
+#       NOR=filter(White_R_NOR, code %in% nor.code), 
+#       FALL=filter(Baseline_FALL, code %in% fall.code), 
+#       .id="group") |>
+#       slice_sample(n=n, by=group, replace=FALSE) |>
+#       select(-group, -code) |>
+#       mutate(population=factor(population)) |>
+#       as.loci()}
 
 FST <- 
   function(adf){
@@ -87,7 +102,7 @@ boot1mean <-
     mean_xx <- mean(xx, na.rm=TRUE)
     return(mean_xx)}
 
-table(Baseline_FALL$population)
+table(Baseline_FALL_100$population)
 table(White_R_NOR$code)
 
 d1 <- 
