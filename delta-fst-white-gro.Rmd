@@ -307,7 +307,6 @@ Non-parametric statistical hypothesis tests of ∆FST were all non-significant, 
 
 
 ```{r, echo=FALSE, fig.height=10}
-
 # 2021-2022
 deltaFSTy21y22 <- FST(d8)$bar - FST(d7)$bar
 
