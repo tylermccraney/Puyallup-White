@@ -269,29 +269,38 @@ ht32tab4$assignment <-
 ht32tab4$assignment <-
   factor(ht32tab4$assignment, levels=c("Spring", "Unknown", "Fall"))
 
+day_breaks <- 
+  tibble(
+    day=c(yday("2024-06-01"), yday("2024-06-15"), yday("2024-07-01"), yday("2024-07-15"), yday("2024-08-01")),
+    label=c("Jun-01", "Jun-15", "Jul-01", "Jul-15", "Aug-01"))
+
 
 gg2 <- 
   ggplot(ht32tab3 |> filter(!is.na(day)), aes(x=day, fill=haplotype)) + 
   geom_bar(width=1) + 
-  labs(title="White River NORs 2021-2024") +
+  labs(title="White River NORs 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
   scale_fill_discrete(palette=terrain.colors)
 
 gg3 <- 
   ggplot(ht32tab3 |> filter(!is.na(day)), aes(x=day, fill=hap.group)) + 
   geom_bar(width=1) + 
-  labs(title="White River NORs 2021-2024") +
+  labs(title="White River NORs 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
   scale_fill_manual(name="allele", values=terrain.colors(4)[c(1, 3)])
 
 gg4 <- 
   ggplot(ht32tab4 |> filter(!is.na(day)), aes(x=day, fill=runtime_genotype2)) + 
   geom_bar(width=1) + 
-  labs(title="White River NORs 2021-2024") +
+  labs(title="White River NORs 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
   scale_fill_manual(name="genotype", values=terrain.colors(4)[c(1:3)])
 
 gg5 <- 
   ggplot(ht32tab4 |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
   geom_bar(width=1) + 
-  labs(title="White River NORs 2021-2024") +
+  labs(title="White River NORs 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
   scale_fill_manual(values=terrain.colors(4)[c(1:3)])
 
 # gg2

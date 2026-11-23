@@ -268,11 +268,23 @@ ht32tab4$assignment <-
 ht32tab4$assignment <-
   factor(ht32tab4$assignment, levels=c("Spring", "Unknown", "Fall"))
 
+min(ht32tab3$day, na.rm=TRUE)
+max(ht32tab3$day, na.rm=TRUE)
+
+
+
+
+day_breaks <- 
+  tibble(
+    day=c(yday("2024-06-01"), yday("2024-06-15"), yday("2024-07-01"), yday("2024-07-15"), yday("2024-08-01")),
+    label=c("Jun-01", "Jun-15", "Jul-01", "Jul-15", "Aug-01"))
+
 (
 gg2 <- 
   ggplot(ht32tab3 |> filter(!is.na(day)), aes(x=day, fill=haplotype)) + 
   geom_bar(width=1) + 
-  labs(title="White River NORs 2021-2024") +
+  labs(title="White River NORs 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
   scale_fill_discrete(palette=terrain.colors)
 )
 (
