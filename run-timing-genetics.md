@@ -2,32 +2,11 @@ Exploratory Analysis of Run Timing Genetics
 ================
 Tyler McCraney
 
-    ##    ots28_11023212    ots28_11075348    ots28_11070757    ots28_11071377 
-    ##               497               497               498               498 
-    ##    ots28_11073668    ots28_11077016    ots28_11201129    ots28_11205423 
-    ##               498               498               498               498 
-    ##    ots28_11206740    ots28_11210919    ots28_11072994    ots28_11075712 
-    ##               498               498               499               499 
-    ##    ots28_11062192    ots28_11205993    ots28_11164637    ots28_11160599 
-    ##               500               500               501               502 
-    ##    ots28_11207428    ots28_11202400    ots28_11077576 ots37124_12272852 
-    ##               503               504               506               508 
-    ##    ots28_11095755    ots28_11025336    ots28_11077172    ots28_11186543 
-    ##               509               511               512               517 
-    ##    ots28_11202863    ots28_11073102    ots28_11033282 ots37124_12277401 
-    ##               518               528               534               535 
-    ##    ots28_11143508 ots37124_12310649    ots28_11202190 ots37124_12267397 
-    ##               537               547               564               596 
-    ## ots37124_12281207 
-    ##               778
-
-![](run-timing-genetics_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
-
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-#### Distribution of haplotypes, alleles, genotypes, and genetic stock assignments
+#### Comparing the temporal distribution of *GREB1L/ROCK1* Region (GRR) alleles and genotypes with respect to genetic stock assignments
 
-![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-4.png)<!-- -->
+![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
 

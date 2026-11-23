@@ -21,11 +21,11 @@ rdat <-
 dat <- 
   readRDS("../data/dat.RDS")
 
-select(dat, 299:331) |> 
-  as.matrix.data.frame() |> 
-  is.na() |> 
-  colSums() |> 
-  sort()
+# select(dat, 299:331) |> 
+#   as.matrix.data.frame() |> 
+#   is.na() |> 
+#   colSums() |> 
+#   sort()
 
 # ots37124_12281207 removed for 33% missing data
 rtd <-
@@ -130,8 +130,6 @@ E0L1sd <-
 E0L1sdh <- 
   hclust(E0L1sd, method="ward.D2")
 
-plot(E0L1sdh)
-
 
 cd <- 
   ggtree(as.dendrogram(E0L1sdh)) %<+%
@@ -178,7 +176,7 @@ gg1 <-
 cd + gg0 + gg1
 ```
 
-#### Distribution of haplotypes, alleles, genotypes, and genetic stock assignments
+#### Comparing the temporal distribution of *GREB1L/ROCK1* Region (GRR) alleles and genotypes with respect to genetic stock assignments
 
 ```{r, echo=FALSE}
 ht32tab <- 
@@ -296,7 +294,7 @@ gg5 <-
   labs(title="White River NORs 2021-2024") +
   scale_fill_manual(values=terrain.colors(4)[c(1:3)])
 
-gg2
+# gg2
 gg3
 gg4
 gg5
