@@ -12,7 +12,7 @@ Tyler McCraney
 | Voights_C_H_Fall_08HZ_Baseline      | 42  |
 
 The 1998 baseline samples were excluded because there was high missing
-data and I could not determine if they were hatchery or natural origin.
+data.
 
 #### White River NORs (2021-2026) with genetic stock assignments.
 
@@ -42,9 +42,12 @@ data and I could not determine if they were hatchery or natural origin.
 FST was estimated each year by taking a random sample of n=100 White
 River NORs (without regards to DFW genetic stock assignments) and a
 random sample of n=100 GRO fall baseline fish (from the N=122 fish
-available in the pooled 2008, 2010, and 2012 baseline collections). So,
-there were a total of 6 FST estimates that were made over 2021 to 2026
-between White River NORs and GRO fall run.
+available in the pooled 2008, 2010, and 2012 baseline collections).
+EDIT: the same sample of n=100 GRO fall baseline fish was used for all 6
+estimates. I reasoned that this was better than the ‘moving target’
+situation I had originally used. There were a total of 6 FST estimates
+that were made over 2021 to 2026 between White River NORs and GRO fall
+run.
 
 The 95% CIs for FSTs were constructed by bootstrapping. The
 distributions of FST estimates with 95% CIs are plotted below. FST
