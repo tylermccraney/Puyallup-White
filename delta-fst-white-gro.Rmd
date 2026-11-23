@@ -307,7 +307,7 @@ bootplot(bs=bootFSTy26, fst=FSTy26, xlim=c(0.01, 0.04), ylim=c(0, 120), main="20
 Non-parametric statistical hypothesis tests of ∆FST were all non-significant, indicating that allele frequency differences between White River NORs and GRO fall run Chinook salmon are maintained. In other words, there is no evidence for hybridization w/ introgression during the study period.      
 
 
-```{r, echo=FALSE, fig.height=8}
+```{r, echo=FALSE, fig.height=10}
 
 # 2021-2022
 deltaFSTy21y22 <- FST(d8)$bar - FST(d7)$bar
