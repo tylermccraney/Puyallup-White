@@ -248,16 +248,20 @@ tbl2 <-
   bind_rows(tbl2, tibble(V1=rep(NA, 4), V2=rep(NA, 4), pop=rep(NA, 4)))
 
 tbl3 <- 
-  bind_rows(tbl3, tibble(V1=rep(NA, 5), V2=rep(NA, 5), V3=rep(NA, 5), pop=rep(NA, 5)))
+  bind_rows(tbl3, tibble(V1=rep(NA, 4), V2=rep(NA, 4), V3=rep(NA, 4), pop=rep(NA, 4)))
 
 rownames(tbl2)[1126:1129] <- 
   paste0("spacer", 1:4)
 
+rownames(tbl3)[1126:1129] <- 
+  paste0("spacer", 1:4)
+
+
 tbl2 <- 
-  tbl2[rownames(tbl2)[c(1:129, 1128, 130:870, 1129, 871:906, 1130, 907:964, 1131, 965:1127)], ]
+  tbl2[rownames(tbl2)[c(1:129, 1126, 130:870, 1127, 871:906, 1128, 907:964, 1129, 965:1125)], ]
 
 tbl3 <- 
-  tbl3[rownames(tbl3)[c(1:129, 1128, 130:870, 1129, 871:906, 1130, 907:964, 1131, 965:1127)], ]
+  tbl3[rownames(tbl3)[c(1:129, 1126, 130:870, 1127, 871:906, 1128, 907:964, 1129, 965:1125)], ]
 
 
 # pdf("../admixture/gdatw_k2_3.pdf", width=12, height=6)
