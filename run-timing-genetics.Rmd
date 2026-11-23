@@ -164,6 +164,7 @@ df$Var1 <-
   factor(df$Var1, levels=E0L1sdh$order, ordered=TRUE)
 
 
+
 gg1 <- 
   ggplot(df, aes(x=Var2, y=Var1, fill=Freq)) + 
   geom_tile() +
