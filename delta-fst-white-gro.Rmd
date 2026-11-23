@@ -8,11 +8,11 @@ output: github_document
 knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
-The 1998 baseline samples were excluded. FST was estimated each year with a random sample of 100 NORs and 100 fall baseline fish (2008, 2010, and 2012).  95% CIs for FSTs were constructed by bootstrapping. Non-parametric statistical hypothesis tests of ∆FST were are non-statistically significant, indicating no hybridization w/ introgression is occurring between White River spring run and Green River fall run Chinook Salmon.      
 
 ```{r, echo=FALSE, fig.height=12}
 library(tidyverse)
 library(pegas)
+library(knitr)
 
 gdatw <- 
   readRDS("../admixture/gdatw.RDS")
@@ -100,8 +100,46 @@ boot1mean <-
     mean_xx <- mean(xx, na.rm=TRUE)
     return(mean_xx)}
 
-table(Baseline_FALL$population)
+tab1 <- 
+  table(Baseline_FALL$population) |> 
+  enframe() |> 
+  rename(collection=name, n=value)
 
+tab2 <- 
+  group_by(White_R_NOR, code, population) |> 
+  count() |> 
+  ungroup() |> 
+  arrange(code, desc(n), population) |> 
+  rename(assignment=population)
+
+
+```
+
+Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.  
+
+```{r, echo=FALSE}
+kable(
+  tab1,
+  col.names=c("Collection Name", "N"),
+  align="l")
+```
+
+White River NORs (2021-2026) with genetic stock assignments.  
+
+```{r, echo=FALSE}
+kable(
+  tab2,
+  col.names=c("DFW Code", "Genetic Stock Assignment", "N"),
+  align="l")
+```
+
+The 1998 baseline samples were excluded because there was high missing data and I could not determine if they were hatchery or natural origin.  
+
+FST was estimated each year by taking a random sample of n=100 White River NORs (without regards to DFW genetic stock assignments) and a random sample of n=100 GRO fall baseline fish (from the N=122 fish available in the pooled 2008, 2010, and 2012 baseline collections). So, there was a total of 6 FST estimates that were made over 2021 to 2026 for White River NORs vs. GRO fall run.    
+
+The distributions of FST estimates with 95% CIs are plotted below. The 95% CIs for FSTs were constructed by bootstrapping. From the plots below it should be clear that FST estimates vary among years but that the 95% CIs overlap. Overlapping 95% CIs are a heuristic for "not significantly different".  
+
+```{r, echo=FALSE, fig.height=12}
 d1 <- 
   nor_fall(nor.code="21LC", fall.code="98HB", n=39)
 
@@ -231,20 +269,21 @@ for(i in 1:1000){bootFSTy26[i] <- boot1mean(FSTy26)}
 
 bootplot <- 
   function(bs, fst, ...){
-    hist(bs, breaks=30, font.main=1, xlab=expression(italic(F)[ST]), ...=...)
+    hist(bs, breaks=30, font.main=1, ...=...)
     abline(v=quantile(bs, probs=c(0.025, 0.975)), col="blue", lwd=2, lty=2)
     abline(v=mean(fst, na.rm=TRUE), col="blue", lwd=2)}
 
 
 par(mfrow=c(6, 1))
-bootplot(bs=bootFSTy21, fst=FSTy21, xlim=c(0.01, 0.04), main="2021")
-bootplot(bs=bootFSTy22, fst=FSTy22, xlim=c(0.01, 0.04), main="2022")
-bootplot(bs=bootFSTy23, fst=FSTy23, xlim=c(0.01, 0.04), main="2023")
-bootplot(bs=bootFSTy24, fst=FSTy24, xlim=c(0.01, 0.04), main="2024")
-bootplot(bs=bootFSTy25, fst=FSTy25, xlim=c(0.01, 0.04), main="2025")
-bootplot(bs=bootFSTy26, fst=FSTy26, xlim=c(0.01, 0.04), main="2026")
+bootplot(bs=bootFSTy21, fst=FSTy21, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2021", xlab=NULL)
+bootplot(bs=bootFSTy22, fst=FSTy22, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2022", xlab=NULL)
+bootplot(bs=bootFSTy23, fst=FSTy23, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2023", xlab=NULL)
+bootplot(bs=bootFSTy24, fst=FSTy24, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2024", xlab=NULL)
+bootplot(bs=bootFSTy25, fst=FSTy25, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2025", xlab=NULL)
+bootplot(bs=bootFSTy26, fst=FSTy26, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2026", xlab=expression(italic(F)[ST]))
 ```
 
+Non-parametric statistical hypothesis tests of ∆FST were all non-significant, indicating that allele frequency differences between White River NORs and GRO fall run Chinook salmon are maintained. In other words, there is no evidence for hybridization w/ introgression during the study period.      
 
 
 ```{r, echo=FALSE, fig.height=8}
@@ -289,16 +328,16 @@ for(i in 1:1000){FSTy25y26perm[i] <- permute2samplet(x=FSTy25y26, n_loci=243)}
 permplot <- 
   function(perm, deltaFST, note="", ...){
     pval <- mean(abs(c(perm, deltaFST)) >= abs(deltaFST)) |> round(digits=5)
-    hist(perm, breaks=30, main=paste(note, "p-value:", pval), font.main=1, xlab=expression(Null~Distribution~of~Delta~italic(F)[ST]), , ...=...)
+    hist(perm, breaks=30, main=paste(note, "p-value:", pval), font.main=1, , ...=...)
     abline(v=deltaFST, col="red", lwd=2)}
 
 
 par(mfrow=c(5, 1))
-permplot(perm=FSTy21y22perm, deltaFST=deltaFSTy21y22, xlim=c(-0.015, 0.015), note="2021-2022")
-permplot(perm=FSTy22y23perm, deltaFST=deltaFSTy22y23, xlim=c(-0.015, 0.015), note="2022-2023")
-permplot(perm=FSTy23y24perm, deltaFST=deltaFSTy23y24, xlim=c(-0.015, 0.015), note="2023-2024")
-permplot(perm=FSTy24y25perm, deltaFST=deltaFSTy24y25, xlim=c(-0.015, 0.015), note="2024-2025")
-permplot(perm=FSTy25y26perm, deltaFST=deltaFSTy25y26, xlim=c(-0.015, 0.015), note="2025-2026")
+permplot(perm=FSTy21y22perm, deltaFST=deltaFSTy21y22, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2021-2022", xlab=NULL)
+permplot(perm=FSTy22y23perm, deltaFST=deltaFSTy22y23, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2022-2023", xlab=NULL)
+permplot(perm=FSTy23y24perm, deltaFST=deltaFSTy23y24, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2023-2024", xlab=NULL)
+permplot(perm=FSTy24y25perm, deltaFST=deltaFSTy24y25, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2024-2025", xlab=NULL)
+permplot(perm=FSTy25y26perm, deltaFST=deltaFSTy25y26, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2025-2026", xlab=expression(Null~Distribution~of~Delta~italic(F)[ST]))
 
 ```
 
