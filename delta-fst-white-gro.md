@@ -2,8 +2,7 @@
 ================
 Tyler McCraney
 
-Green River origin (GRO) fall-run Chinook salmon in DFW genetic
-baseline.
+#### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.
 
 | Collection Name                     | N   |
 |:------------------------------------|:----|
@@ -12,7 +11,10 @@ baseline.
 | Soos_C_H_Fall_10JX_Baseline         | 39  |
 | Voights_C_H_Fall_08HZ_Baseline      | 42  |
 
-White River NORs (2021-2026) with genetic stock assignments.
+The 1998 baseline samples were excluded because there was high missing
+data and I could not determine if they were hatchery or natural origin.
+
+#### White River NORs (2021-2026) with genetic stock assignments.
 
 | DFW Code | Genetic Stock Assignment | N   |
 |:---------|:-------------------------|:----|
@@ -35,23 +37,23 @@ White River NORs (2021-2026) with genetic stock assignments.
 | 26ON     | White_R_Fall_26ON        | 5   |
 | 26ON     | White_R_Unknown_26ON     | 2   |
 
-The 1998 baseline samples were excluded because there was high missing
-data and I could not determine if they were hatchery or natural origin.
+#### FST
 
 FST was estimated each year by taking a random sample of n=100 White
 River NORs (without regards to DFW genetic stock assignments) and a
 random sample of n=100 GRO fall baseline fish (from the N=122 fish
 available in the pooled 2008, 2010, and 2012 baseline collections). So,
-there was a total of 6 FST estimates that were made over 2021 to 2026
-for White River NORs vs. GRO fall run.
+there were a total of 6 FST estimates that were made over 2021 to 2026
+between White River NORs and GRO fall run.
 
-The distributions of FST estimates with 95% CIs are plotted below. The
-95% CIs for FSTs were constructed by bootstrapping. From the plots below
-it should be clear that FST estimates vary among years but that the 95%
-CIs overlap. Overlapping 95% CIs are a heuristic for “not significantly
-different”.
+The 95% CIs for FSTs were constructed by bootstrapping. The
+distributions of FST estimates with 95% CIs are plotted below. FST
+estimates vary among years but 95% CIs overlap. Overlapping 95% CIs are
+a heuristic for “not significantly different”.
 
 ![](delta-fst-white-gro_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+#### ∆FST
 
 Non-parametric statistical hypothesis tests of ∆FST were all
 non-significant, indicating that allele frequency differences between

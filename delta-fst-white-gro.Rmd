@@ -115,7 +115,7 @@ tab2 <-
 
 ```
 
-Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.  
+#### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.  
 
 ```{r, echo=FALSE}
 kable(
@@ -124,7 +124,11 @@ kable(
   align="l")
 ```
 
-White River NORs (2021-2026) with genetic stock assignments.  
+The 1998 baseline samples were excluded because there was high missing data and I could not determine if they were hatchery or natural origin.   
+
+
+
+#### White River NORs (2021-2026) with genetic stock assignments.  
 
 ```{r, echo=FALSE}
 kable(
@@ -133,11 +137,11 @@ kable(
   align="l")
 ```
 
-The 1998 baseline samples were excluded because there was high missing data and I could not determine if they were hatchery or natural origin.  
+#### FST
 
-FST was estimated each year by taking a random sample of n=100 White River NORs (without regards to DFW genetic stock assignments) and a random sample of n=100 GRO fall baseline fish (from the N=122 fish available in the pooled 2008, 2010, and 2012 baseline collections). So, there was a total of 6 FST estimates that were made over 2021 to 2026 for White River NORs vs. GRO fall run.    
+FST was estimated each year by taking a random sample of n=100 White River NORs (without regards to DFW genetic stock assignments) and a random sample of n=100 GRO fall baseline fish (from the N=122 fish available in the pooled 2008, 2010, and 2012 baseline collections). So, there were a total of 6 FST estimates that were made over 2021 to 2026 between White River NORs and GRO fall run.    
 
-The distributions of FST estimates with 95% CIs are plotted below. The 95% CIs for FSTs were constructed by bootstrapping. From the plots below it should be clear that FST estimates vary among years but that the 95% CIs overlap. Overlapping 95% CIs are a heuristic for "not significantly different".  
+The 95% CIs for FSTs were constructed by bootstrapping. The distributions of FST estimates with 95% CIs are plotted below. FST estimates vary among years but 95% CIs overlap. Overlapping 95% CIs are a heuristic for "not significantly different".  
 
 ```{r, echo=FALSE, fig.height=12}
 d1 <- 
@@ -282,6 +286,9 @@ bootplot(bs=bootFSTy24, fst=FSTy24, xlim=c(0.01, 0.04), ylim=c(0, 120), main="20
 bootplot(bs=bootFSTy25, fst=FSTy25, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2025", xlab=NULL)
 bootplot(bs=bootFSTy26, fst=FSTy26, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2026", xlab=expression(italic(F)[ST]))
 ```
+
+#### ∆FST 
+
 
 Non-parametric statistical hypothesis tests of ∆FST were all non-significant, indicating that allele frequency differences between White River NORs and GRO fall run Chinook salmon are maintained. In other words, there is no evidence for hybridization w/ introgression during the study period.      
 
