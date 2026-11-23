@@ -141,10 +141,12 @@ gg0 <-
   tibble(Var1=factor(1:27, levels=E0L1sdh$order, ordered=TRUE), hap.prob=ht32$hap.prob, allele=cutree(E0L1sdh, k=2) |> factor(levels=1:2, labels=c("E", "L"))) |>
   ggplot(aes(x=hap.prob, y=Var1, fill=allele)) + 
   geom_col(show.legend=FALSE) +
+  geom_hline(yintercept=c(1.5, 11.5, 19.5)) + 
+  annotate(geom="text", x=Inf, y=c(1, 6.5, 15.5, 23.5), label=c("Late", "Recombinant\nLate", "Early", "Recombinant\nEarly"), hjust=1) +
   scale_fill_manual(name=NULL, values=terrain.colors(4)[c(1, 3)]) +
   scale_x_continuous(labels=scales::label_percent()) +
   labs(x="Frequency", title="White River NORs 2021-2026", y=NULL) +
-  theme(panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank())
+  theme(panel.grid=element_blank())
 )
 
 rownames(E0L1) <- 
@@ -158,10 +160,15 @@ df <-
 df$Var1 <- 
   factor(df$Var1, levels=E0L1sdh$order, ordered=TRUE)
 
+c(rep("GREB1L", 7), rep("Intergenic", 13), rep("ROCK1", 12))
+c(rep("italic", 7), rep("plain", 13), rep("italic", 12))
+
 (
 gg1 <- 
   ggplot(df, aes(x=Var2, y=Var1, fill=Freq)) + 
   geom_tile() +
+  geom_vline(xintercept=c(7.5, 20.5), colour="white", linewidth=0.33) +
+  annotate(geom="text", x=c(3.5, 14, 26.5), y=19, colour="white", label=c("italic('GREB1L')", "intergenic~region", "italic('ROCK1')"), parse=TRUE) +
   scale_fill_manual(name=NULL, values=terrain.colors(4)[c(1, 3)]) +
   labs(x="SNP", y=NULL, title=expression(italic('GREB1L')/italic('ROCK1')~Region~(GRR))) +
   theme(axis.text.x=element_text(angle=270, hjust=0, vjust=0.4), panel.grid=element_blank())
