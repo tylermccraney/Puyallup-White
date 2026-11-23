@@ -10,7 +10,7 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 
 
 
-```{r}
+```{r, echo=FALSE}
 library(tidyverse)
 library(ggtree)
 library(patchwork)
@@ -174,12 +174,13 @@ gg1 <-
 ```
 
 
-```{r, fig.width=12, fig.height=8}
+```{r, echo=FALSE, fig.width=12, fig.height=8}
 cd + gg0 + gg1
 ```
 
+#### Distribution of haplotypes, alleles, genotypes, and genetic stock assignments
 
-```{r}
+```{r, echo=FALSE}
 ht32tab <- 
   tibble(
     indx.subj=ht32$indx.subj, 
@@ -187,8 +188,6 @@ ht32tab <-
     hap1=ht32$hap1code, 
     hap2=ht32$hap2code, 
     post=ht32$post)
-
-tail(ht32tab)
 
 ht32tab1 <- 
   group_by(ht32tab, indx.subj, subj.id) |> 
@@ -304,7 +303,7 @@ gg5
 ```
 
 
-```{r, fig.width=8, fig.height=8}
+```{r, echo=FALSE, fig.width=8, fig.height=8}
 gg6 <- 
   ggplot(ht32tab3, aes(fill=hap.group, x=assignment)) + 
   geom_bar() + 
@@ -335,6 +334,13 @@ gg6
 gg7
 gg8
 gg9
+```
+
+Selection against heterozygotes (underdominance)?   
+
+#### GRR genotypes in Hardy-Weinberg Equilibrium 2021-2025 (both individually and combined). Not in HWE when 2026 added, or 2026 individually, 2026 spring, and 2026 non-spring.
+
+```{r}
 
 #
 (gf0 <- pull(ht32tab4, runtime_genotype2) |> table(useNA="ifany") |> c())
