@@ -342,10 +342,9 @@ gg9 <-
   labs(y="proportion") +
   scale_fill_manual(name="genotype", values=terrain.colors(4)[c(1:3)])
 
-gg6
-gg7
-gg8
-gg9
+gg6 + gg7 + plot_layout(guides='collect')
+
+gg8 + gg9 + plot_layout(guides='collect')
 ```
 
 Selection against heterozygotes (underdominance)?   

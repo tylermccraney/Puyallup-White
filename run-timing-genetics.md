@@ -8,7 +8,7 @@ Tyler McCraney
 
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
-![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
+![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 Selection against heterozygotes (underdominance)?
 
