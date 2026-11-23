@@ -360,3 +360,4 @@ permplot(perm=FSTy25y26perm, deltaFST=deltaFSTy25y26, xlim=c(-0.015, 0.015), yli
 
 ```
 
+More work is needed to establish standards for comparison. Furthermore, additional baseline data from recently-collected NOR fall run fish from the Puyallup River and White River would improve the quality of this analsysis.  

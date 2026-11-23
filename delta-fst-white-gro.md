@@ -65,3 +65,8 @@ other words, there is no evidence for hybridization w/ introgression
 during the study period.
 
 ![](delta-fst-white-gro_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+More work is needed to establish standards for comparison. Furthermore,
+additional baseline data from recently-collected NOR fall run fish from
+the Puyallup River and White River would improve the quality of this
+analsysis.
