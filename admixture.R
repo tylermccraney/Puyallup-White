@@ -289,6 +289,11 @@ tbl3 <-
 pdf("../admixture/gdatw_k2_3.pdf", width=12, height=6)
 par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
 barplot(t(as.matrix(tbl2[-3])), col=terrain.colors(4)[c(3, 1)], ylab="Ancestry", border=NA, names.arg=tbl2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==2*`*`), font.main=1)
+mtext(text="Baseline\nSpring", adj=0)
+mtext(text="'Spring'")
+mtext(text="'?'", adj=0.8)
+mtext(text="'Fall'", adj=0.9)
+mtext(text="Baseline\nFall", adj=1)
 barplot(t(as.matrix(tbl3[-4])), col=terrain.colors(4)[c(3, 1, 2)], ylab="Ancestry", border=NA, names.arg=tbl3$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==3), font.main=1)
 dev.off()
 
