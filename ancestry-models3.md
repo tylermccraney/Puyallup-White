@@ -5,8 +5,8 @@ Tyler McCraney
 
 #### White River NORs & White/Puyallup (Green River Origin) Baseline
 
-This is the 3rd version of the ancestry modeling analysis. It is very
-similar to the [2nd
+This is the 3rd version of the (NOR + baseline) ancestry modeling
+analysis. It is very similar to the [2nd
 version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md)
 except for a single locus *Ots_u07-07.161* that was removed because of
 null alleles detected in the [2nd
@@ -83,3 +83,20 @@ above.
     ##   Spring     712     29    0
     ##   Unknown     15     19    2
     ##   Fall        10     33   15
+
+Now let’s see if ADMIXTURE can sort the White River NORs into 2
+ancestral populations. In other words, lets see if there’s any support
+for splitting these phenotypically 100% spring-run fish into ‘Spring’
+and ‘Fall’ classes.
+
+``` bash
+plink --file NOR3 --make-bed --out NOR3
+
+for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 NOR3.bed $K | tee NOR3_log${K}.out; done
+
+grep -h CV NOR3_log*  > NOR3_log.txt
+```
+
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->

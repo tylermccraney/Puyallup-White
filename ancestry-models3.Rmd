@@ -10,11 +10,12 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 
 #### White River NORs & White/Puyallup (Green River Origin) Baseline
 
-This is the 3rd version of the ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R) of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
+This is the 3rd version of the (NOR + baseline) ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R) of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
 
 ADMIXTURE is a command-line application that estimates individual ancestry proportions from large multilocus SNP genotype datasets. It uses the same statistical model as the classic STRUCTURE program, but replaces slow MCMC sampling with fast maximum-likelihood optimization so large datasets finish in minutes rather than hours.  
 
 Like STRUCTURE, ADMIXTURE requires you to specify ${K}$---the assumed number of ancestral populations---in advance, although it uses cross-validation (CV) to help pick the best ${K}$. For each value of ${K}$ = 1 to 4, ADMIXTURE first randomly partitions entries of the genotype matrix into 10 folds, hides 10% of the genotype calls in each fold, fits the ancestry and allele-frequency parameters on the remaining 90%, and measures how accurately those parameters predict the masked genotypes. We plot this _CV_error_ so we can see the ${K}$ value with the lowest CV error, which will give us the best statistical fit.
+
 
 We convert the genotype matrix into binary PLINK (.bed/.bim/.fam) format, run ADMIXTURE, and then import the .Q files---containing estimated ancestry fractions per individual---into R for plotting and summary.  
 
@@ -201,7 +202,6 @@ table(filter(tbl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tbl2s, BASELINE==FALSE)$
 
 
 ```{r, echo=FALSE}
-
 # saveRDS(gdatw, file="../admixture/gdatw3.RDS")
 # 
 # saveRDS(tbl2s, file="../admixture/3-tbl2s.RDS")
@@ -209,6 +209,82 @@ table(filter(tbl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tbl2s, BASELINE==FALSE)$
 # saveRDS(tbl2, file="../admixture/3-tbl2.RDS")
 # 
 # saveRDS(tbl3, file="../admixture/3-tbl3.RDS")
+```
+
+
+Now let's see if ADMIXTURE can sort the White River NORs into 2 ancestral populations. In other words, lets see if there's any support for splitting these phenotypically 100% spring-run fish into 'Spring' and 'Fall' classes.     
+
+```{r, echo=FALSE}
+NOR <- 
+  mutate(gdatw, population=gdatw_pop) |>
+  filter(grepl(pattern="White_R", population)) |>
+  filter(!grepl(pattern="Baseline", population))
+
+# write_delim(mutate(NOR[-509], ID=paste0("i", ID)), col_names=FALSE, file="../admixture/NOR3.ped", na="0")
+# 
+# data.frame(Chromosome=1, SNP=paste0("rs", 10001:10251), GD=0, POS=seq(1, 251000000, 1000000)) |> 
+#   write_delim(col_names=FALSE, file="../admixture/NOR3.map")
+```
+
+
+
+```{bash, eval=FALSE}
+plink --file NOR3 --make-bed --out NOR3
+
+for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 NOR3.bed $K | tee NOR3_log${K}.out; done
+
+grep -h CV NOR3_log*  > NOR3_log.txt
+```
+
+
+
+```{r, echo=FALSE}
+NOR_cv <- 
+  read_delim("../admixture/NOR3_log.txt", col_names=FALSE) %>% 
+  mutate(K=1:nrow(.)) |> 
+  select(K, CV_error=X4)
+
+par(mar=c(5, 4, 4, 2) + 0.1)
+
+plot(NOR_cv); lines(NOR_cv)
+```
+
+
+
+```{r, echo=FALSE, fig.width=13, fig.height=6}
+
+NOR_1 <- read.table("../admixture/NOR3.1.Q")
+
+NOR_2 <- read.table("../admixture/NOR3.2.Q")
+
+NOR_1$id <- 
+  NOR$ID
+
+NOR_2$id <- 
+  NOR$ID
+
+NOR_1$pop <- 
+  NOR$population
+
+NOR_2$pop <- 
+  NOR$population
+
+NOR_2 <- 
+  bind_rows(NOR_2, tibble(V1=rep(NA, 2), V2=rep(NA, 2)))
+
+rownames(NOR_2)[836:837] <-
+  paste0("spacer", 1:2)
+
+NOR_2 <-
+  NOR_2[rownames(NOR_2)[c(1:741, 836, 742:777, 837, 778:835)], ]
+
+# pdf("../admixture/NOR3_k2_3.pdf", width=12, height=6)
+par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
+barplot(t(as.matrix(data.frame(V1=c(rep(1, 741), NA, rep(1, length(742:777)), NA, rep(1, length(778:835)))))), col=terrain.colors(4)[1], ylab="Ancestry", border=NA, names.arg=NOR_2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==1*`*`), font.main=1)
+abline(v=c(742, 779), col="white")
+barplot(t(as.matrix(NOR_2[1:2])), col=terrain.colors(4)[c(1, 3)], ylab="Ancestry", border=NA, xaxt="n", las=2, cex.names=0.3, space=0, main=expression(italic(K)==2), font.main=1)
+abline(v=c(742, 779), col="white")
+# dev.off()
 
 ```
 
