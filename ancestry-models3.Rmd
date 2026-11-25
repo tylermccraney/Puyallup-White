@@ -10,6 +10,9 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 
 #### White River NORs & White/Puyallup (Green River Origin) Baseline
 
+This is the 3rd version of the ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version of $\Delta F_{ST}$](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R) analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
+
+
 ```{r, echo=FALSE}
 library(tidyverse)
 
@@ -25,8 +28,6 @@ write_delim(
   col_names=FALSE, 
   file="../admixture/gdatw3.ped", 
   na="0")
-
-length(names(gdatw)[7:508])/2
 
 data.frame(Chromosome=1, SNP=paste0("rs", 10001:10251), GD=0, POS=seq(1, 251000000, 1000000)) |> 
   write_delim(col_names=FALSE, file="../admixture/gdatw3.map")

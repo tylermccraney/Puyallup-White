@@ -5,7 +5,14 @@ Tyler McCraney
 
 #### White River NORs & White/Puyallup (Green River Origin) Baseline
 
-    ## [1] 251
+This is the 3rd version of the ancestry modeling analysis. It is very
+similar to the [2nd
+version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md)
+except for a single locus *Ots_u07-07.161* that was removed because of
+null alleles detected in the [2nd version of
+$\Delta F_{ST}$](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R)
+analyses. The ADMIXTURE plots from version 2 and 3 look identical, but
+the classifications changed by a few counts.
 
 ``` zsh
 conda activate admixture_Env
