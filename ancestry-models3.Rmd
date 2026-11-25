@@ -35,7 +35,7 @@ data.frame(Chromosome=1, SNP=paste0("rs", 10001:10251), GD=0, POS=seq(1, 2510000
 
 
 
-```{zsh, eval=FALSE}
+```{bash, eval=FALSE}
 conda activate admixture_Env
 
 cd /Users/tylermccraney/Google\ Drive/My\ Drive/Puyallup-White/admixture

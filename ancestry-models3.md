@@ -14,7 +14,7 @@ version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-tes
 of $\Delta F_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3
 look identical, but the classifications changed by a few counts.
 
-``` zsh
+``` bash
 conda activate admixture_Env
 
 cd /Users/tylermccraney/Google\ Drive/My\ Drive/Puyallup-White/admixture
