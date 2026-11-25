@@ -11,8 +11,8 @@ version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-mode
 except for a single locus *Ots_u07-07.161* that was removed because of
 null alleles detected in the [2nd
 version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R)
-of $\Delta F_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3
-look identical, but the classifications changed by a few counts.
+of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2
+and 3 look identical, but the classifications changed by a few counts.
 
 ``` bash
 conda activate admixture_Env
