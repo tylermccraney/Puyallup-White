@@ -20,10 +20,10 @@ uses the same statistical model as the classic STRUCTURE program, but
 replaces slow MCMC sampling with fast maximum-likelihood optimization so
 large datasets finish in minutes rather than hours.
 
-Like STRUCTURE, ADMIXTURE requires you to specify ${K}$—the assumed
-number of ancestral populations—in advance, although it uses
+Like STRUCTURE, ADMIXTURE requires you to specify ${K}$ (the assumed
+number of ancestral populations) in advance, although it uses
 cross-validation (CV) to help pick the best ${K}$. For each value of
-${K}$ = 1 to 4, ADMIXTURE first randomly partitions entries of the
+${K} = 1 - 4$, ADMIXTURE first randomly partitions entries of the
 genotype matrix into 10 folds, hides 10% of the genotype calls in each
 fold, fits the ancestry and allele-frequency parameters on the remaining
 90%, and measures how accurately those parameters predict the masked
