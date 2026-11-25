@@ -58,6 +58,46 @@ runner-up ${K}$ as well, so let’s do that.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
+A mixed-color bar plot does not uniquely prove recent hybridization.
+Since STRUCTURE/ADMIXTURE clustering algorithms reconstruct allele
+frequencies by minimizing departures from Hardy-Weinberg and linkage
+equilibrium, several different evolutionary and demographic scenarios
+can produce the same patterns in bar plots. Here are a few common
+examples for White R spring NOR and GRO baseline fall samples that could
+be difficult or impossible to distinguish:
+
+1.  If recent admixture occurred (true hybridization), White R spring
+    and Green River fall were historically isolated, genetically
+    differentiated parental populations that came into secondary contact
+    and interbred. In this case, White R spring and Green River fall
+    parental populations would appear as solid green and brown bars,
+    respectively, while the hybrid population appears as a mosaic of
+    those colors proportional to their genetic contribution.
+
+2.  With ghost admixture (an unsampled source population), White R
+    spring hybridizes with an unsampled or extinct “ghost” population
+    other than Green River fall, though the ghost population shares more
+    ancestry with Green River fall (e.g., Puyallup R fall). This forces
+    the hybrid’s alleles to be modeled as a mixture of White R spring
+    and Green River fall, creating a false impression of direct
+    hybridization between the two sampled runs.
+
+3.  With a recent population bottleneck, White R spring and Green River
+    fall diverge from a common ancestor without any subsequent gene
+    flow. White R spring then underwent a severe population bottleneck
+    causing its allele frequencies to shift away from the ancestral
+    state, while Green River fall population remains large and retains
+    ancestral allele frequencies. In this scenario, STRUCTURE/ADMIXTURE
+    would assign the bottlenecked White R spring population its own
+    distinct cluster color and model the un-bottlenecked Green River
+    fall population as an “admixed” intermediate between White R spring
+    and Green River fall, even though hybridization did not occur.
+
+It would be reasonable to assume all three of these scenarios—recent
+hybridization, ghost admixture, and population bottleneck—have occurred
+in with respect to White R spring and Green River fall, further
+complicating the interpretation of results.
+
 Sort ancestry. The ‘Fall’ class is defined by 0-40% ancestry, the
 ‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’ class by 60-100%
 ancestry.
