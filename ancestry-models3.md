@@ -100,3 +100,11 @@ grep -h CV NOR3_log*  > NOR3_log.txt
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+It’s interesting how ancestry of these phenotypically-spring run NORs
+with ‘Unknown’ and ‘Fall’ run GSI assignments appears more fall-like
+when the phenotypically-fall run baseline fish are included. I wonder if
+that’s an artifact of incomplete sampling of ancestral diversity with
+the closest ancestor unsampled. For instance, a scenario like long
+branch attraction (LBA) in phylogenetics, where use of an outgroup
+that’s too divergent from your ingroup can cause topology artifacts.
