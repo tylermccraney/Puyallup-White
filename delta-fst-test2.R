@@ -45,12 +45,12 @@ gdatw_loci <-
   select(-2:-6) |>
   rename(population=pop)
 
-
-
 White_R_NOR <- 
   filter(gdatw_loci, !grepl(pattern="Baseline", population)) |>
   mutate(code=str_extract(string=population, pattern="\\w{4}$")) |>
   relocate(code, .before=1)
+
+table(White_R_NOR$code)
 
 Baseline_FALL <- 
   filter(gdatw_loci, grepl(pattern="Baseline", population)) |>
@@ -62,19 +62,15 @@ table(Baseline_FALL$population)
 
 GRO_Fall <- 
   filter(Baseline_FALL, !code %in% c("98HB", "23LR")) 
-# |> 
-#   slice_sample(n=100)
 
 table(GRO_Fall$population)
 
 Minter_C_Fall_23LR <- 
   filter(Baseline_FALL, code=="23LR")
 
-
 nor_fall <- 
   function(nor.code, fall){
     bind_rows(
-      # NOR=filter(White_R_NOR, code %in% nor.code) |> slice_sample(n=nrow(fall)), 
       NOR=filter(White_R_NOR, code %in% nor.code), 
       FALL=fall, 
       .id="group") |>
@@ -115,11 +111,11 @@ perm_boot_fst <-
       stop("Population labels must match between Year 1 and Year 2.")}
     if (!identical(names(hf1)[-1], names(hf2)[-1])){
       stop("Both years must contain the exact same SNPs in the same order.")}
-    # Observed Fst and difference
+    # Observed Fst and test statistic
     fst1 <- wc(hf1)$FST
     fst2 <- wc(hf2)$FST
-    obs_diff <- fst2 - fst1
-    # Stratified Permutation (shuffling individuals between years within pops)
+    obs_diff <- fst2-fst1
+    # Stratified Permutation (shuffle individuals between years within pops)
     hf_combined <- rbind(hf1, hf2)
     yr_vec <- c(rep(1, nrow(hf1)), rep(2, nrow(hf2)))
     pop_vec <- hf_combined[, 1]
@@ -133,8 +129,8 @@ perm_boot_fst <-
       p_fst2 <- wc(cbind(pop_vec[perm_yr==2], snp_mat[perm_yr==2, , drop=FALSE]))$FST
       p_fst2 - p_fst1}, 
       mc.cores=cores))
-    # Paired Locus Bootstrap (95% CI on Delta_Fst)
-    nloci <- ncol(hf1) - 1
+    # Paired Locus Bootstrap to generate 95% CI for the test statistic
+    nloci <- ncol(hf1)-1
     pop1 <- hf1[, 1]; snps1 <- hf1[, -1, drop=FALSE]
     pop2 <- hf2[, 1]; snps2 <- hf2[, -1, drop=FALSE]
     boot_diffs <- unlist(
@@ -146,10 +142,10 @@ perm_boot_fst <-
           b_fst2 <- wc(cbind(pop2, snps2[, idx, drop=FALSE]))$FST
           b_fst2 - b_fst1}, 
         mc.cores=cores))
-    # Two-Tailed P-value & Bootstrap 95% CI
+    # Two-way P-value & 95% CI
     null_clean <- null_diffs[!is.na(null_diffs)]
     null_mean <- mean(null_clean)
-    p_val_two_sided <- (sum(abs(null_clean - null_mean) >= abs(obs_diff - null_mean)) + 1) / (length(null_clean) + 1)
+    p_val_two_sided <- (sum(abs(null_clean-null_mean)>=abs(obs_diff-null_mean))+1)/(length(null_clean)+1)
     ci <- quantile(boot_diffs, probs=c(0.025, 0.975), na.rm=TRUE)
     list(
       summary=c(
@@ -203,12 +199,107 @@ dat <-
       labels=c("2022", "2023", "2024", "2025", "2026", "2022", "2023", "2024", "2025", "2026")) |> as.character() |> as.numeric(),
     Year=(Year1+Year2)/2)
 
-ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper, colour=Fall_pop, shape=Fall_pop)) + 
+ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) + 
   geom_hline(yintercept=0, colour="white", linewidth=2) +
   geom_pointrange(position=position_dodge(width=0.2)) + 
   geom_path(position=position_dodge(width=0.2), linetype=2) + 
   facet_wrap(vars(Fall_pop), ncol=1) +
-  labs(y=expression(Delta~italic(F)[ST]), title=expression(Delta~italic(F)[ST]~is~Sensitive~to~))
+  labs(
+    y=expression(Delta~italic(F)[ST]), 
+    title=expression(Delta~italic(F)[ST]~varies~with~respect~to~baseline~data~source))
 
+# In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
 
-
+# Fst(y21b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
+# table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y22b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
+# table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y23b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
+# table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+# table(gdatw$pop, gdatw$ots_u07_07_161_a1, useNA="ifany")
+# 
+# Fst(y24b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
+# table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y25b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
+# table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
+# 
+# Fst(y26b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
+# table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
+# 
+# 
+# table(y22b$population, y22b$ots_u202_161)
+# table(y23b$population, y23b$ots_u07_07_161)
+# table(y24b$population, y24b$ots_u07_07_161)
+# table(y25b$population, y25b$ots_crrad28677_65)
+# table(y26b$population, y26b$ots_u07_07_161)
+# 
+# 
+# baseline_og <- 
+#   read_tsv(
+#     "../data-from-Amelia/Updated_WhiteRiverChinookBaseline_RubiasInput.txt", 
+#     col_types=str_flatten(rep("c", 594)), 
+#     na="NA")
+# 
+# table(baseline_og$repunit, useNA="ifany")
+# 
+# table(baseline_og$repunit, baseline_og$Ots_u07_07_161_1, useNA="ifany")
+# table(baseline_og$repunit, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+# 
+# table(baseline_og$repunit, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+# table(baseline_og$collection, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+# 
+# table(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+# table(baseline_og$Ots_u07_07_161_2, useNA="ifany")
+# 
+# 
+# 
+# table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
+# 
+# 
+# Fst(y21a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
+# table(y21a$population, y21a$ots_crrad66330_60, useNA="ifany")
+# 
+# Fst(y22a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
+# table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y23a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
+# table(y23a$population, y23a$ots_crrad66330_60, useNA="ifany")
+# 
+# Fst(y24a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
+# table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y25a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
+# table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+# 
+# Fst(y26a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
+# Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
+# table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+# 
+# 
+# table(y21a$population, y21a$ots_u07_07_161, useNA="ifany")
+# table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+# table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
+# table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+# table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+# table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+# 
+# table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+# table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+# table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+# table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+# table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
+# table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
