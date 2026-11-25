@@ -1,0 +1,214 @@
+library(tidyverse)
+library(pegas)
+library(hierfstat)
+
+gdatw <- 
+  readRDS("../admixture/gdatw2.RDS")
+
+gdatw$pop <- 
+  gsub(pattern="River", replacement="R", gdatw$pop) |> 
+  gsub(pattern="Creek", replacement="C") |> 
+  gsub(pattern="Hatchery", replacement="H") |> 
+  gsub(pattern="Chinook_", replacement="") |> 
+  gsub(pattern="Buckley_Trap_", replacement="") |> 
+  gsub(pattern="at_", replacement="_") |> 
+  gsub(pattern="unclipped", replacement="Fall") |>
+  gsub(pattern="_PBT", replacement="Fall") |>
+  gsub(pattern="WDFW_FH", replacement="Fall") |>
+  gsub(pattern="Spring_Fall_06KK", replacement="Spring_06KK_Baseline") |>
+  gsub(pattern="R_24ND", replacement="R_Spring_24ND_Baseline") |>
+  gsub(pattern="R_25NI", replacement="R_Spring_25NI_Baseline") |>
+  gsub(pattern="fall", replacement="Fall") |>
+  gsub(pattern="08HZ", replacement="08HZ_Baseline") |>
+  gsub(pattern="98HB", replacement="98HB_Baseline") |>
+  gsub(pattern="10JX", replacement="10JX_Baseline") |>
+  gsub(pattern="12IP", replacement="12IP_Baseline") |>
+  gsub(pattern="__", replacement="_") |>
+  gsub(pattern="Hupp_Springs_23LQ", replacement="Hupp_S_Spring_23LQ_Baseline") |>
+  gsub(pattern="Minter_C_23LR", replacement="Minter_C_Fall_23LR_Baseline")
+
+gdatw_loci <- 
+  reduce(
+    names(gdatw) |> 
+      grep("_a[12]$", x=_, value=TRUE) |> 
+      sub("_a[12]$", "", x=_) |> 
+      unique(),
+    \(df, prefix){
+      unite(
+        df,
+        col=!!prefix,
+        matches(paste0("^", prefix, "_a[12]$")),
+        sep="/",
+        na.rm=TRUE)},
+    .init=gdatw) |>
+  mutate(across(7:258, ~na_if(., "")), across(.cols=c(7:258), ~factor(.))) |>
+  select(-2:-6) |>
+  rename(population=pop)
+
+
+
+White_R_NOR <- 
+  filter(gdatw_loci, !grepl(pattern="Baseline", population)) |>
+  mutate(code=str_extract(string=population, pattern="\\w{4}$")) |>
+  relocate(code, .before=1)
+
+Baseline_FALL <- 
+  filter(gdatw_loci, grepl(pattern="Baseline", population)) |>
+  filter(!grepl(pattern="Spring", population)) |>
+  mutate(code=str_extract(string=population, pattern="\\d{2}\\w{2}")) |>
+  relocate(code, .before=1)
+
+table(Baseline_FALL$population)
+
+GRO_Fall <- 
+  filter(Baseline_FALL, !code %in% c("98HB", "23LR")) 
+# |> 
+#   slice_sample(n=100)
+
+table(GRO_Fall$population)
+
+Minter_C_Fall_23LR <- 
+  filter(Baseline_FALL, code=="23LR")
+
+
+nor_fall <- 
+  function(nor.code, fall){
+    bind_rows(
+      # NOR=filter(White_R_NOR, code %in% nor.code) |> slice_sample(n=nrow(fall)), 
+      NOR=filter(White_R_NOR, code %in% nor.code), 
+      FALL=fall, 
+      .id="group") |>
+      select(-population, -code) |>
+      rename(population=group) |>
+      mutate(population=factor(population)) |>
+      as.loci()}
+
+table(White_R_NOR$code)
+
+y21a <- nor_fall(nor.code="21LC", fall=GRO_Fall)
+y22a <- nor_fall(nor.code="22LL", fall=GRO_Fall)
+y23a <- nor_fall(nor.code="23LI", fall=GRO_Fall)
+y24a <- nor_fall(nor.code="24ND", fall=GRO_Fall)
+y25a <- nor_fall(nor.code="25NI", fall=GRO_Fall)
+y26a <- nor_fall(nor.code="26ON", fall=GRO_Fall)
+
+
+y21b <- nor_fall(nor.code="21LC", fall=Minter_C_Fall_23LR)
+y22b <- nor_fall(nor.code="22LL", fall=Minter_C_Fall_23LR)
+y23b <- nor_fall(nor.code="23LI", fall=Minter_C_Fall_23LR)
+y24b <- nor_fall(nor.code="24ND", fall=Minter_C_Fall_23LR)
+y25b <- nor_fall(nor.code="25NI", fall=Minter_C_Fall_23LR)
+y26b <- nor_fall(nor.code="26ON", fall=Minter_C_Fall_23LR)
+
+
+perm_boot_fst <- 
+  function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(1, detectCores()/2)){
+    require(pegas)
+    require(hierfstat)
+    require(parallel)
+    hf1 <- genind2hierfstat(loci2genind(loci_yr1))
+    hf2 <- genind2hierfstat(loci2genind(loci_yr2))
+    hf1[, 1] <- as.character(hf1[, 1])
+    hf2[, 1] <- as.character(hf2[, 1])
+    pops <- sort(unique(hf1[, 1]))
+    if (!identical(pops, sort(unique(hf2[, 1])))){
+      stop("Population labels must match between Year 1 and Year 2.")}
+    if (!identical(names(hf1)[-1], names(hf2)[-1])){
+      stop("Both years must contain the exact same SNPs in the same order.")}
+    # Observed Fst and difference
+    fst1 <- wc(hf1)$FST
+    fst2 <- wc(hf2)$FST
+    obs_diff <- fst2 - fst1
+    # Stratified Permutation (shuffling individuals between years within pops)
+    hf_combined <- rbind(hf1, hf2)
+    yr_vec <- c(rep(1, nrow(hf1)), rep(2, nrow(hf2)))
+    pop_vec <- hf_combined[, 1]
+    snp_mat <- hf_combined[, -1, drop=FALSE]
+    null_diffs <- unlist(mclapply(seq_len(nperm), function(i){
+      perm_yr <- yr_vec
+      for (p in pops){
+        idx <- which(pop_vec==p)
+        perm_yr[idx] <- sample(yr_vec[idx], replace=FALSE)}
+      p_fst1 <- wc(cbind(pop_vec[perm_yr==1], snp_mat[perm_yr==1, , drop=FALSE]))$FST
+      p_fst2 <- wc(cbind(pop_vec[perm_yr==2], snp_mat[perm_yr==2, , drop=FALSE]))$FST
+      p_fst2 - p_fst1}, 
+      mc.cores=cores))
+    # Paired Locus Bootstrap (95% CI on Delta_Fst)
+    nloci <- ncol(hf1) - 1
+    pop1 <- hf1[, 1]; snps1 <- hf1[, -1, drop=FALSE]
+    pop2 <- hf2[, 1]; snps2 <- hf2[, -1, drop=FALSE]
+    boot_diffs <- unlist(
+      mclapply(
+        seq_len(nboot), 
+        function(i){
+          idx <- sample.int(nloci, nloci, replace=TRUE)
+          b_fst1 <- wc(cbind(pop1, snps1[, idx, drop=FALSE]))$FST
+          b_fst2 <- wc(cbind(pop2, snps2[, idx, drop=FALSE]))$FST
+          b_fst2 - b_fst1}, 
+        mc.cores=cores))
+    # Two-Tailed P-value & Bootstrap 95% CI
+    null_clean <- null_diffs[!is.na(null_diffs)]
+    null_mean <- mean(null_clean)
+    p_val_two_sided <- (sum(abs(null_clean - null_mean) >= abs(obs_diff - null_mean)) + 1) / (length(null_clean) + 1)
+    ci <- quantile(boot_diffs, probs=c(0.025, 0.975), na.rm=TRUE)
+    list(
+      summary=c(
+        Fst_Year1=round(fst1, 5),
+        Fst_Year2=round(fst2, 5),
+        Delta_Fst=round(obs_diff, 5),
+        CI_Lower=round(as.numeric(ci[1]), 5),
+        CI_Upper=round((as.numeric(ci[2])), 5),
+        P_value=round(p_val_two_sided, 4)),
+      null_differences=null_diffs,
+      boot_differences=boot_diffs)}
+
+y21a_y22a <- perm_boot_fst(loci_yr1=y21a, loci_yr2=y22a, cores=10)
+y22a_y23a <- perm_boot_fst(loci_yr1=y22a, loci_yr2=y23a, cores=10)
+y23a_y24a <- perm_boot_fst(loci_yr1=y23a, loci_yr2=y24a, cores=10)
+y24a_y25a <- perm_boot_fst(loci_yr1=y24a, loci_yr2=y25a, cores=10)
+y25a_y26a <- perm_boot_fst(loci_yr1=y25a, loci_yr2=y26a, cores=10)
+
+y21b_y22b <- perm_boot_fst(loci_yr1=y21b, loci_yr2=y22b, cores=10)
+y22b_y23b <- perm_boot_fst(loci_yr1=y22b, loci_yr2=y23b, cores=10)
+y23b_y24b <- perm_boot_fst(loci_yr1=y23b, loci_yr2=y24b, cores=10)
+y24b_y25b <- perm_boot_fst(loci_yr1=y24b, loci_yr2=y25b, cores=10)
+y25b_y26b <- perm_boot_fst(loci_yr1=y25b, loci_yr2=y26b, cores=10)
+
+dat <-
+  rbind(
+    y21a_y22a=y21a_y22a$summary, 
+    y21b_y22b=y21b_y22b$summary, 
+    y22a_y23a=y22a_y23a$summary, 
+    y22b_y23b=y22b_y23b$summary, 
+    y23a_y24a=y23a_y24a$summary, 
+    y23b_y24b=y23b_y24b$summary, 
+    y24a_y25a=y24a_y25a$summary, 
+    y24b_y25b=y24b_y25b$summary, 
+    y25a_y26a=y25a_y26a$summary, 
+    y25b_y26b=y25b_y26b$summary) |>
+  as.data.frame() |>
+  rownames_to_column(var="Set") |>
+  mutate(
+    Fall_pop=ifelse(
+      grepl(pattern="a$", Set), 
+      yes="08HZ_10JX_12IP", 
+      no="23LR"),
+    Year1=factor(
+      Set, 
+      levels=c("y21a_y22a", "y22a_y23a", "y23a_y24a", "y24a_y25a", "y25a_y26a", "y21b_y22b", "y22b_y23b", "y23b_y24b", "y24b_y25b", "y25b_y26b"),
+      labels=c("2021", "2022", "2023", "2024", "2025", "2021", "2022", "2023", "2024", "2025")) |> as.character() |> as.numeric(),
+    Year2=factor(
+      Set, 
+      levels=c("y21a_y22a", "y22a_y23a", "y23a_y24a", "y24a_y25a", "y25a_y26a", "y21b_y22b", "y22b_y23b", "y23b_y24b", "y24b_y25b", "y25b_y26b"),
+      labels=c("2022", "2023", "2024", "2025", "2026", "2022", "2023", "2024", "2025", "2026")) |> as.character() |> as.numeric(),
+    Year=(Year1+Year2)/2)
+
+ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper, colour=Fall_pop, shape=Fall_pop)) + 
+  geom_hline(yintercept=0) +
+  geom_pointrange(position=position_dodge(width=0.2)) + 
+  geom_path(position=position_dodge(width=0.2), linetype=2) + 
+  # facet_wrap(vars(Fall_pop), ncol=1) +
+  labs(y=expression(Delta~italic(F)[ST]))
+
+
+
