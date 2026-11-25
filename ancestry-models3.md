@@ -110,19 +110,30 @@ and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-Baseline reporting groups (rows) assigned to ‘Spring’, ‘Fall’, or
-‘Hybrid’ ancestry classes (columns). The ‘Fall’ class is defined by
-0-40% ancestry, the ‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’
-class by 60-100% ancestry.
+Okay now let’s cross-tabulate the GSI assignments with the ancestry
+classifications. We start by comparing the baseline reporting groupings
+(‘Spring’ or ‘Fall’) with the ancestry classes (‘Spring’, ‘Hybrid’, or
+‘Fall’). The baseline reporting group counts are in rows and the
+ancestry classes in columns. So for example, 214 fish from the ‘Spring’
+baseline reporting group were also classified as ‘Spring’ by ancestry,
+whereas 11 of the fish from the ‘Spring’ baseline reporting group were
+classified as ‘Hybrid’ by thier ancestry. Keep in mind, these are 100%
+baseline fish in this case (the reference samples which we base GSI of
+mixture NORs on):
 
     ##         
     ##          Spring Hybrid Fall
     ##   Spring    214     11    0
     ##   Fall        1     18  237
 
-White River NOR assignments (rows) assigned to ‘Spring’, ‘Fall’, or
-‘Hybrid’ ancestry classes (columns). Ancestry classes defined same as
-above.
+It looks like the two baseline reporting groups correspond to ‘Spring’
+and ‘Fall’ ancestry classes reasonably well. For example, only one
+‘Fall’ reporting group baseline fish was classified as ‘Spring’ by it’s
+ancestry.
+
+Now let’s compare results for the White River NOR fish. White River NOR
+assignments (rows) assigned to ‘Spring’, ‘Fall’, or ‘Hybrid’ ancestry
+classes (columns). Ancestry classes defined same as above.
 
     ##          
     ##           Spring Hybrid Fall
