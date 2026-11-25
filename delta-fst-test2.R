@@ -204,11 +204,11 @@ dat <-
     Year=(Year1+Year2)/2)
 
 ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper, colour=Fall_pop, shape=Fall_pop)) + 
-  geom_hline(yintercept=0) +
+  geom_hline(yintercept=0, colour="white", linewidth=2) +
   geom_pointrange(position=position_dodge(width=0.2)) + 
   geom_path(position=position_dodge(width=0.2), linetype=2) + 
-  # facet_wrap(vars(Fall_pop), ncol=1) +
-  labs(y=expression(Delta~italic(F)[ST]))
+  facet_wrap(vars(Fall_pop), ncol=1) +
+  labs(y=expression(Delta~italic(F)[ST]), title=expression(Delta~italic(F)[ST]~is~Sensitive~to~))
 
 
 
