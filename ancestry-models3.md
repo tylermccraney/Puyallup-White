@@ -98,9 +98,15 @@ hybridization, ghost admixture, and population bottleneck—have occurred
 in with respect to White R spring and Green River fall, further
 complicating the interpretation of results.
 
-Sort ancestry. The ‘Fall’ class is defined by 0-40% ancestry, the
-‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’ class by 60-100%
-ancestry.
+#### Classify (NOR and baseline) fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
+
+In this section I apply a 80% threshold to classify fish as ‘Spring’,
+‘Fall’, or ‘Hybrid’ by their proportional ancestry.
+
+We can visualize what these classes look like by sorting fish by their
+spring-like population ancestry. The ‘Spring’ class is defined by
+1.0–0.6 spring ancestry, the ‘Hybrid’ class by 0.6–0.4 spring ancestry,
+and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
