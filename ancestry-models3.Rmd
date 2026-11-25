@@ -12,6 +12,13 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 
 This is the 3rd version of the ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R) of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
 
+ADMIXTURE is a command-line application that estimates individual ancestry proportions from large multilocus SNP genotype datasets. It uses the same statistical model as the classic STRUCTURE program, but replaces slow MCMC sampling with fast maximum-likelihood optimization so large datasets finish in minutes rather than hours.  
+
+Like STRUCTURE, ADMIXTURE requires you to specify ${K}$---the assumed number of ancestral populations---in advance, although it uses cross-validation (CV) to help pick the best ${K}$. For each value of ${K}$ = 1 to 4, ADMIXTURE first randomly partitions entries of the genotype matrix into 10 folds, hides 10% of the genotype calls in each fold, fits the ancestry and allele-frequency parameters on the remaining 90%, and measures how accurately those parameters predict the masked genotypes. We plot this _CV_error_ so we can see the ${K}$ value with the lowest CV error, which will give us the best statistical fit.
+
+We convert the genotype matrix into binary PLINK (.bed/.bim/.fam) format, run ADMIXTURE, and then import the .Q files---containing estimated ancestry fractions per individual---into R for plotting and summary.  
+
+
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -47,6 +54,7 @@ for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 gdatw3.bed $K | tee gdatw3_log
 grep -h CV gdatw3_log* > gdatw3_log.txt
 ```
 
+Now lets look at the results of ADMIXTURE. The R code is hidden in this page but it can be found [here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.Rmd).  
 
 ```{r, echo=FALSE}
 gdatw_cv <- 
@@ -58,8 +66,9 @@ plot(gdatw_cv); lines(gdatw_cv)
 
 ```
 
+Okay we have clear evidence indicating that ${K}$ = 2 should provide the best statistical model fit.  However, it is common practice to plot the runner-up ${K}$ as well, so let's do that.  
 
-```{r, echo=FALSE, fig.width=13, fig.height=3}
+```{r, echo=FALSE, fig.width=13, fig.height=6}
 tbl2 <- read.table("../admixture/gdatw3.2.Q")
 
 tbl3 <- read.table("../admixture/gdatw3.3.Q")
@@ -117,7 +126,7 @@ tbl3 <-
   tbl3[rownames(tbl3)[c(1:225, 1317, 226:966, 1318, 967:1002, 1319, 1003:1060, 1320, 1061:1316)], ]
 
 # pdf("../admixture/gdatw3_k2_3.pdf", width=13, height=6)
-par(mar=c(7, 4, 4, 2) + 0.1)
+par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
 barplot(t(as.matrix(tbl2[-3])), col=terrain.colors(4)[c(1, 3)], ylab="Ancestry", border=NA, names.arg=tbl2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==2*`*`), font.main=1)
 abline(v=c(226, 968, 1005, 1064), col="white")
 mtext(text="Baseline Spring", adj=0.08)
@@ -125,13 +134,13 @@ mtext(text="'Spring'")
 mtext(text="?", adj=0.73)
 mtext(text="'Fall'", adj=0.77)
 mtext(text="Baseline Fall", adj=0.90)
-# barplot(t(as.matrix(tbl3[c(3, 1, 2)])), col=terrain.colors(4)[c(1, 2, 3)], ylab="Ancestry", border=NA, xaxt="n", las=2, cex.names=0.3, space=0, main=expression(italic(K)==3), font.main=1)
-# abline(v=c(226, 968, 1005, 1064), col="white")
-# mtext(text="Baseline Spring", adj=0.08)
-# mtext(text="'Spring'")
-# mtext(text="?", adj=0.73)
-# mtext(text="'Fall'", adj=0.77)
-# mtext(text="Baseline Fall", adj=0.90)
+barplot(t(as.matrix(tbl3[c(3, 1, 2)])), col=terrain.colors(4)[c(1, 2, 3)], ylab="Ancestry", border=NA, xaxt="n", las=2, cex.names=0.3, space=0, main=expression(italic(K)==3), font.main=1)
+abline(v=c(226, 968, 1005, 1064), col="white")
+mtext(text="Baseline Spring", adj=0.08)
+mtext(text="'Spring'")
+mtext(text="?", adj=0.73)
+mtext(text="'Fall'", adj=0.77)
+mtext(text="Baseline Fall", adj=0.90)
 # dev.off()
 ```
 

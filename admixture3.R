@@ -204,3 +204,61 @@ saveRDS(tbl2s, file="../admixture/3-tbl2s.RDS")
 saveRDS(tbl2, file="../admixture/3-tbl2.RDS")
 
 saveRDS(tbl3, file="../admixture/3-tbl3.RDS")
+
+
+NOR <- 
+  mutate(gdatw, population=gdatw_pop) |>
+  filter(grepl(pattern="White_R", population)) |>
+  filter(!grepl(pattern="Baseline", population))
+
+table(NOR$population)
+
+write_delim(mutate(NOR[-509], ID=paste0("i", ID)), col_names=FALSE, file="../admixture/NOR3.ped", na="0")
+
+
+data.frame(Chromosome=1, SNP=paste0("rs", 10001:10251), GD=0, POS=seq(1, 251000000, 1000000)) |> 
+  write_delim(col_names=FALSE, file="../admixture/NOR3.map")
+
+# plink --file NOR3 --make-bed --out NOR3
+# for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 NOR3.bed $K | tee NOR3_log${K}.out; done
+# grep -h CV NOR3_log*  > NOR3_log.txt
+
+
+NOR_cv <- 
+  read_delim("../admixture/NOR_log.txt", col_names=FALSE) %>% 
+  mutate(K=1:nrow(.)) |> 
+  select(K, CV_error=X4)
+
+plot(NOR_cv)
+lines(NOR_cv)
+
+NOR_1 <- read.table("../admixture/NOR.1.Q")
+NOR_2 <- read.table("../admixture/NOR.2.Q")
+
+NOR_1$id <- 
+  NOR$ID
+NOR_2$id <- 
+  NOR$ID
+
+NOR_1$pop <- 
+  NOR$population
+NOR_2$pop <- 
+  NOR$population
+
+NOR_2 <- 
+  bind_rows(NOR_2, tibble(V1=rep(NA, 2), V2=rep(NA, 2)))
+
+rownames(NOR_2)[836:837] <-
+  paste0("spacer", 1:2)
+
+rownames(NOR_2)
+
+
+NOR_2 <-
+  NOR_2[rownames(NOR_2)[c(1:741, 836, 742:777, 837, 778:835)], ]
+
+pdf("../admixture/NOR_k2_3.pdf", width=12, height=6)
+par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
+barplot(t(as.matrix(data.frame(V1=c(rep(1, 741), NA, rep(1, length(742:777)), NA, rep(1, length(778:835)))))), col=terrain.colors(4)[1], ylab="Ancestry", border=NA, names.arg=NOR_2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==1*`*`), font.main=1)
+barplot(t(as.matrix(NOR_2[2:1])), col=terrain.colors(4)[c(3, 1)], ylab="Ancestry", border=NA, names.arg=NOR_2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==2), font.main=1)
+dev.off()

@@ -14,6 +14,26 @@ version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-tes
 of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2
 and 3 look identical, but the classifications changed by a few counts.
 
+ADMIXTURE is a command-line application that estimates individual
+ancestry proportions from large multilocus SNP genotype datasets. It
+uses the same statistical model as the classic STRUCTURE program, but
+replaces slow MCMC sampling with fast maximum-likelihood optimization so
+large datasets finish in minutes rather than hours.
+
+Like STRUCTURE, ADMIXTURE requires you to specify ${K}$—the assumed
+number of ancestral populations—in advance, although it uses
+cross-validation (CV) to help pick the best ${K}$. For each value of
+${K}$ = 1 to 4, ADMIXTURE first randomly partitions entries of the
+genotype matrix into 10 folds, hides 10% of the genotype calls in each
+fold, fits the ancestry and allele-frequency parameters on the remaining
+90%, and measures how accurately those parameters predict the masked
+genotypes. We plot this *CV_error* so we can see the ${K}$ value with
+the lowest CV error, which will give us the best statistical fit.
+
+We convert the genotype matrix into binary PLINK (.bed/.bim/.fam)
+format, run ADMIXTURE, and then import the .Q files—containing estimated
+ancestry fractions per individual—into R for plotting and summary.
+
 ``` bash
 conda activate admixture_Env
 
@@ -26,7 +46,15 @@ for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 gdatw3.bed $K | tee gdatw3_log
 grep -h CV gdatw3_log* > gdatw3_log.txt
 ```
 
+Now lets look at the results of ADMIXTURE. The R code is hidden in this
+page but it can be found
+[here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.Rmd).
+
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Okay we have clear evidence indicating that ${K}$ = 2 should provide the
+best statistical model fit. However, it is common practice to plot the
+runner-up ${K}$ as well, so let’s do that.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
