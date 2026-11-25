@@ -209,7 +209,7 @@ plot(gdatw_cv); lines(gdatw_cv)
 ```
 
 
-```{r, echo=FALSE, fig.width=13, fig.height=6}
+```{r, echo=FALSE, fig.width=13, fig.height=3}
 tbl2 <- read.table("../admixture/gdatw2.2.Q")
 
 tbl3 <- read.table("../admixture/gdatw2.3.Q")
@@ -268,7 +268,8 @@ tbl3 <-
 
 
 # pdf("../admixture/gdatw2_k2_3.pdf", width=13, height=6)
-par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
+# par(mar=c(7, 4, 4, 2) + 0.1, mfrow=c(2, 1))
+par(mar=c(7, 4, 4, 2) + 0.1)
 barplot(t(as.matrix(tbl2[-3])), col=terrain.colors(4)[c(1, 3)], ylab="Ancestry", border=NA, names.arg=tbl2$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==2*`*`), font.main=1)
 abline(v=c(226, 968, 1005, 1064), col="white")
 mtext(text="Baseline Spring", adj=0.08)
@@ -276,11 +277,12 @@ mtext(text="'Spring'")
 mtext(text="?", adj=0.73)
 mtext(text="'Fall'", adj=0.77)
 mtext(text="Baseline Fall", adj=0.90)
-barplot(t(as.matrix(tbl3[-4])), col=terrain.colors(4)[c(1, 3, 2)], ylab="Ancestry", border=NA, xaxt="n", las=2, cex.names=0.3, space=0, main=expression(italic(K)==3), font.main=1)
-abline(v=c(226, 968, 1005, 1064), col="white")
+# barplot(t(as.matrix(tbl3[-4])), col=terrain.colors(4)[c(1, 3, 2)], ylab="Ancestry", border=NA, xaxt="n", las=2, cex.names=0.3, space=0, main=expression(italic(K)==3), font.main=1)
+# abline(v=c(226, 968, 1005, 1064), col="white")
 # dev.off()
 ```
 
+Sort ancestry. The 'Fall' class is defined by 0-40% ancestry, the 'Hybrid' class by 40-60% ancestry, and the 'Spring' class by 60-100% ancestry.  
 
 ```{r, echo=FALSE, fig.width=13, fig.height=3}
 tbl2s <- 
@@ -322,13 +324,13 @@ mtext(text="'Fall'", adj=0.87)
 # table(tbl2s$ASSIGNMENT, tbl2s$Q)
 ```
 
-Baseline reporting groups (left margin) assigned to 'Spring', 'Fall', or 'Hybrid' ancestry classes (top margin). The 'Fall' class is defined by 0-40% ancestry, the 'Hybrid' class by 40-60% ancestry, and the 'Spring' class by 60-100% ancestry.      
+Baseline reporting groups (rows) assigned to 'Spring', 'Fall', or 'Hybrid' ancestry classes (columns). The 'Fall' class is defined by 0-40% ancestry, the 'Hybrid' class by 40-60% ancestry, and the 'Spring' class by 60-100% ancestry.      
 
 ```{r, echo=FALSE}
 table(filter(tbl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tbl2s, BASELINE==TRUE)$Q)[-2, ]
 ```
 
-White River NOR assignments (left margin) assigned to 'Spring', 'Fall', or 'Hybrid' ancestry classes (top margin). Ancestry classes defined same as above.      
+White River NOR assignments (rows) assigned to 'Spring', 'Fall', or 'Hybrid' ancestry classes (columns). Ancestry classes defined same as above.      
 
 ```{r, echo=FALSE}
 table(filter(tbl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tbl2s, BASELINE==FALSE)$Q)

@@ -20,10 +20,14 @@ grep -h CV gdatw2_log* > gdatw2_log.txt
 
 ![](ancestry-models2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
+Sort ancestry. The ‘Fall’ class is defined by 0-40% ancestry, the
+‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’ class by 60-100%
+ancestry.
+
 ![](ancestry-models2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-Baseline reporting groups (left margin) assigned to ‘Spring’, ‘Fall’, or
-‘Hybrid’ ancestry classes (top margin). The ‘Fall’ class is defined by
+Baseline reporting groups (rows) assigned to ‘Spring’, ‘Fall’, or
+‘Hybrid’ ancestry classes (columns). The ‘Fall’ class is defined by
 0-40% ancestry, the ‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’
 class by 60-100% ancestry.
 
@@ -32,9 +36,9 @@ class by 60-100% ancestry.
     ##   Spring    213     12    0
     ##   Fall        1     18  237
 
-White River NOR assignments (left margin) assigned to ‘Spring’, ‘Fall’,
-or ‘Hybrid’ ancestry classes (top margin). Ancestry classes defined same
-as above.
+White River NOR assignments (rows) assigned to ‘Spring’, ‘Fall’, or
+‘Hybrid’ ancestry classes (columns). Ancestry classes defined same as
+above.
 
     ##          
     ##           Spring Hybrid Fall
