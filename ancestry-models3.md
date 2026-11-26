@@ -118,7 +118,8 @@ complicating the interpretation of results.
 #### Classify fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
 
 In this section I apply a 80% threshold to classify fish as ‘Spring’,
-‘Fall’, or ‘Hybrid’ by their proportional ancestry.
+‘Fall’, or ‘Hybrid’ by their proportional ancestry. Then I compare the
+classes to the assignments.
 
 We can visualize what these classes look like by sorting fish by their
 spring-like population ancestry. The ‘Spring’ class is defined by
