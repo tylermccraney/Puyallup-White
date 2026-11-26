@@ -84,7 +84,7 @@ be difficult or impossible to distinguish:
     and Green River fall were historically isolated, genetically
     differentiated parental populations that came into secondary contact
     and interbred. In this case, White R spring and Green River fall
-    parental populations would appear as solid green and brown bars,
+    parental populations would appear as solid purple and green bars,
     respectively, while the hybrid population appears as a mosaic of
     those colors proportional to their genetic contribution.
 
