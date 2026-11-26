@@ -196,7 +196,9 @@ It would be reasonable to assume all three of these scenarios—recent hybridiza
 
 In this section I apply a 80% threshold to classify fish as 'Spring', 'Fall', or 'Hybrid' by their proportional ancestry.    
 
-We can visualize what these classes look like by sorting fish by their spring-like population ancestry. The 'Spring' class is defined by 1.0--0.6 spring ancestry, the 'Hybrid' class by 0.6--0.4 spring ancestry, and the 'Fall' class by 0.4--0.0 spring ancestry.    
+We can visualize what these classes look like by sorting fish by their spring-like population ancestry.  
+
+The 'Spring' class is defined by 1.0--0.6 spring ancestry, the 'Hybrid' class by 0.6--0.4 spring ancestry, and the 'Fall' class by 0.4--0.0 spring ancestry.    
 
 ```{r, echo=FALSE, fig.width=13, fig.height=3}
 tbl2s <- 
