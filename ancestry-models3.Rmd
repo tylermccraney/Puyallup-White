@@ -1,5 +1,5 @@
 ---
-title: "Ancestry Model for Classifying White River Spring-Run Natural Origin Chinook Salmon"
+title: "Ancestry Model for Classifying White River Spring Chinook Salmon"
 author: "Tyler McCraney"
 output: github_document
 ---
@@ -9,6 +9,38 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
 This is the 3rd version of the (NOR + baseline) ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R) of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
+
+#### Genetic Management of White River Spring Chinook Salmon
+
+```{r, echo=FALSE}
+library(tidyverse)
+
+rdat <- 
+  readRDS("../data/rdat.RDS")
+
+rdat <- 
+  mutate(rdat, day=yday(date), assignment=factor(assignment, levels=c("Spring", "Unknown", "Fall")))
+
+day_breaks <- 
+  tibble(
+    day=c(yday("2024-06-01"), yday("2024-06-15"), yday("2024-07-01"), yday("2024-07-15"), yday("2024-08-01"), yday("2024-08-15"), yday("2024-09-01")),
+    label=c("Jun-01", "Jun-15", "Jul-01", "Jul-15", "Aug-01", "Aug-15", "Sep-01"))
+
+ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
+  geom_bar(width=1) + 
+  labs(title="White River NOR Genetic Stock Assignments 2009-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
+  scale_fill_manual(name=NULL, values=terrain.colors(4)[c(1:3)])
+```
+
+```{r, echo=FALSE, fig.height=8, fig.width=4}
+ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
+  geom_histogram(show.legend=FALSE) + 
+  labs(title="White River NOR Genetic Stock Assignments 2009-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
+  scale_fill_manual(name=NULL, values=terrain.colors(4)[c(1:3)]) + 
+  facet_wrap(vars(assignment), ncol=1)
+```
 
 #### Ancestry Model
 ADMIXTURE is a command-line application that estimates individual ancestry proportions from large SNP datasets. It uses the same model as STRUCTURE, but replaces MCMC sampling with ML optimization, so runs finish in just minutes rather than hours.  
@@ -247,6 +279,12 @@ Results for the n=58 'Fall'-assigned fish are interesting. We see that most of t
 Let's see if ADMIXTURE can put the White River NORs into 2 ancestral populations. In other words, lets see if there's any support for splitting these phenotypically spring-run fish (i.e., all returned between Jun-01 and Aug-09) into 'Spring' and 'Fall' populations.     
 
 ```{r, echo=FALSE}
+ggplot(rdat |> filter(!is.na(day), year %in% 2021:2024), aes(x=day, fill=assignment)) + 
+  geom_bar(width=1) + 
+  labs(title="White River NOR Genetic Stock Assignments 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
+  scale_fill_manual(name=NULL, values=terrain.colors(4)[c(1:3)])
+
 NOR <- 
   mutate(gdatw, population=gdatw_pop) |>
   filter(grepl(pattern="White_R", population)) |>

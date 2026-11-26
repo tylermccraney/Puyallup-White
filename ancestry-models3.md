@@ -1,5 +1,4 @@
-Ancestry Model for Classifying White River Spring-Run Natural Origin
-Chinook Salmon
+Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
 Tyler McCraney
 
@@ -11,6 +10,12 @@ null alleles detected in the [2nd
 version](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-test2.R)
 of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2
 and 3 look identical, but the classifications changed by a few counts.
+
+#### Genetic Management of White River Spring Chinook Salmon
+
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 #### Ancestry Model
 
@@ -51,7 +56,7 @@ Now lets look at the results of ADMIXTURE. The R code is hidden in this
 page but it can be found
 [here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.Rmd).
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 We have clear evidence above indicating that ${K} = 2$ should provide
 the best statistical fit. However, it is common practice to plot the
@@ -59,7 +64,7 @@ runner-up ${K}$ as well, in order to see if any grouping patterns are
 visible but not accounted for by the best ${K}$. Let’s do that so we can
 see if there’s any indication of more than 2 ancestral populations.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 The barplot for ${K} = 2^*$ shows the best statistical fit, and I don’t
 see any patterns in the ${K} = 3$ barplot that would suggest the
@@ -117,7 +122,7 @@ spring-like population ancestry. The ‘Spring’ class is defined by
 1.0–0.6 spring ancestry, the ‘Hybrid’ class by 0.6–0.4 spring ancestry,
 and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ##### Ancestry classification of 100% baseline samples
 
@@ -176,6 +181,8 @@ populations. In other words, lets see if there’s any support for
 splitting these phenotypically spring-run fish (i.e., all returned
 between Jun-01 and Aug-09) into ‘Spring’ and ‘Fall’ populations.
 
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
 ``` bash
 plink --file NOR3 --make-bed --out NOR3
 
@@ -188,12 +195,12 @@ There is little support for these White River NORs to have ancestry from
 more than one ancestral population when the Green River origin fall run
 run fish are excluded.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 But let’s plot ${K} = 2$ barplot just in case there’s some interesting
 pattern to see.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 I don’t see anything interesting in the NOR-only ${K} = 2$ barplot.
 
