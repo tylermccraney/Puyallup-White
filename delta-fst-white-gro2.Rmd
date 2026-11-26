@@ -9,7 +9,7 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE, eval=TRUE}
 library(tidyverse)
 library(pegas)
 library(hierfstat)
@@ -331,6 +331,8 @@ table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
 table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
 
 ```
+
+# The End
 
 #### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.  
 

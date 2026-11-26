@@ -56,7 +56,13 @@ White_R_NOR <-
   relocate(code, .before=1)
 
 table(White_R_NOR$code)
+```
 
+    ## 
+    ## 21LC 22LL 23LI 24ND 25NI 26ON 
+    ##  128  164  107  184  106  146
+
+``` r
 Baseline_FALL <- 
   filter(gdatw_loci, grepl(pattern="Baseline", population)) |>
   filter(!grepl(pattern="Spring", population)) |>
@@ -64,12 +70,30 @@ Baseline_FALL <-
   relocate(code, .before=1)
 
 table(Baseline_FALL$population)
+```
 
+    ## 
+    ##          Green_R_Fall_98HB_Baseline Green_R_Soos_C_H_Fall_12IP_Baseline 
+    ##                                  39                                  41 
+    ##         Minter_C_Fall_23LR_Baseline         Soos_C_H_Fall_10JX_Baseline 
+    ##                                  95                                  39 
+    ##      Voights_C_H_Fall_08HZ_Baseline 
+    ##                                  42
+
+``` r
 GRO_Fall <- 
   filter(Baseline_FALL, !code %in% c("98HB", "23LR")) 
 
 table(GRO_Fall$population)
+```
 
+    ## 
+    ## Green_R_Soos_C_H_Fall_12IP_Baseline         Soos_C_H_Fall_10JX_Baseline 
+    ##                                  41                                  39 
+    ##      Voights_C_H_Fall_08HZ_Baseline 
+    ##                                  42
+
+``` r
 Minter_C_Fall_23LR <- 
   filter(Baseline_FALL, code=="23LR")
 
@@ -85,7 +109,13 @@ nor_fall <-
       as.loci()}
 
 table(White_R_NOR$code)
+```
 
+    ## 
+    ## 21LC 22LL 23LI 24ND 25NI 26ON 
+    ##  128  164  107  184  106  146
+
+``` r
 y21a <- nor_fall(nor.code="21LC", fall=GRO_Fall)
 y22a <- nor_fall(nor.code="22LL", fall=GRO_Fall)
 y23a <- nor_fall(nor.code="23LI", fall=GRO_Fall)
@@ -234,36 +264,147 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) +
   labs(
     y=expression(Delta~italic(F)[ST]), 
     title=expression(Delta~italic(F)[ST]~varies~with~respect~to~baseline~data~source))
+```
 
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+``` r
 # In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
 
 
 # null allele
 Fst(y21b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
+
+``` r
 Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_u07_07_161 
+    ##      0.7250443
+
+``` r
 table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR    0   0  71   57
+
+``` r
 Fst(y22b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
+
+``` r
 Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_u202_161 
+    ##    0.2397849
+
+``` r
 table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T
+    ##   FALL  53  37   5
+    ##   NOR   66  79  19
+
+``` r
 Fst(y23b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-4.png)<!-- -->
+
+``` r
 Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_u07_07_161 
+    ##      0.7136582
+
+``` r
 table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR    0   0  62   45
+
+``` r
 Fst(y24b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-5.png)<!-- -->
+
+``` r
 Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_crrad28677_65 
+    ##         0.1612426
+
+``` r
 table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR   76  82  25    1
+
+``` r
 Fst(y25b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-6.png)<!-- -->
+
+``` r
 Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_crrad28677_65 
+    ##         0.2090271
+
+``` r
 table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  21  46  27    1
+    ##   NOR   60  29   4   13
+
+``` r
 Fst(y26b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-7.png)<!-- -->
+
+``` r
 Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_u07_53_133 
+    ##      0.1871711
+
+``` r
 table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR   59  61  25    1
 
+``` r
 baseline_og <-
   read_tsv(
     "../data-from-Amelia/Updated_WhiteRiverChinookBaseline_RubiasInput.txt",
@@ -271,58 +412,325 @@ baseline_og <-
     na="NA")
 
 table(baseline_og$repunit, useNA="ifany")
+```
 
+    ## 
+    ## HuppSprings_Hatchery_Spring   MinterCreek_Hatchery_Fall 
+    ##                          96                          95 
+    ##     SoosCreek_Hatchery_Fall  VoightsCreek_Hatchery_Fall 
+    ##                         120                          43 
+    ##  WhiteRiver_Hatchery_Spring           WhiteRiver_Spring 
+    ##                          83                          46
+
+``` r
 table(baseline_og$repunit, baseline_og$Ots_u07_07_161_1, useNA="ifany")
+```
+
+    ##                              
+    ##                                C  T <NA>
+    ##   HuppSprings_Hatchery_Spring 80 16    0
+    ##   MinterCreek_Hatchery_Fall   90  5    0
+    ##   SoosCreek_Hatchery_Fall     28 29   63
+    ##   VoightsCreek_Hatchery_Fall   0 19   24
+    ##   WhiteRiver_Hatchery_Spring  70 10    3
+    ##   WhiteRiver_Spring            0 23   23
+
+``` r
 table(baseline_og$repunit, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+```
 
+    ##                              
+    ##                                C  T <NA>
+    ##   HuppSprings_Hatchery_Spring 31 65    0
+    ##   MinterCreek_Hatchery_Fall   53 42    0
+    ##   SoosCreek_Hatchery_Fall     22 35   63
+    ##   VoightsCreek_Hatchery_Fall   0 19   24
+    ##   WhiteRiver_Hatchery_Spring  32 48    3
+    ##   WhiteRiver_Spring            0 23   23
+
+``` r
 table(baseline_og$repunit, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+```
+
+    ##                              
+    ##                               C/C C/T T/T <NA>
+    ##   HuppSprings_Hatchery_Spring  31  49  16    0
+    ##   MinterCreek_Hatchery_Fall    53  37   5    0
+    ##   SoosCreek_Hatchery_Fall      22   6  29   63
+    ##   VoightsCreek_Hatchery_Fall    0   0  19   24
+    ##   WhiteRiver_Hatchery_Spring   32  38  10    3
+    ##   WhiteRiver_Spring             0   0  23   23
+
+``` r
 table(baseline_og$collection, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+```
 
+    ##                                                          
+    ##                                                           C/C C/T T/T <NA>
+    ##   Green_River__Soos_Creek_Hatchery_unclipped_Chinook_12IP   0   0  14   28
+    ##   Green_River_WDFW_FH-98HB                                 22   6   0   11
+    ##   Hupp_Springs_23LQ                                        31  49  16    0
+    ##   Minter_Creek_23LR                                        53  37   5    0
+    ##   Soos_Creek_Hatchery__fall_Chinook_10JX                    0   0  15   24
+    ##   Voights_Creek_Hatchery__PBT-08HZ                          0   0  19   24
+    ##   White_River_24ND                                         13  22   4    3
+    ##   White_River_25NI                                         19  16   6    0
+    ##   White_River_Chinook_@_Buckley_Trap_Spring-Fall_06KK       0   0  23   23
+
+``` r
 table(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+```
+
+    ##       
+    ##          C   T <NA>
+    ##   C    138 130    0
+    ##   T      0 102    0
+    ##   <NA>   0   0  113
+
+``` r
 table(baseline_og$Ots_u07_07_161_2, useNA="ifany")
+```
 
+    ## 
+    ##    C    T <NA> 
+    ##  138  232  113
 
-
+``` r
 table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   21LC   0   0  71   57
+    ##   22LL  66  79  19    0
+    ##   23LI   0   0  62   45
+    ##   24ND  76  82  25    1
+    ##   25NI  39  56   9    2
+    ##   26ON  59  61  25    1
 
+``` r
 Fst(y21a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-8.png)<!-- -->
+
+``` r
 Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
+```
 
+    ## ots_crrad66330_60 
+    ##         0.1708509
+
+``` r
 Fst(y22a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-9.png)<!-- -->
+
+``` r
 Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
-table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+```
 
+    ## ots_u07_07_161 
+    ##      0.5345239
+
+``` r
+table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   66  79  19    0
+
+``` r
 Fst(y23a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-10.png)<!-- -->
+
+``` r
 Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
+```
 
+    ## ots_crrad66330_60 
+    ##         0.2050146
+
+``` r
 Fst(y24a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-11.png)<!-- -->
+
+``` r
 Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
-table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+```
 
+    ## ots_u07_07_161 
+    ##      0.5242859
+
+``` r
+table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   76  82  25    1
+
+``` r
 Fst(y25a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-12.png)<!-- -->
+
+``` r
 Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
-table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+```
 
+    ## ots_u07_07_161 
+    ##        0.56539
+
+``` r
+table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   39  56   9    2
+
+``` r
 Fst(y26a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+```
+
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-13.png)<!-- -->
+
+``` r
 Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
+```
+
+    ## ots_u07_07_161 
+    ##      0.5130525
+
+``` r
 table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   59  61  25    1
 
+``` r
 table(y21a$population, y21a$ots_u07_07_161, useNA="ifany")
-table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
-table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
-table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
-table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
-table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+```
 
+    ##       
+    ##        T/T <NA>
+    ##   FALL  47   75
+    ##   NOR   71   57
+
+``` r
+table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   66  79  19    0
+
+``` r
+table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        T/T <NA>
+    ##   FALL  47   75
+    ##   NOR   62   45
+
+``` r
+table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   76  82  25    1
+
+``` r
+table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   39  56   9    2
+
+``` r
+table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL   0   0  47   75
+    ##   NOR   59  61  25    1
+
+``` r
 table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR    0   0  71   57
+
+``` r
 table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T
+    ##   FALL  53  37   5
+    ##   NOR   66  79  19
+
+``` r
 table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR    0   0  62   45
+
+``` r
 table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR   76  82  25    1
+
+``` r
 table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
+```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR   39  56   9    2
+
+``` r
 table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
 ```
+
+    ##       
+    ##        C/C C/T T/T <NA>
+    ##   FALL  53  37   5    0
+    ##   NOR   59  61  25    1
+
+# The End
 
 #### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.
 
