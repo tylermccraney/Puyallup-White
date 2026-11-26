@@ -1,0 +1,363 @@
+---
+title: "∆FST White River NORs 2021-2026 vs Green River Origin Fall (3nd Version)"
+author: "Tyler McCraney"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+```
+
+
+```{r, echo=FALSE, fig.height=12}
+library(tidyverse)
+library(pegas)
+library(knitr)
+
+gdatw <- 
+  readRDS("../admixture/gdatw.RDS")
+
+gdatw$pop <- 
+  gsub(pattern="River", replacement="R", gdatw$pop) |> 
+  gsub(pattern="Creek", replacement="C") |> 
+  gsub(pattern="Hatchery", replacement="H") |> 
+  gsub(pattern="Chinook_", replacement="") |> 
+  gsub(pattern="Buckley_Trap_", replacement="") |> 
+  gsub(pattern="at_", replacement="_") |> 
+  gsub(pattern="unclipped", replacement="Fall") |>
+  gsub(pattern="_PBT", replacement="Fall") |>
+  gsub(pattern="WDFW_FH", replacement="Fall") |>
+  gsub(pattern="Spring_Fall_06KK", replacement="Spring_06KK_Baseline") |>
+  gsub(pattern="R_24ND", replacement="R_Spring_24ND_Baseline") |>
+  gsub(pattern="R_25NI", replacement="R_Spring_25NI_Baseline") |>
+  gsub(pattern="fall", replacement="Fall") |>
+  gsub(pattern="08HZ", replacement="08HZ_Baseline") |>
+  gsub(pattern="98HB", replacement="98HB_Baseline") |>
+  gsub(pattern="10JX", replacement="10JX_Baseline") |>
+  gsub(pattern="12IP", replacement="12IP_Baseline") |>
+  gsub(pattern="__", replacement="_")
+
+gdatw_loci <- 
+  reduce(
+    names(gdatw) |> 
+      grep("_a[12]$", x=_, value=TRUE) |> 
+      sub("_a[12]$", "", x=_) |> 
+      unique(),
+    \(df, prefix){
+      unite(
+        df,
+        col=!!prefix,
+        matches(paste0("^", prefix, "_a[12]$")),
+        sep="/",
+        na.rm=TRUE)},
+    .init=gdatw) |>
+  mutate(across(7:250, ~na_if(., "")), across(.cols=c(7:250), ~factor(.))) |>
+  select(-2:-6) |>
+  rename(population=pop)
+
+White_R_NOR <- 
+  filter(gdatw_loci, !grepl(pattern="Baseline", population)) |>
+  mutate(code=str_extract(string=population, pattern="\\w{4}$")) |>
+  relocate(code, .before=1)
+
+Baseline_FALL <- 
+  filter(gdatw_loci, grepl(pattern="Baseline", population)) |>
+  filter(!grepl(pattern="Spring", population)) |>
+  mutate(code=str_extract(string=population, pattern="\\d{2}\\w{2}")) |>
+  relocate(code, .before=1)
+
+Baseline_FALL_100 <- 
+  filter(Baseline_FALL, code!="98HB") |> 
+  slice_sample(n=100)
+
+nor_fall <- 
+  function(nor.code, fall.code=NA, n){
+    bind_rows(
+      NOR=filter(White_R_NOR, code %in% nor.code) |> slice_sample(n=n, replace=FALSE), 
+      FALL=Baseline_FALL_100, 
+      .id="group") |>
+      select(-group, -code) |>
+      mutate(population=factor(population)) |>
+      as.loci()}
+
+
+# nor_fall <- 
+#   function(nor.code, fall.code, n){
+#     bind_rows(
+#       NOR=filter(White_R_NOR, code %in% nor.code), 
+#       FALL=filter(Baseline_FALL, code %in% fall.code), 
+#       .id="group") |>
+#       slice_sample(n=n, by=group, replace=FALSE) |>
+#       select(-group, -code) |>
+#       mutate(population=factor(population)) |>
+#       as.loci()}
+
+FST <- 
+  function(adf){
+    require(pegas)
+    x <- Fst(adf)[, 2] |> as.double()
+    bar <- mean(x, na.rm=TRUE)
+    return(list(x=x, bar=bar))}
+
+permute2samplet <- 
+  function(x, n_loci){
+    n <- n_loci*2
+    idx_b <- sample(1:n, n_loci)
+    idx_a <- setdiff(1:n, idx_b)
+    mean_diff <- mean(x[idx_b], na.rm=TRUE) - mean(x[idx_a], na.rm=TRUE)
+    return(mean_diff)}
+
+
+boot1mean <- 
+  function(x){
+    xx <- sample(x, replace=TRUE)
+    mean_xx <- mean(xx, na.rm=TRUE)
+    return(mean_xx)}
+
+tab1 <- 
+  table(Baseline_FALL$population) |> 
+  enframe() |> 
+  rename(collection=name, n=value)
+
+tab2 <- 
+  group_by(White_R_NOR, code, population) |> 
+  count() |> 
+  ungroup() |> 
+  arrange(code, desc(n), population) |> 
+  rename(assignment=population)
+
+
+```
+
+#### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.  
+
+```{r, echo=FALSE}
+kable(
+  tab1,
+  col.names=c("Collection Name", "N"),
+  align="l")
+```
+
+The 1998 baseline samples were excluded because there was high missing data.   
+
+
+
+#### White River NORs (2021-2026) with genetic stock assignments.  
+
+```{r, echo=FALSE}
+kable(
+  tab2,
+  col.names=c("DFW Code", "Genetic Stock Assignment", "N"),
+  align="l")
+```
+
+#### FST
+
+FST was estimated each year by taking a random sample of n=100 White River NORs (without regards to DFW genetic stock assignments) and a random sample of n=100 GRO fall baseline fish (from the N=122 fish available in the pooled 2008, 2010, and 2012 baseline collections). EDIT: the same sample of n=100 GRO fall baseline fish was used for all 6 estimates. I reasoned that this was better than the 'moving target' situation I had originally used. There were a total of 6 FST estimates that were made over 2021 to 2026 between White River NORs and GRO fall run.    
+
+The 95% CIs for FSTs were constructed by bootstrapping. The distributions of FST estimates with 95% CIs are plotted below. FST estimates vary among years but 95% CIs overlap. Overlapping 95% CIs are a heuristic for "not significantly different".  
+
+```{r, echo=FALSE, fig.height=12}
+d1 <- 
+  nor_fall(nor.code="21LC", fall.code="98HB", n=39)
+
+# FST(d1)$x |> hist(breaks=30)
+# 
+# FST(d1)$bar
+
+
+d2 <- 
+  nor_fall(nor.code="22LL", fall.code="08HZ", n=42)
+
+# FST(d2)$x |> hist(breaks=30)
+# 
+# FST(d2)$bar
+
+# low quality SNP removed: ots_u07_07_161
+White_R_NOR <- 
+  select(White_R_NOR, -ots_u07_07_161)
+
+Baseline_FALL <- 
+  select(Baseline_FALL, -ots_u07_07_161)
+
+d1r <- 
+  nor_fall(nor.code="21LC", fall.code="98HB", n=39)
+
+# FST(d1r)$x |> hist(breaks=30)
+# 
+# FST(d1r)$bar
+
+d2r <- 
+  nor_fall(nor.code="22LL", fall.code="08HZ", n=42)
+
+# FST(d2r)$x |> hist(breaks=30)
+# 
+# FST(d2r)$bar
+
+
+d3 <- 
+  nor_fall(nor.code="23LI", fall.code="10JX", n=39)
+
+# FST(d3)$x |> hist(breaks=30)
+# 
+# FST(d3)$bar
+
+d4 <- 
+  nor_fall(nor.code="24ND", fall.code="12IP", n=41)
+
+# FST(d4)$x |> hist(breaks=30)
+# 
+# FST(d4)$bar
+
+
+
+#
+d5 <- 
+  nor_fall(nor.code="25NI", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d5)$x |> hist(breaks=30)
+# 
+# FST(d5)$bar
+
+
+d6 <- 
+  nor_fall(nor.code="26ON", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d6)$x |> hist(breaks=30)
+# 
+# FST(d6)$bar
+
+#
+d7 <- 
+  nor_fall(nor.code="21LC", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d7)$x |> hist(breaks=30)
+# 
+# FST(d7)$bar
+
+
+d8 <- 
+  nor_fall(nor.code="22LL", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d8)$x |> hist(breaks=30)
+# 
+# FST(d8)$bar
+
+
+d9 <- 
+  nor_fall(nor.code="23LI", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d9)$x |> hist(breaks=30)
+# 
+# FST(d9)$bar
+
+d10 <- 
+  nor_fall(nor.code="24ND", fall.code=c("08HZ", "10JX", "12IP"), n=100)
+
+# FST(d10)$x |> hist(breaks=30)
+# 
+# FST(d10)$bar
+
+
+#
+FSTy21 <- FST(d7)$x
+FSTy22 <- FST(d8)$x
+FSTy23 <- FST(d9)$x
+FSTy24 <- FST(d10)$x
+FSTy25 <- FST(d5)$x
+FSTy26 <- FST(d6)$x
+
+
+bootFSTy21 <- rep(NA, 1000)
+bootFSTy22 <- rep(NA, 1000)
+bootFSTy23 <- rep(NA, 1000)
+bootFSTy24 <- rep(NA, 1000)
+bootFSTy25 <- rep(NA, 1000)
+bootFSTy26 <- rep(NA, 1000)
+
+
+
+for(i in 1:1000){bootFSTy21[i] <- boot1mean(FSTy21)}
+for(i in 1:1000){bootFSTy22[i] <- boot1mean(FSTy22)}
+for(i in 1:1000){bootFSTy23[i] <- boot1mean(FSTy23)}
+for(i in 1:1000){bootFSTy24[i] <- boot1mean(FSTy24)}
+for(i in 1:1000){bootFSTy25[i] <- boot1mean(FSTy25)}
+for(i in 1:1000){bootFSTy26[i] <- boot1mean(FSTy26)}
+
+
+bootplot <- 
+  function(bs, fst, ...){
+    hist(bs, breaks=30, font.main=1, ...=...)
+    abline(v=quantile(bs, probs=c(0.025, 0.975)), col="blue", lwd=2, lty=2)
+    abline(v=mean(fst, na.rm=TRUE), col="blue", lwd=2)}
+
+
+par(mfrow=c(6, 1))
+bootplot(bs=bootFSTy21, fst=FSTy21, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2021", xlab=NULL)
+bootplot(bs=bootFSTy22, fst=FSTy22, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2022", xlab=NULL)
+bootplot(bs=bootFSTy23, fst=FSTy23, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2023", xlab=NULL)
+bootplot(bs=bootFSTy24, fst=FSTy24, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2024", xlab=NULL)
+bootplot(bs=bootFSTy25, fst=FSTy25, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2025", xlab=NULL)
+bootplot(bs=bootFSTy26, fst=FSTy26, xlim=c(0.01, 0.04), ylim=c(0, 120), main="2026", xlab=expression(italic(F)[ST]))
+```
+
+#### ∆FST 
+
+Non-parametric statistical hypothesis tests of ∆FST were all non-significant, indicating that allele frequency differences between White River NORs and GRO fall run Chinook salmon are maintained. In other words, there is no evidence for hybridization w/ introgression during the study period.      
+
+
+```{r, echo=FALSE, fig.height=10}
+# 2021-2022
+deltaFSTy21y22 <- FST(d8)$bar - FST(d7)$bar
+
+# 2022-2023
+deltaFSTy22y23 <- FST(d9)$bar - FST(d8)$bar
+
+# 2023-2024
+deltaFSTy23y24 <- FST(d10)$bar - FST(d9)$bar
+
+# 2024-2025
+deltaFSTy24y25 <- FST(d5)$bar - FST(d10)$bar
+
+# 2025-2026
+deltaFSTy25y26 <- FST(d6)$bar - FST(d5)$bar
+
+
+FSTy21y22 <- c(FST(d7)$x, FST(d8)$x)
+FSTy22y23 <- c(FST(d8)$x, FST(d9)$x)
+FSTy23y24 <- c(FST(d9)$x, FST(d10)$x)
+FSTy24y25 <- c(FST(d10)$x, FST(d5)$x)
+FSTy25y26 <- c(FST(d5)$x, FST(d6)$x)
+
+
+FSTy21y22perm <- rep(NA, 1000)
+FSTy22y23perm <- rep(NA, 1000)
+FSTy23y24perm <- rep(NA, 1000)
+FSTy24y25perm <- rep(NA, 1000)
+FSTy25y26perm <- rep(NA, 1000)
+
+
+for(i in 1:1000){FSTy21y22perm[i] <- permute2samplet(x=FSTy21y22, n_loci=243)}
+for(i in 1:1000){FSTy22y23perm[i] <- permute2samplet(x=FSTy22y23, n_loci=243)}
+for(i in 1:1000){FSTy23y24perm[i] <- permute2samplet(x=FSTy23y24, n_loci=243)}
+for(i in 1:1000){FSTy24y25perm[i] <- permute2samplet(x=FSTy24y25, n_loci=243)}
+for(i in 1:1000){FSTy25y26perm[i] <- permute2samplet(x=FSTy25y26, n_loci=243)}
+
+
+permplot <- 
+  function(perm, deltaFST, note="", ...){
+    pval <- mean(abs(c(perm, deltaFST)) >= abs(deltaFST)) |> round(digits=5)
+    hist(perm, breaks=30, main=paste(note, "p-value:", pval), font.main=1, , ...=...)
+    abline(v=deltaFST, col="red", lwd=2)}
+
+
+par(mfrow=c(5, 1))
+permplot(perm=FSTy21y22perm, deltaFST=deltaFSTy21y22, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2021-2022", xlab=NULL)
+permplot(perm=FSTy22y23perm, deltaFST=deltaFSTy22y23, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2022-2023", xlab=NULL)
+permplot(perm=FSTy23y24perm, deltaFST=deltaFSTy23y24, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2023-2024", xlab=NULL)
+permplot(perm=FSTy24y25perm, deltaFST=deltaFSTy24y25, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2024-2025", xlab=NULL)
+permplot(perm=FSTy25y26perm, deltaFST=deltaFSTy25y26, xlim=c(-0.015, 0.015), ylim=c(0, 130), note="2025-2026", xlab=expression(Null~Distribution~of~Delta~italic(F)[ST]))
+
+```
+
+More work is needed to establish standards for comparison. Furthermore, additional baseline data from recently-collected NOR fall run fish from the Puyallup River and White River would improve the quality of this analsysis.  

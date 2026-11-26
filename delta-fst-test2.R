@@ -200,8 +200,8 @@ dat <-
     Year=(Year1+Year2)/2)
 
 ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) + 
-  geom_hline(yintercept=0, colour="white", linewidth=2) +
-  geom_pointrange(position=position_dodge(width=0.2)) + 
+  geom_hline(yintercept=0, colour="white", linewidth=1) +
+  geom_pointrange(position=position_dodge(width=0.2), shape=1) + 
   geom_path(position=position_dodge(width=0.2), linetype=2) + 
   facet_wrap(vars(Fall_pop), ncol=1) +
   labs(
@@ -221,97 +221,90 @@ saveRDS(y23b_y24b, "../data/y23b_y24b_0.RDS")
 saveRDS(y24b_y25b, "../data/y24b_y25b_0.RDS")
 saveRDS(y25b_y26b, "../data/y25b_y26b_0.RDS")
 
-## null allele
-# Fst(y21b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
-# table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y22b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
-# table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y23b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
-# table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
-# table(gdatw$pop, gdatw$ots_u07_07_161_a1, useNA="ifany")
-# 
-# Fst(y24b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
-# table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y25b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
-# table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
-# 
-# Fst(y26b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
-# table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
-# 
-# 
-# table(y22b$population, y22b$ots_u202_161)
-# table(y23b$population, y23b$ots_u07_07_161)
-# table(y24b$population, y24b$ots_u07_07_161)
-# table(y25b$population, y25b$ots_crrad28677_65)
-# table(y26b$population, y26b$ots_u07_07_161)
-# 
-# 
-# baseline_og <- 
-#   read_tsv(
-#     "../data-from-Amelia/Updated_WhiteRiverChinookBaseline_RubiasInput.txt", 
-#     col_types=str_flatten(rep("c", 594)), 
-#     na="NA")
-# 
-# table(baseline_og$repunit, useNA="ifany")
-# 
-# table(baseline_og$repunit, baseline_og$Ots_u07_07_161_1, useNA="ifany")
-# table(baseline_og$repunit, baseline_og$Ots_u07_07_161_2, useNA="ifany")
-# 
-# table(baseline_og$repunit, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
-# table(baseline_og$collection, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
-# 
-# table(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, useNA="ifany")
-# table(baseline_og$Ots_u07_07_161_2, useNA="ifany")
-# 
-# 
-# 
-# table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
-# 
-# 
-# Fst(y21a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
-# table(y21a$population, y21a$ots_crrad66330_60, useNA="ifany")
-# 
-# Fst(y22a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
-# table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y23a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
-# table(y23a$population, y23a$ots_crrad66330_60, useNA="ifany")
-# 
-# Fst(y24a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
-# table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y25a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
-# table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
-# 
-# Fst(y26a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-# Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
-# table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
-# 
-# 
-# table(y21a$population, y21a$ots_u07_07_161, useNA="ifany")
-# table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
-# table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
-# table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
-# table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
-# table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
-# 
-# table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
-# table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
-# table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
-# table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
-# table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
-# table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
+# null allele
+Fst(y21b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
+table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+
+Fst(y22b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
+table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+
+Fst(y23b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
+table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+table(gdatw$pop, gdatw$ots_u07_07_161_a1, useNA="ifany")
+
+Fst(y24b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
+table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+
+Fst(y25b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
+table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
+
+Fst(y26b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
+table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
+
+
+baseline_og <-
+  read_tsv(
+    "../data-from-Amelia/Updated_WhiteRiverChinookBaseline_RubiasInput.txt",
+    col_types=str_flatten(rep("c", 594)),
+    na="NA")
+
+table(baseline_og$repunit, useNA="ifany")
+
+table(baseline_og$repunit, baseline_og$Ots_u07_07_161_1, useNA="ifany")
+table(baseline_og$repunit, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+
+table(baseline_og$repunit, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+table(baseline_og$collection, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
+
+table(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, useNA="ifany")
+table(baseline_og$Ots_u07_07_161_2, useNA="ifany")
+
+
+
+table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
+
+
+Fst(y21a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
+table(y21a$population, y21a$ots_crrad66330_60, useNA="ifany")
+
+Fst(y22a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
+table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+
+Fst(y23a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
+table(y23a$population, y23a$ots_crrad66330_60, useNA="ifany")
+
+Fst(y24a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
+table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+
+Fst(y25a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
+table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+
+Fst(y26a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
+Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
+table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+
+
+table(y21a$population, y21a$ots_u07_07_161, useNA="ifany")
+table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
+table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
+table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
+table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
+table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
+
+table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
+table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
+table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
+table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
+table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
+table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
