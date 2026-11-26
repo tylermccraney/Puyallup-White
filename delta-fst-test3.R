@@ -2,8 +2,10 @@ library(tidyverse)
 library(pegas)
 library(hierfstat)
 
+# removed bad SNP
+
 gdatw <- 
-  readRDS("../admixture/gdatw2.RDS")
+  readRDS("../admixture/gdatw3.RDS")
 
 gdatw$pop <- 
   gsub(pattern="River", replacement="R", gdatw$pop) |> 
@@ -41,13 +43,11 @@ gdatw_loci <-
         sep="/",
         na.rm=TRUE)},
     .init=gdatw) |>
-  mutate(across(7:258, ~na_if(., "")), across(.cols=c(7:258), ~factor(.))) |>
+  mutate(across(7:257, ~na_if(., "")), across(.cols=c(7:257), ~factor(.))) |>
   select(-2:-6) |>
   rename(population=pop)
 
-# remove bad SNP
-gdatw_loci <- 
-  select(gdatw_loci, -ots_u07_07_161)
+glimpse(gdatw_loci)
 
 White_R_NOR <- 
   filter(gdatw_loci, !grepl(pattern="Baseline", population)) |>
@@ -174,6 +174,18 @@ y23b_y24b <- perm_boot_fst(loci_yr1=y23b, loci_yr2=y24b, cores=10)
 y24b_y25b <- perm_boot_fst(loci_yr1=y24b, loci_yr2=y25b, cores=10)
 y25b_y26b <- perm_boot_fst(loci_yr1=y25b, loci_yr2=y26b, cores=10)
 
+
+saveRDS(y21a_y22a, "../data/y21a_y22a.RDS")
+saveRDS(y22a_y23a, "../data/y22a_y23a.RDS")
+saveRDS(y23a_y24a, "../data/y23a_y24a.RDS")
+saveRDS(y24a_y25a, "../data/y24a_y25a.RDS")
+saveRDS(y25a_y26a, "../data/y25a_y26a.RDS")
+saveRDS(y21b_y22b, "../data/y21b_y22b.RDS")
+saveRDS(y22b_y23b, "../data/y22b_y23b.RDS")
+saveRDS(y23b_y24b, "../data/y23b_y24b.RDS")
+saveRDS(y24b_y25b, "../data/y24b_y25b.RDS")
+saveRDS(y25b_y26b, "../data/y25b_y26b.RDS")
+
 dat <-
   rbind(
     y21a_y22a=y21a_y22a$summary, 
@@ -210,117 +222,4 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) +
   facet_wrap(vars(Fall_pop), ncol=1) +
   labs(
     y=expression(Delta~italic(F)[ST]), 
-    title=expression(Delta~italic(F)[ST]~varies~with~respect~to~baseline~data~source))
-
-# In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
-
-hist(y21b_y22b$null_differences)
-
-Fst(y21b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
-table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
-
-Fst(y22b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
-table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
-
-Fst(y23b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
-table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
-table(gdatw$pop, gdatw$ots_u07_07_161_a1, useNA="ifany")
-
-Fst(y24b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
-table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
-
-Fst(y25b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
-table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
-
-Fst(y26b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
-table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
-
-
-table(y22b$population, y22b$ots_u202_161)
-table(y23b$population, y23b$ots_u07_07_161)
-table(y24b$population, y24b$ots_u07_07_161)
-table(y25b$population, y25b$ots_crrad28677_65)
-table(y26b$population, y26b$ots_u07_07_161)
-
-
-baseline_og <- 
-  read_tsv(
-    "../data-from-Amelia/Updated_WhiteRiverChinookBaseline_RubiasInput.txt", 
-    col_types=str_flatten(rep("c", 594)), 
-    na="NA")
-
-table(baseline_og$repunit, useNA="ifany")
-
-table(baseline_og$repunit, baseline_og$Ots_u07_07_161_1, useNA="ifany")
-table(baseline_og$repunit, baseline_og$Ots_u07_07_161_2, useNA="ifany")
-
-table(baseline_og$repunit, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
-table(baseline_og$collection, paste(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, sep="/") |> na_if("NA/NA"), useNA="ifany")
-
-table(baseline_og$Ots_u07_07_161_1, baseline_og$Ots_u07_07_161_2, useNA="ifany")
-table(baseline_og$Ots_u07_07_161_2, useNA="ifany")
-
-
-
-table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
-
-
-
-
-
-
-
-
-
-
-
-
-Fst(y21a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
-table(y21a$population, y21a$ots_crrad66330_60, useNA="ifany")
-
-Fst(y22a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
-table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
-
-Fst(y23a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
-table(y23a$population, y23a$ots_crrad66330_60, useNA="ifany")
-
-Fst(y24a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
-table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
-
-Fst(y25a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
-table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
-
-Fst(y26a)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
-Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
-table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
-
-
-
-
-
-
-
-table(y21a$population, y21a$ots_u07_07_161, useNA="ifany")
-table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
-table(y23a$population, y23a$ots_u07_07_161, useNA="ifany")
-table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
-table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
-table(y26a$population, y26a$ots_u07_07_161, useNA="ifany")
-
-table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
-table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
-table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
-table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
-table(y25b$population, y25b$ots_u07_07_161, useNA="ifany")
-table(y26b$population, y26b$ots_u07_07_161, useNA="ifany")
+    title=expression(Delta~italic(F)[ST]~by~baseline~population))

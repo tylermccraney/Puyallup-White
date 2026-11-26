@@ -210,6 +210,18 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) +
 
 # In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
 
+saveRDS(y21a_y22a, "../data/y21a_y22a_0.RDS")
+saveRDS(y22a_y23a, "../data/y22a_y23a_0.RDS")
+saveRDS(y23a_y24a, "../data/y23a_y24a_0.RDS")
+saveRDS(y24a_y25a, "../data/y24a_y25a_0.RDS")
+saveRDS(y25a_y26a, "../data/y25a_y26a_0.RDS")
+saveRDS(y21b_y22b, "../data/y21b_y22b_0.RDS")
+saveRDS(y22b_y23b, "../data/y22b_y23b_0.RDS")
+saveRDS(y23b_y24b, "../data/y23b_y24b_0.RDS")
+saveRDS(y24b_y25b, "../data/y24b_y25b_0.RDS")
+saveRDS(y25b_y26b, "../data/y25b_y26b_0.RDS")
+
+## null allele
 # Fst(y21b)[, 'Fst'] |> hist(breaks=30, xlim=c(-0.2, 1), main=NULL, xlab=NULL)
 # Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
 # table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
