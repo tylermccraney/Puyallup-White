@@ -121,11 +121,9 @@ In this section I apply a 80% threshold to classify fish as ‘Spring’,
 ‘Fall’, or ‘Hybrid’ by their proportional ancestry.
 
 We can visualize what these classes look like by sorting fish by their
-spring-like population ancestry.
-
-The ‘Spring’ class is defined by 1.0–0.6 spring ancestry, the ‘Hybrid’
-class by 0.6–0.4 spring ancestry, and the ‘Fall’ class by 0.4–0.0 spring
-ancestry.
+spring-like population ancestry. The ‘Spring’ class is defined by
+1.0–0.6 spring ancestry, the ‘Hybrid’ class by 0.6–0.4 spring ancestry,
+and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
