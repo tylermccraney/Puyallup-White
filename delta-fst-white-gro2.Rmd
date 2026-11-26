@@ -9,7 +9,7 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
 
-```{r, echo=TRUE, eval=TRUE}
+```{r, echo=TRUE, eval=TRUE, fig.height=8}
 library(tidyverse)
 library(pegas)
 library(hierfstat)
@@ -242,10 +242,13 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) +
     y=expression(Delta~italic(F)[ST]), 
     title=expression(Delta~italic(F)[ST]~varies~with~respect~to~baseline~data~source))
 
-# In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
+```
 
+In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to the distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.  
 
-# null allele
+#### Discovery of a null allele
+
+```{r, echo=TRUE, eval=TRUE}
 Fst(y21b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
 table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")

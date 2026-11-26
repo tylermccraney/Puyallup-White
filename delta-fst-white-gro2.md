@@ -268,15 +268,20 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) +
 
 ![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
+In this figure, the same White River NORs are used with different ‘Fall’
+baseline populations to demonstrate how sensitive this method is to the
+distribution of allele frequencies. The 08HZ_10JX_12IP baseline
+population consists of 122 ‘Fall’ fish from Puyallup River and Soos
+Creek. The 23LR baseline population is composed of 95 ‘Fall’ fish from
+Minter Creek.
+
+#### Discovery of a null allele
+
 ``` r
-# In this figure, the same White River NORs are used with different 'Fall' baseline populations to demonstrate how sensitive this method is to teh distribution of allele frequencies. The 08HZ_10JX_12IP baseline population consists of 122 'Fall' fish from Puyallup River and Soos Creek. The 23LR baseline population is composed of 95 'Fall' fish from Minter Creek.
-
-
-# null allele
 Fst(y21b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 Fst(y21b)[, 'Fst'] |> sort() |> tail(1)
@@ -298,7 +303,7 @@ table(y21b$population, y21b$ots_u07_07_161, useNA="ifany")
 Fst(y22b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
 
 ``` r
 Fst(y22b)[, 'Fst'] |> sort() |> tail(1)
@@ -320,7 +325,7 @@ table(y22b$population, y22b$ots_u07_07_161, useNA="ifany")
 Fst(y23b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-4.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
 
 ``` r
 Fst(y23b)[, 'Fst'] |> sort() |> tail(1)
@@ -342,7 +347,7 @@ table(y23b$population, y23b$ots_u07_07_161, useNA="ifany")
 Fst(y24b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-5.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->
 
 ``` r
 Fst(y24b)[, 'Fst'] |> sort() |> tail(1)
@@ -364,7 +369,7 @@ table(y24b$population, y24b$ots_u07_07_161, useNA="ifany")
 Fst(y25b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-6.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-5.png)<!-- -->
 
 ``` r
 Fst(y25b)[, 'Fst'] |> sort() |> tail(1)
@@ -386,7 +391,7 @@ table(y25b$population, y25b$ots_crrad28677_65, useNA="ifany")
 Fst(y26b)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-7.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-6.png)<!-- -->
 
 ``` r
 Fst(y26b)[, 'Fst'] |> sort() |> tail(1)
@@ -512,7 +517,7 @@ table(White_R_NOR$code, White_R_NOR$ots_u07_07_161, useNA="ifany")
 Fst(y21a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-8.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-7.png)<!-- -->
 
 ``` r
 Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
@@ -525,7 +530,7 @@ Fst(y21a)[, 'Fst'] |> sort() |> tail(1)
 Fst(y22a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-9.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-8.png)<!-- -->
 
 ``` r
 Fst(y22a)[, 'Fst'] |> sort() |> tail(1)
@@ -547,7 +552,7 @@ table(y22a$population, y22a$ots_u07_07_161, useNA="ifany")
 Fst(y23a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-10.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-9.png)<!-- -->
 
 ``` r
 Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
@@ -560,7 +565,7 @@ Fst(y23a)[, 'Fst'] |> sort() |> tail(1)
 Fst(y24a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-11.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-10.png)<!-- -->
 
 ``` r
 Fst(y24a)[, 'Fst'] |> sort() |> tail(1)
@@ -582,7 +587,7 @@ table(y24a$population, y24a$ots_u07_07_161, useNA="ifany")
 Fst(y25a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-12.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-11.png)<!-- -->
 
 ``` r
 Fst(y25a)[, 'Fst'] |> sort() |> tail(1)
@@ -604,7 +609,7 @@ table(y25a$population, y25a$ots_u07_07_161, useNA="ifany")
 Fst(y26a)[, 'Fst'] |> hist(breaks=30, main=NULL, xlab=NULL)
 ```
 
-![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-1-13.png)<!-- -->
+![](delta-fst-white-gro2_files/figure-gfm/unnamed-chunk-2-12.png)<!-- -->
 
 ``` r
 Fst(y26a)[, 'Fst'] |> sort() |> tail(1)
