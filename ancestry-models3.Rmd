@@ -33,6 +33,8 @@ ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) +
   scale_fill_manual(name=NULL, values=hcl.colors(3))
 ```
 
+Let's break this plot apart by assignment, bin days, and visualize with free y-scale to get sense of patterns.  
+
 ```{r, echo=FALSE, fig.height=8, fig.width=4}
 ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
   geom_histogram(show.legend=FALSE) + 

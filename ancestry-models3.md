@@ -15,6 +15,9 @@ and 3 look identical, but the classifications changed by a few counts.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
+Let’s break this plot apart by assignment, bin days, and visualize with
+free y-scale to get sense of patterns.
+
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 #### Ancestry Model
