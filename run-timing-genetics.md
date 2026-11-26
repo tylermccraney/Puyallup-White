@@ -8,9 +8,10 @@ Tyler McCraney
 
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
 
-![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+I changed the pallette for *asssignment* to avoid confusion with
+*allele* or *genotype*.
 
-Selection against heterozygotes (underdominance)?
+![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](run-timing-genetics_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 #### GRR genotypes in Hardy-Weinberg Equilibrium 2021-2025 (both individually and combined). Not in HWE when 2026 added, or 2026 individually, 2026 spring, and 2026 non-spring.
 
