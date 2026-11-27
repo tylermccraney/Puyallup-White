@@ -244,14 +244,17 @@ appears stable over all these years. I’d say this warrants further
 investigation, but at least this demonstrates how valuable it can be to
 repeat analyses using alternative methods.
 
+Let’s wrap up this section by plotting the distribution of GSI
+assignments and ancestry classes by arrival time at the Buckley Trap.
+
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
 ### Ancestry Model of White River NORs
 
 Let’s see if ADMIXTURE can put the White River NORs into 2 ancestral
 populations. In other words, lets see if there’s any support for
 splitting these phenotypically spring-run fish (i.e., all returned
 between Jun-01 and Aug-09) into ‘Spring’ and ‘Fall’ populations.
-
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` bash
 plink --file NOR3 --make-bed --out NOR3
@@ -287,3 +290,8 @@ fall-like when the phenotypically-fall run baseline fish are included. I
 wonder if that could be an artifact of incomplete sampling ancestral
 population genetic diversity, where the closest ancestor of White River
 Spring Chinook Salmon is unsampled.
+
+In conclusion, I hypothesize the WRS ‘Fall’-assigned NORs are actually
+F1 hybrids of WRS and some other population (possibly GRF, or maybe
+local Puyallup River fall), and the ‘Unknown’ WRS NORs are progeny of
+the F1 hybrids that backcrossed with WRS.

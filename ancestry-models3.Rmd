@@ -14,6 +14,7 @@ This is the 3rd version of the (NOR + baseline) ancestry modeling analysis. It i
 
 ```{r, echo=FALSE}
 library(tidyverse)
+library(patchwork)
 
 rdat <- 
   readRDS("../data/rdat.RDS")
@@ -26,11 +27,14 @@ day_breaks <-
     day=c(yday("2024-06-01"), yday("2024-06-15"), yday("2024-07-01"), yday("2024-07-15"), yday("2024-08-01"), yday("2024-08-15"), yday("2024-09-01")),
     label=c("Jun-01", "Jun-15", "Jul-01", "Jul-15", "Aug-01", "Aug-15", "Sep-01"))
 
-ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
+gg1 <- 
+  ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
   geom_bar(width=1) + 
   labs(title="White River NOR Genetic Stock Assignments 2009-2024", x=NULL) + 
   scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
-  scale_fill_manual(name=NULL, values=hcl.colors(3))
+  scale_fill_manual(name="GSI\nAssignment", values=hcl.colors(3))
+
+gg1
 ```
 
 Let's break this plot apart by assignment, bin days, and visualize with free y-scale to get sense of patterns.  
@@ -244,7 +248,8 @@ Let's cross-tabulate the GSI assignments with the ancestry classifications. We s
 
 ```{r, echo=FALSE}
 tibl2s <- 
-  as_tibble(tbl2s) |>
+  rownames_to_column(tbl2s, var="ID") |>
+  as_tibble() |>
   filter(!is.na(pop)) |>
   mutate(collection=factor(pop), year=factor(pop))
 
@@ -338,7 +343,30 @@ table(filter(tibl2s, BASELINE==FALSE)$collection |> fct_drop(), filter(tibl2s, B
 
 I'm going to say it looks like something might have happened behind the scenes of GSI assignments around 2024--2025, and then again in 2026. For instance, the cross-tab counts appear relatively stable for 2021--2023, but then there's a big jump in 'Fall' assignments 2024--2025 which are predominantly classified 'Hybrid' by ancestry (some are 'Spring' by ancestry as well). Then in 2026, it looks like an abrupt increase in 'Spring' GSI assignments that are 'Hybrid' by ancestry, however the relative frequency of fish classified 'Spring', 'Hybrid', and 'Fall' appears stable over all these years. I'd say this warrants further investigation, but at least this demonstrates how valuable it can be to repeat analyses using alternative methods.        
 
-```{r, echo=FALSE}
+Let's wrap up this section by plotting the distribution of GSI assignments and ancestry classes by arrival time at the Buckley Trap.  
+
+```{r, echo=FALSE, fig.height=8}
+gg2 <- 
+  ggplot(rdat |> filter(!is.na(day), year %in% 2021:2024), aes(x=day, fill=assignment)) + 
+  geom_bar(width=1) + 
+  labs(title="White River NOR GSI Assignments 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
+  scale_fill_manual(name="GSI\nAssignment  ", values=hcl.colors(3))
+
+
+tibl2sr <- 
+  left_join(x=tibl2s, y=rdat, by=join_by(ID==wdfw_id, year)) |> 
+  filter(!is.na(day), year %in% 2021:2024)
+
+gg3 <- 
+  ggplot(tibl2sr, aes(x=day, fill=Q)) + 
+  geom_bar(width=1) + 
+  labs(title="White River NOR Ancestry Classes 2021-2024", x=NULL) + 
+  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
+  scale_fill_manual(name="Ancestry\nClassification", values=hcl.colors(3))
+
+gg2 / gg3
+
 # saveRDS(gdatw, file="../admixture/gdatw3.RDS")
 # 
 # saveRDS(tbl2s, file="../admixture/3-tbl2s.RDS")
@@ -355,12 +383,6 @@ I'm going to say it looks like something might have happened behind the scenes o
 Let's see if ADMIXTURE can put the White River NORs into 2 ancestral populations. In other words, lets see if there's any support for splitting these phenotypically spring-run fish (i.e., all returned between Jun-01 and Aug-09) into 'Spring' and 'Fall' populations.     
 
 ```{r, echo=FALSE}
-ggplot(rdat |> filter(!is.na(day), year %in% 2021:2024), aes(x=day, fill=assignment)) + 
-  geom_bar(width=1) + 
-  labs(title="White River NOR Genetic Stock Assignments 2021-2024", x=NULL) + 
-  scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
-  scale_fill_manual(name=NULL, values=hcl.colors(3))
-
 NOR <- 
   mutate(gdatw, population=gdatw_pop) |>
   filter(grepl(pattern="White_R", population)) |>
@@ -444,4 +466,6 @@ Hmmm.... there might be a pattern in the NOR-only ${K} = 2$ barplot. When I look
 
 ### Final thoughts
 
-It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled. 
+It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled.  
+
+In conclusion, I hypothesize the WRS 'Fall'-assigned NORs are actually F1 hybrids of WRS and some other population (possibly GRF, or maybe local Puyallup River fall), and the 'Unknown' WRS NORs are progeny of the F1 hybrids that backcrossed with WRS.  

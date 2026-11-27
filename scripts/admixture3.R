@@ -181,7 +181,8 @@ tbl2s$ASSIGNMENT <-
     ordered=TRUE)
 
 tibl2s <- 
-  as_tibble(tbl2s) |>
+  rownames_to_column(tbl2s, var="ID") |>
+  as_tibble() |>
   filter(!is.na(pop)) |>
   mutate(collection=factor(pop), year=factor(pop))
 
