@@ -79,11 +79,11 @@ probability of GSI assignment to ‘Spring’ or ‘Fall’ reporting groups
 Now the question becomes, *what evolutionary or demographic processes
 could have produced this pattern?*. One possible answer is
 hybridization. However, a mixed-color bar plot does not uniquely prove
-recent hybridization. The STRUCTURE/ADMIXTURE clustering algorithms
-reconstruct allele frequencies by simply minimizing Hardy-Weinberg and
-Linkage Disequilibrium (LD). Therefore, several different evolutionary
-and demographic scenarios can produce the same pattern of mixed
-ancestry. Here are a few common examples for White River Spring (WRS)
+recent hybridization. The ADMIXTURE clustering algorithm reconstructs
+allele frequencies by minimizing Hardy-Weinberg and Linkage
+Disequilibrium (LD). Therefore, several different evolutionary and
+demographic scenarios can produce the same pattern of mixed ancestry.
+Here are a few common examples for White River Spring (WRS)
 baseline+NORs and Green River Fall (GRF) baseline samples that could be
 difficult to distinguish:
 
@@ -108,10 +108,10 @@ difficult to distinguish:
     a severe population bottleneck causing its allele frequencies to
     shift away from the ancestral state, while GRF population remains
     large and retains ancestral allele frequencies. In this scenario,
-    STRUCTURE/ADMIXTURE would assign the bottlenecked WRS population its
-    own distinct cluster (purple color) and model the un-bottlenecked
-    GRF population as an “admixed” intermediate between WRS and GRF,
-    even though hybridization did not occur.
+    ADMIXTURE would assign the bottlenecked WRS population its own
+    distinct cluster (purple color) and model the un-bottlenecked GRF
+    population as an “admixed” intermediate between WRS and GRF, even
+    though hybridization did not occur.
 
 It would be reasonable to assume all three of these scenarios—recent
 hybridization, ghost admixture, and population bottleneck—have occurred
@@ -131,7 +131,7 @@ and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-### Ancestry classification of 100% baseline samples
+### Ancestry classification of baseline samples (WRS, GRF)
 
 Let’s cross-tabulate the GSI assignments with the ancestry
 classifications. We start by comparing the baseline reporting groupings
@@ -172,7 +172,7 @@ Okay, it looks like the Hupp Springs ‘Spring’ and Minter Creek ‘Fall’
 baseline samples might contain more hybrid individuals relative to the
 other baseline samples.
 
-### Ancestry classification of 100% WRS NORs
+### Ancestry classification of WRS NORs
 
 Let’s compare results for the White River Spring (WRS) NOR fish with the
 ancestry classes (same as above).
@@ -250,8 +250,8 @@ organized by arrival time (i.e., less protracted).
 
 Let’s see if ADMIXTURE can put the White River NORs into 2 ancestral
 populations. In other words, lets see if there’s any support for
-splitting these phenotypically spring-run fish (i.e., all returned
-between Jun-01 and Aug-09) into ‘Spring’ and ‘Fall’ populations.
+splitting these phenotypically spring-run fish (i.e., most returned
+between Jun-01 and Aug-01) into ‘Spring’ and ‘Fall’ populations.
 
 ``` bash
 plink --file NOR3 --make-bed --out NOR3
@@ -261,8 +261,8 @@ for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 NOR3.bed $K | tee NOR3_log${K}
 grep -h CV NOR3_log*  > NOR3_log.txt
 ```
 
-When the GRO fall fish are excluded, there is little support for White
-River NORs having ancestry from more than one ancestral population.
+When the GRF fish are excluded, there is little support for WRS NORs
+having ancestry from more than one ancestral population.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
