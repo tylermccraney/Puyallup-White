@@ -1,8 +1,12 @@
-Ancestry Modeling White River Spring-run Chinook Salmon (Part 2)
+Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
 Tyler McCraney
 
-#### White River NORs & White-Puyallup (Green River Origin) Baseline
+#### Genetic Management of White River Spring (WRS) Chinook Salmon
+
+#### Ancestry Model
+
+#### WRS NOR & Baseline (WRS + Green River Fall)
 
 ``` zsh
 conda activate admixture_Env
@@ -20,28 +24,39 @@ grep -h CV gdatw2_log* > gdatw2_log.txt
 
 ![](ancestry-models2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-Sort ancestry. The ‘Fall’ class is defined by 0-40% ancestry, the
-‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’ class by 60-100%
-ancestry.
+#### Interpretation of mixed-color barplots
+
+#### Classify fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
+
+Sort fish by their *Spring* ancestry. The ‘Fall’ class is defined by
+0.0-0.4 *Spring* ancestry, the ‘Hybrid’ class by 0.6-0.6 *Spring*
+ancestry, and the ‘Spring’ class by 0.6-1.0 *Spring* ancestry.
 
 ![](ancestry-models2_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-Baseline reporting groups (rows) assigned to ‘Spring’, ‘Fall’, or
-‘Hybrid’ ancestry classes (columns). The ‘Fall’ class is defined by
-0-40% ancestry, the ‘Hybrid’ class by 40-60% ancestry, and the ‘Spring’
-class by 60-100% ancestry.
+#### Ancestry classification of 100% baseline samples
+
+Baseline reporting groups (in rows) assigned to ‘Spring’, ‘Fall’, or
+‘Hybrid’ ancestry classes (in columns). The ‘Fall’ class is defined by
+0.0-0.4 *Spring* ancestry, the ‘Hybrid’ class by 0.6-0.6 *Spring*
+ancestry, and the ‘Spring’ class by 0.6-1.0 *Spring* ancestry.
 
     ##         
     ##          Spring Hybrid Fall
     ##   Spring    213     12    0
     ##   Fall        1     18  237
 
-White River NOR assignments (rows) assigned to ‘Spring’, ‘Fall’, or
-‘Hybrid’ ancestry classes (columns). Ancestry classes defined same as
-above.
+#### Ancestry classification of 100% WRS NORs
+
+White River NOR assignments (in rows) assigned to ‘Spring’, ‘Fall’, or
+‘Hybrid’ ancestry classes (in columns). The ‘Fall’ class is defined by
+0.0-0.4 *Spring* ancestry, the ‘Hybrid’ class by 0.6-0.6 *Spring*
+ancestry, and the ‘Spring’ class by 0.6-1.0 *Spring* ancestry.
 
     ##          
     ##           Spring Hybrid Fall
     ##   Spring     714     27    0
     ##   Unknown     16     18    2
     ##   Fall         9     34   15
+
+#### Ancestry Model of WRS NORs

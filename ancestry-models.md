@@ -1,8 +1,12 @@
-Ancestry Modeling White River Spring-run Chinook Salmon
+Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
 Tyler McCraney
 
-#### White River NORs & White-Puyallup (Green River Origin) Baseline
+#### Genetic Management of White River Spring (WRS) Chinook Salmon
+
+#### Ancestry Model
+
+#### WRS NOR & Baseline (WRS + Green River Fall)
 
 ``` zsh
 conda activate admixture_Env
@@ -20,7 +24,9 @@ grep -h CV gdatw_log* > gdatw_log.txt
 
 ![](ancestry-models_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-#### White River NORs
+#### Interpretation of mixed-color barplots
+
+#### Ancestry Model of WRS NORs
 
 ``` zsh
 plink --file NOR --make-bed --out NOR

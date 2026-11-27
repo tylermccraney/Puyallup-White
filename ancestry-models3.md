@@ -8,10 +8,10 @@ version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-mode
 except for a single locus *Ots_u07-07.161* that was removed because of
 null alleles detected in the [2nd
 version](https://github.com/tylermccraney/Puyallup-White/blob/main/scripts/delta-fst-test2.R)
-of $\Delta F_{\text{ST}}$ analyses. The ADMIXTURE plots from version 2
-and 3 look identical, but the classifications changed by a few counts.
+of $\Delta{F}_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3
+look identical, but the classifications changed by a few counts.
 
-#### Genetic Management of White River Spring Chinook Salmon
+#### Genetic Management of White River Spring (WRS) Chinook Salmon
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
@@ -25,23 +25,25 @@ free y-scale to get sense of patterns.
 ADMIXTURE is a command-line application that estimates individual
 ancestry proportions from large SNP datasets. It uses the same model as
 STRUCTURE, but replaces MCMC sampling with ML optimization, so runs
-finish in just minutes rather than hours.
+finish in just minutes instead of hours.
 
 Just like STRUCTURE, ADMIXTURE requires you to specify ${K}$ (the
 assumed number of ancestral populations) in advance, although it uses
-cross-validation (CV) to help pick the best ${K}$. For each value of
-${K} = 1 - ...$, ADMIXTURE first randomly partitions entries of the
-genotype matrix into 10 folds, hides 10% of the genotype calls in each
-fold, fits the ancestry and allele-frequency parameters on the remaining
-90%, and measures how accurately those parameters predict the masked
-genotypes. The CV error is then plotted to see the ${K}$ value with the
-lowest CV error, which should give us the best statistical fit.
+cross-validation (CV) to help pick the best ${K}$. In this analysis we
+will run ${K}=1-4$. For each value of ${K}=1-4$, ADMIXTURE randomly
+partitions the genotype matrix into 10 folds, hides 10% of the genotype
+calls in each fold, fits parameters of the ancestry and allele-frequency
+model on the remaining 90%, and measures how accurately those parameters
+predict the masked genotypes. This *CV error* is then plotted to see the
+${K}$ value that produced the most accurate analysis, which should give
+us the best statistical fit.
 
-#### White River NORs & White/Puyallup (Green River Origin) Baseline
+#### WRS NOR & Baseline (WRS + Green River Fall)
 
-We convert the genotype matrix into binary PLINK (.bed/.bim/.fam)
-format, run ADMIXTURE, and then import the .Q files—containing estimated
-ancestry fractions per individual—into R for plotting and summary.
+We convert the genotype matrix into binary PLINK format
+(.bed/.bim/.fam), run ADMIXTURE, and then import the .Q files
+(containing estimated ancestry proportions per individual) into R for
+plotting and summary.
 
 ``` bash
 conda activate admixture_Env
@@ -75,40 +77,52 @@ presence of more than two ancestral populations.
 
 #### Interpretation of mixed-color barplots
 
-A mixed-color bar plot does not uniquely prove recent hybridization.
-Since STRUCTURE/ADMIXTURE clustering algorithms reconstruct allele
-frequencies by minimizing departures from Hardy-Weinberg and linkage
-equilibrium, several different evolutionary and demographic scenarios
-can produce the same patterns in bar plots. Here are a few common
-examples for White R spring NOR and GRO baseline fall samples that could
-be difficult or impossible to distinguish:
+At ${K} = 2^*$, Baseline Spring and ‘Spring’-assigned NORs have
+*Spring-like* ancestry, whereas the Baseline Fall has *Fall-like*
+ancestry. The ‘Fall’-assigned NOR ancestry appears intermediary to
+*Spring-* and *Fall-like*. The ‘Unknown’ fish (i.e., fish with posterior
+probability of GSI assignment to ‘Spring’ or ‘Fall’ reporting groups
+\<0.8) appear to have ancestry intermediate to the ‘Spring’- and
+‘Fall’-assigned NORs.
 
-1.  If recent admixture occurred (true hybridization), White R spring
-    and Green River fall were historically isolated, genetically
-    differentiated parental populations that came into secondary contact
-    and interbred. In this case, White R spring and Green River fall
-    parental populations would appear as solid purple and yellow bars,
-    respectively, while the hybrid population appears as a mosaic of
-    those colors proportional to their genetic contribution.
+Now the question becomes, *what evolutionary or demographic processes
+could have produced this pattern?*. One possible answer is
+*hybridization*.
 
-2.  With ghost admixture (an unsampled source population), White R
-    spring hybridizes with an unsampled or extinct “ghost” population
-    other than Green River fall, though the ghost population shares more
-    ancestry with Green River fall (e.g., Puyallup R fall). This forces
-    the hybrid’s alleles to be modeled as a mixture of White R spring
-    and Green River fall, creating a false impression of direct
-    hybridization between the two sampled runs.
+However, a mixed-color bar plot does not uniquely prove recent
+hybridization. The STRUCTURE/ADMIXTURE clustering algorithms reconstruct
+allele frequencies by simply minimizing Hardy-Weinberg and Linkage
+Disequilibrium (LD). Therefore, several different evolutionary and
+demographic scenarios can produce the same pattern of mixed ancestry.
+Here are a few common examples for White River Spring (WRS)
+baseline+NORs and Green River Fall (GRF) baseline samples that could be
+difficult to distinguish:
 
-3.  With a recent population bottleneck, White R spring and Green River
-    fall diverge from a common ancestor without any subsequent gene
-    flow. White R spring then underwent a severe population bottleneck
-    causing its allele frequencies to shift away from the ancestral
-    state, while Green River fall population remains large and retains
-    ancestral allele frequencies. In this scenario, STRUCTURE/ADMIXTURE
-    would assign the bottlenecked White R spring population its own
-    distinct cluster color and model the un-bottlenecked Green River
-    fall population as an “admixed” intermediate between White R spring
-    and Green River fall, even though hybridization did not occur.
+1.  If recent admixture occurred (true hybridization), then WRS and GRF
+    were historically isolated, genetically differentiated parental
+    populations that came into secondary contact and interbred. In this
+    case, WRS and GRF parental populations would appear as solid purple
+    and yellow bars, respectively, while the hybrid population appears
+    as a mosaic of those colors proportional to their genetic
+    contribution.
+
+2.  If ghost admixture happened (hybrid w/ unsampled source population),
+    WRS hybridized with an unsampled or possibly extinct “ghost”
+    population that’s not GRF, although the ghost population shares more
+    recent ancestry with GRF (e.g., the White or Puyallup River fall
+    run). This forces the hybrid’s alleles to be modeled as a mixture of
+    WRS and GRF, creating a false impression of direct hybridization
+    between the two sampled lineages.
+
+3.  If a population bottleneck occurred, WRS and GRF diverge from a
+    common ancestor without any subsequent gene flow. WRS then underwent
+    a severe population bottleneck causing its allele frequencies to
+    shift away from the ancestral state, while GRF population remains
+    large and retains ancestral allele frequencies. In this scenario,
+    STRUCTURE/ADMIXTURE would assign the bottlenecked WRS population its
+    own distinct cluster (purple color) and model the un-bottlenecked
+    GRF population as an “admixed” intermediate between WRS and GRF,
+    even though hybridization did not occur.
 
 It would be reasonable to assume all three of these scenarios—recent
 hybridization, ghost admixture, and population bottleneck—have occurred
@@ -128,7 +142,7 @@ and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-##### Ancestry classification of 100% baseline samples
+#### Ancestry classification of 100% baseline samples
 
 Let’s cross-tabulate the GSI assignments with the ancestry
 classifications. We start by comparing the baseline reporting groupings
@@ -152,10 +166,10 @@ and ‘Fall’ ancestry classes reasonably well. For example, only one
 ancestry. On the other hand, several fish were classified as ‘Hybrid’
 although they are from the ‘Spring’ or ‘Fall’ baseline reporting group.
 
-##### Ancestry classification of 100% White River NORs
+#### Ancestry classification of 100% WRS NORs
 
-Let’s compare results for the White River NOR fish with the ancestry
-classes same as above.
+Let’s compare results for the White River Spring (WRS) NOR fish with the
+ancestry classes (same as above).
 
     ##          
     ##           Spring Hybrid Fall
@@ -178,7 +192,7 @@ Results for the n=58 ‘Fall’-assigned fish are interesting. We see that
 most of the ‘Fall’-assigned fish are classified as either ‘Hybrid’
 (n=33) or pure ‘Spring’ (n=10) by their ancestry.
 
-##### Ancestry Model of White River NORs
+#### Ancestry Model of White River NORs
 
 Let’s see if ADMIXTURE can put the White River NORs into 2 ancestral
 populations. In other words, lets see if there’s any support for
@@ -195,9 +209,8 @@ for K in 1 2 3 4; do admixture -s $RANDOM --cv=10 NOR3.bed $K | tee NOR3_log${K}
 grep -h CV NOR3_log*  > NOR3_log.txt
 ```
 
-There is little support for these White River NORs to have ancestry from
-more than one ancestral population when the Green River origin fall run
-run fish are excluded.
+When the GRO fall fish are excluded, there is little support for White
+River NORs having ancestry from more than one ancestral population.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
@@ -206,13 +219,22 @@ pattern to see.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-I don’t see anything interesting in the NOR-only ${K} = 2$ barplot.
+Hmmm…. there might be a pattern in the NOR-only ${K} = 2$ barplot. When
+I look at the ‘Spring’-assigned fish, I see individuals with 0.0–1.0
+*Spring* ancestry. However, when I look at the ‘Unknown’ (Unassigned), I
+see several individuals with 0.0 *Spring* ancestry and only 1 individual
+with 1.0 *Spring* ancestry. Finally, when look at the ‘Fall’-asigned
+fish, I see many individuals with 0.0 *Spring* ancestry and no
+individuals with 1.0 *Spring* ancestry.
 
-But I do think it’s interesting how ancestry of these
-phenotypically-spring run NORs with ‘Unknown’ and ‘Fall’ run GSI
-assignments appears more fall-like when the phenotypically-fall run
-baseline fish are included. I wonder if that’s an artifact of incomplete
-sampling of ancestral diversity with the closest ancestor unsampled. For
-instance, a scenario like long branch attraction (LBA) in phylogenetics,
-where use of an outgroup that’s too divergent from your ingroup can
-cause topology artifacts.
+#### Questions
+
+It’s interesting how ancestry of these phenotypically-spring White River
+NORs with ‘Unknown’ and ‘Fall’ run GSI assignments appears more
+fall-like when the phenotypically-fall run baseline fish are included. I
+wonder if that could be an artifact of incomplete sampling ancestral
+population genetic diversity, where the closest ancestor of White River
+Spring Chinook Salmon is unsampled. For instance, there’s a scenario in
+phylogenetics known as long branch attraction (LBA), where using an
+outgroup that’s too divergent from your ingroup can bias inference due
+to homoplasy.
