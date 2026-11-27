@@ -195,7 +195,7 @@ However, a mixed-color bar plot does not uniquely prove recent hybridization. Th
 3. If a population bottleneck occurred, WRS and GRF diverge from a common ancestor without any subsequent gene flow. WRS then underwent a severe population bottleneck causing its allele frequencies to shift away from the ancestral state, while GRF population remains large and retains ancestral allele frequencies. In this scenario, STRUCTURE/ADMIXTURE would assign the bottlenecked WRS population its own distinct cluster (purple color) and model the un-bottlenecked GRF population as an "admixed" intermediate between WRS and GRF, even though hybridization did not occur.  
 
 
-It would be reasonable to assume all three of these scenarios---recent hybridization, ghost admixture, and population bottleneck---have occurred in with respect to White R spring and Green River fall, further complicating the interpretation of results.  
+It would be reasonable to assume all three of these scenarios---recent hybridization, ghost admixture, and population bottleneck---have occurred with respect to WRS and GRF Chinook Salmon, further complicating the interpretation of results.  
 
 #### Classify fish as 'Spring', 'Fall', or 'Hybrid' based on their proportional ancestry  
 

@@ -126,8 +126,8 @@ difficult to distinguish:
 
 It would be reasonable to assume all three of these scenarios—recent
 hybridization, ghost admixture, and population bottleneck—have occurred
-in with respect to White R spring and Green River fall, further
-complicating the interpretation of results.
+with respect to WRS and GRF Chinook Salmon, further complicating the
+interpretation of results.
 
 #### Classify fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
 
