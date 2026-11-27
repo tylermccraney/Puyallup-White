@@ -135,7 +135,7 @@ cd <-
   ggtree(as.dendrogram(E0L1sdh)) %<+%
   tibble(label=as.character(1:27), allele=cutree(E0L1sdh, k=2) |> factor(levels=1:2, labels=c("E", "L"))) +
   geom_tippoint(aes(label=label, color=allele), shape=15, show.legend=FALSE) +
-  scale_color_manual(values=hcl.colors(3, palette="Plasma")[-2]) +
+  scale_color_manual(values=hcl.colors(3)[-2]) +
   labs(title='hclust(*, "ward.D2")') + 
   theme_dendrogram()
 
@@ -146,7 +146,7 @@ gg0 <-
   geom_col(show.legend=FALSE) +
   geom_hline(yintercept=c(1.5, 11.5, 19.5), linetype="dashed") + 
   annotate(geom="text", x=Inf, y=c(1, 6.5, 15.5, 23.5), label=c("Late", "Recombinant\nLate", "Early", "Recombinant\nEarly"), hjust=1) +
-  scale_fill_manual(name=NULL, values=hcl.colors(3, palette="Plasma")[-2]) +
+  scale_fill_manual(name=NULL, values=hcl.colors(3)[-2]) +
   scale_x_continuous(labels=scales::label_percent()) +
   labs(x="Frequency", title="White River NORs 2021-2026", y=NULL) +
   theme(panel.grid=element_blank())
@@ -170,7 +170,7 @@ gg1 <-
   geom_tile() +
   geom_vline(xintercept=c(7.5, 20.5), colour="white", linewidth=0.33, linetype="dashed") +
   annotate(geom="text", x=c(4, 14, 26.5), y=19, colour="white", label=c("italic('GREB1L')", "intergenic~region", "italic('ROCK1')"), parse=TRUE) +
-  scale_fill_manual(name=NULL, values=hcl.colors(3, palette="Plasma")[-2]) +
+  scale_fill_manual(name=NULL, values=hcl.colors(3)[-2]) +
   labs(x="SNP", y=NULL, title=expression(italic('GREB1L')/italic('ROCK1')~Region~(GRR))) +
   theme(axis.text.x=element_text(angle=270, hjust=0, vjust=0.4), panel.grid=element_blank())
 
@@ -292,14 +292,14 @@ gg3 <-
   geom_bar(width=1) + 
   labs(title="White River NORs 2021-2024", x=NULL) + 
   scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
-  scale_fill_manual(name="allele", values=hcl.colors(3, palette="Plasma")[-2])
+  scale_fill_manual(name="allele", values=hcl.colors(3)[-2])
 
 gg4 <- 
   ggplot(ht32tab4 |> filter(!is.na(day)), aes(x=day, fill=runtime_genotype2)) + 
   geom_bar(width=1) + 
   labs(title="White River NORs 2021-2024", x=NULL) + 
   scale_x_continuous(breaks=day_breaks$day, labels=day_breaks$label) +
-  scale_fill_manual(name="genotype", values=hcl.colors(3, palette="Plasma"))
+  scale_fill_manual(name="genotype", values=hcl.colors(3))
 
 gg5 <- 
   ggplot(ht32tab4 |> filter(!is.na(day)), aes(x=day, fill=assignment)) + 
@@ -323,27 +323,27 @@ gg6 <-
   ggplot(ht32tab3, aes(fill=hap.group, x=assignment)) + 
   geom_bar() + 
   facet_wrap(facet=vars(year), ncol=1) + 
-  scale_fill_manual(name="allele", values=hcl.colors(3, palette="Plasma")[-2])
+  scale_fill_manual(name="allele", values=hcl.colors(3)[-2])
 
 gg7 <- 
   ggplot(ht32tab3, aes(fill=hap.group, x=assignment)) + 
   geom_bar(position="fill") + 
   facet_wrap(facet=vars(year), ncol=1) + 
   labs(y="proportion") +
-  scale_fill_manual(name="allele", values=hcl.colors(3, palette="Plasma")[-2])
+  scale_fill_manual(name="allele", values=hcl.colors(3)[-2])
 
 gg8 <- 
   ggplot(ht32tab4, aes(fill=runtime_genotype2, x=assignment)) + 
   geom_bar() + 
   facet_wrap(facet=vars(year), ncol=1) +
-  scale_fill_manual(name="genotype", values=hcl.colors(3, palette="Plasma"))
+  scale_fill_manual(name="genotype", values=hcl.colors(3))
 
 gg9 <- 
   ggplot(ht32tab4, aes(fill=runtime_genotype2, x=assignment)) + 
   geom_bar(position="fill") + 
   facet_wrap(facet=vars(year), ncol=1) +
   labs(y="proportion") +
-  scale_fill_manual(name="genotype", values=hcl.colors(3, palette="Plasma"))
+  scale_fill_manual(name="genotype", values=hcl.colors(3))
 
 gg6 + gg7 + plot_layout(guides='collect')
 
