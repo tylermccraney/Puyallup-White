@@ -1,6 +1,6 @@
 ∆FST White River NORs 2021-2026 vs Green River Origin Fall
 ================
-Tyler McCraney
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 #### Green River origin (GRO) fall-run Chinook salmon in DFW genetic baseline.
 

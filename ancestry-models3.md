@@ -1,6 +1,6 @@
 Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
-Tyler McCraney
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 This is the 3rd version of the (NOR + baseline) ancestry modeling
 analysis. It is very similar to the [2nd

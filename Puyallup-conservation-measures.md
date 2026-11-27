@@ -1,6 +1,6 @@
 Statistical Hypothesis Test for Hybridization w/ Introgression
 ================
-Tyler McCraney
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 This is an exploratory analysis of one idea I have for a statistical
 hypothesis test for hybridization w/ introgression of White River spring
@@ -59,7 +59,7 @@ would produce FST estimates with high stochastic error in order to
 demonstrate how the statistical hypothesis test works. In practice,
 large sample sizes and many loci are used.
 
-First we import Chinook salmon genotypes from Van Doornick et al. 2024,
+First we import Chinook salmon genotypes from Van Doornik et al. 2024,
 filter the White River and Puyallup River samples, edit the sample
 labels, and convert the format so we can estimate FST with `pegas`.
 
@@ -128,7 +128,8 @@ Now lets estimate FST from data at these 2 simulated timepoints. FST is
 estimated for each locus independently, so we’ll get n=94 FST estimates.
 Some of these estimates will be `NA` just by chance, since there are
 loci with very low minor allele frequencies, they will likely be fixed
-in the simulated datasets. They are actually FST = 0 so lets fix that.
+in the simulated datasets. They are actually FST = 0 but they appear in
+the results as `NaN`.
 
 ``` r
 Fst_A <- 
@@ -139,15 +140,23 @@ Fst_B <-
   Fst(B)[, 2] |> 
   as.double()
 
-Fst_A[is.na(Fst_A)] <- 
-  0
-
-Fst_B[is.na(Fst_B)] <- 
-  0
+Fst_A[is.na(Fst_A)] |> 
+  length()
 ```
 
-There were 5 SNPs fixed in the “A” data and 4 in the “B” data, and I set
-those to all to 0.
+    ## [1] 5
+
+``` r
+Fst_B[is.na(Fst_B)] |> 
+  length()
+```
+
+    ## [1] 4
+
+There are 5 SNPs fixed in the “A” data and 4 in the “B” data. Originally
+I had set those to all to 0, but then I realized that would introduce
+bias in the estimate so I leave them in, and they are excluded in
+summary statistics (i.e., they have no effect).
 
 Now let’s take the mean of the two independent n=94 FST estimates to get
 the overall FST for sample A and sample B.
@@ -156,13 +165,13 @@ the overall FST for sample A and sample B.
 mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] 0.0248826
+    ## [1] 0.0262805
 
 ``` r
 mean(Fst_B, na.rm=TRUE)
 ```
 
-    ## [1] 0.01788871
+    ## [1] 0.01868376
 
 These FSTs are different just by chance alone. Let’s plot the
 distributions with the mean FST annotated below the x-axis labels and
@@ -188,7 +197,7 @@ at 2 different timepoints: ∆FST.
 mean(Fst_B, na.rm=TRUE) - mean(Fst_A, na.rm=TRUE)
 ```
 
-    ## [1] -0.006993888
+    ## [1] -0.007596733
 
 This is negative (by design), to simulate a noticible decrease of
 genetic differentiation between White R and Puyallup River that might be
@@ -236,7 +245,7 @@ par(mfrow=c(1, 1))
 mean(abs(c(permuteAB, obsAB)) >= abs(obsAB))
 ```
 
-    ## [1] 0.2097902
+    ## [1] 0.1898102
 
 ``` r
 hist(c(permuteAB, obsAB), xlab=expression(Null~Distribution~of~Delta~italic(F)[ST]), breaks=30, main=paste("p-value:", mean(abs(c(permuteAB, obsAB)) >= abs(obsAB)) |> round(digits=5)))
@@ -290,9 +299,9 @@ Fst_C[is.na(Fst_C)] <-
 mean(Fst_A, na.rm=TRUE); mean(Fst_B, na.rm=TRUE); mean(Fst_C, na.rm=TRUE)
 ```
 
-    ## [1] 0.0248826
+    ## [1] 0.0262805
 
-    ## [1] 0.01788871
+    ## [1] 0.01868376
 
     ## [1] 0.0006900401
 
@@ -334,7 +343,7 @@ obsBC <-
 obsBC
 ```
 
-    ## [1] -0.01719867
+    ## [1] -0.01799372
 
 We see our observed test statistic above (`∆FST = -0.018`) indicating a
 big decrease in FST. We compute the non-parametric “p-value” as in the

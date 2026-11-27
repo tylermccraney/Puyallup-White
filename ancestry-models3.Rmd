@@ -1,6 +1,6 @@
 ---
 title: "Ancestry Model for Classifying White River Spring Chinook Salmon"
-author: "Tyler McCraney"
+author: "Tyler McCraney, Northwest Indian Fisheries Commission"
 output: github_document
 ---
 

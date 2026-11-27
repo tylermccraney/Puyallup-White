@@ -1,6 +1,6 @@
 Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
-Tyler McCraney
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 #### Genetic Management of White River Spring (WRS) Chinook Salmon
 

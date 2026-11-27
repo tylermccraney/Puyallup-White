@@ -1,6 +1,6 @@
 Exploratory Analysis of Run Timing Genetics
 ================
-Tyler McCraney
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 

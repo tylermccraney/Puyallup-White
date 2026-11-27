@@ -1,6 +1,6 @@
 ---
 title: "Statistical Hypothesis Test for Hybridization w/ Introgression"
-author: "Tyler McCraney"
+author: "Tyler McCraney, Northwest Indian Fisheries Commission"
 output: github_document
 ---
 
@@ -27,7 +27,7 @@ To demonstrate the test, I simulate genetic data sampled at 3 different time poi
 I purposely simulated data with small sample sizes and few loci that would produce FST estimates with high stochastic error in order to demonstrate how the statistical hypothesis test works. In practice, large sample sizes and many loci are used.   
          
 
-First we import Chinook salmon genotypes from Van Doornick et al. 2024, filter the White River and Puyallup River samples, edit the sample labels, and convert the format so we can estimate FST with `pegas`.  
+First we import Chinook salmon genotypes from Van Doornik et al. 2024, filter the White River and Puyallup River samples, edit the sample labels, and convert the format so we can estimate FST with `pegas`.  
 
 
 ```{r}
@@ -63,7 +63,7 @@ table(A$population); table(B$population)
 
 Okay, now we have 2 datasets. The 1st dataset "A" has 47 fish in the Puyallup R sample and 46 fish in White R sample. The 2nd dataset "B" has 47 fish in the Puyallup R sample and 45 fish in White R sample. Remember, the purpose of these 2 datasets is to simulate data sampled from different time points.  
 
-Now lets estimate FST from data at these 2 simulated timepoints. FST is estimated for each locus independently, so we'll get n=94 FST estimates. Some of these estimates will be `NA` just by chance, since there are loci with very low minor allele frequencies, they will likely be fixed in the simulated datasets. They are actually FST = 0 so lets fix that.     
+Now lets estimate FST from data at these 2 simulated timepoints. FST is estimated for each locus independently, so we'll get n=94 FST estimates. Some of these estimates will be `NA` just by chance, since there are loci with very low minor allele frequencies, they will likely be fixed in the simulated datasets. They are actually FST = 0 but they appear in the results as `NaN`.     
 
 ```{r}
 Fst_A <- 
@@ -74,14 +74,14 @@ Fst_B <-
   Fst(B)[, 2] |> 
   as.double()
 
-Fst_A[is.na(Fst_A)] <- 
-  0
+Fst_A[is.na(Fst_A)] |> 
+  length()
 
-Fst_B[is.na(Fst_B)] <- 
-  0
+Fst_B[is.na(Fst_B)] |> 
+  length()
 ```
 
-There were 5 SNPs fixed in the "A" data and 4 in the "B" data, and I set those to all to 0.    
+There are 5 SNPs fixed in the "A" data and 4 in the "B" data. Originally I had set those to all to 0, but then I realized that would introduce bias in the estimate so I leave them in, and they are excluded in summary statistics (i.e., they have no effect).      
 
 Now let's take the mean of the two independent n=94 FST estimates to get the overall FST for sample A and sample B.     
 

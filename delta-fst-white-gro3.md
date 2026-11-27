@@ -1,7 +1,7 @@
 
 # $\Delta{F}_{ST}$ White River NORs 2021-2026 vs Green River Origin Fall (3rd Version)
 
-Tyler McCraney.
+Tyler McCraney, Northwest Indian Fisheries Commission
 
 ### Removed 1 SNP
 
