@@ -2,23 +2,14 @@ Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
 Tyler McCraney, Northwest Indian Fisheries Commission
 
-This is the 3rd version of the (NOR + baseline) ancestry modeling
-analysis. It is very similar to the [2nd
-version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md)
-except for a single locus *Ots_u07-07.161* that was removed because of
-null alleles detected in the [2nd
-version](https://github.com/tylermccraney/Puyallup-White/blob/main/scripts/delta-fst-test2.R)
-of $\Delta{F}_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3
-look identical, but the classifications changed by a few counts.
-
 ### Genetic Management of White River Spring (WRS) Chinook Salmon
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 Let’s break this plot apart by assignment, bin days, and visualize with
 free y-scale to get sense of patterns.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ### Ancestry Model
 
@@ -61,7 +52,7 @@ Now lets look at the results of ADMIXTURE. The R code is hidden in this
 page but it can be found
 [here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.Rmd).
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 We have clear evidence above indicating that ${K} = 2$ should provide
 the best statistical fit. However, it is common practice to plot the
@@ -69,7 +60,7 @@ runner-up ${K}$ as well, in order to see if any grouping patterns are
 visible but not accounted for by the best ${K}$. Let’s do that so we can
 see if there’s any indication of more than 2 ancestral populations.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 The barplot for ${K} = 2^*$ shows the best statistical fit, and I don’t
 see any patterns in the ${K} = 3$ barplot that would suggest the
@@ -138,7 +129,7 @@ spring-like population ancestry. The ‘Spring’ class is defined by
 1.0–0.6 spring ancestry, the ‘Hybrid’ class by 0.6–0.4 spring ancestry,
 and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ### Ancestry classification of 100% baseline samples
 
@@ -200,13 +191,14 @@ ancestry, whereas n=29 of the ‘Spring’-assigned fish are classified as
 
 For the n=36 ‘Unknown’ fish (i.e., fish with posterior probability of
 GSI assignment to ‘Spring’ or ‘Fall’ reporting groups \<0.8), we see
-that almost half (n=17) of these fish are classified as either pure
-‘Spring’ (n=15) or pure ‘Fall’ (n=2).
+many of these fish are classified as either pure ‘Spring’ (n=15) or pure
+‘Fall’ (n=2).
 
-Results for the n=58 ‘Fall’-assigned fish interest me. We see that most
-of the ‘Fall’-assigned fish are classified as either ‘Hybrid’ (n=33) or
-pure ‘Spring’ (n=10) by their ancestry. This result is consistent with
-my observation of these individuals in the ${K} = 2^*$ barplot.
+Results for the n=58 ‘Fall’-assigned fish are interesting. We see that
+most of the ‘Fall’-assigned fish are classified as either ‘Hybrid’
+(n=33) or pure ‘Spring’ (n=10) by their ancestry. This result is
+consistent with my observation of these individuals in the ${K} = 2^*$
+barplot (i.e., they appear admixed).
 
 Let’s see how these assignment-X-ancestry cross-comparisons vary by year
 for WRS NORs.
@@ -232,22 +224,27 @@ for WRS NORs.
     ##   White_R_Unknown_26ON      0      2    0
     ##   White_R_Fall_26ON         0      3    2
 
-I’m going to say it looks like something might have happened behind the
-scenes of GSI assignments around 2024–2025, and then again in 2026. For
-instance, the cross-tab counts appear relatively stable for 2021–2023,
-but then there’s a big jump in ‘Fall’ assignments 2024–2025 which are
+I’m going to say it looks like something might have changed with GSI
+assignments around 2024–2025, and then again in 2026. For instance, the
+cross-tab counts appear relatively stable for 2021–2023, but then
+there’s a big jump in ‘Fall’ assignments 2024–2025 which are
 predominantly classified ‘Hybrid’ by ancestry (some are ‘Spring’ by
 ancestry as well). Then in 2026, it looks like an abrupt increase in
 ‘Spring’ GSI assignments that are ‘Hybrid’ by ancestry, however the
 relative frequency of fish classified ‘Spring’, ‘Hybrid’, and ‘Fall’
-appears stable over all these years. I’d say this warrants further
+appears stable over all these years. I’d say it warrants further
 investigation, but at least this demonstrates how valuable it can be to
 repeat analyses using alternative methods.
 
 Let’s wrap up this section by plotting the distribution of GSI
-assignments and ancestry classes by arrival time at the Buckley Trap.
+assignments and ancestry classes by arrival time at the Buckley Trap
+(only for dates 2021–2024).
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+The GSI assignments and ancestry classifications look similar overall.
+The distribution of ancestry classifications is perhaps slightly more
+organized by arrival time (i.e., less protracted).
 
 ### Ancestry Model of White River NORs
 
@@ -267,12 +264,12 @@ grep -h CV NOR3_log*  > NOR3_log.txt
 When the GRO fall fish are excluded, there is little support for White
 River NORs having ancestry from more than one ancestral population.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 But let’s plot ${K} = 2$ barplot just in case there’s some interesting
 pattern to see.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Hmmm…. there might be a pattern in the NOR-only ${K} = 2$ barplot. When
 I look at the ‘Spring’-assigned fish, I see individuals with 0.0–1.0
@@ -282,8 +279,6 @@ with 1.0 *Spring* ancestry. Finally, when look at the ‘Fall’-asigned
 fish, I see many individuals with 0.0 *Spring* ancestry and no
 individuals with 1.0 *Spring* ancestry.
 
-### Final thoughts
-
 It’s interesting how ancestry of these phenotypically-spring White River
 NORs with ‘Unknown’ and ‘Fall’ run GSI assignments appears more
 fall-like when the phenotypically-fall run baseline fish are included. I
@@ -291,9 +286,13 @@ wonder if that could be an artifact of incomplete sampling ancestral
 population genetic diversity, where the closest ancestor of White River
 Spring Chinook Salmon is unsampled.
 
-In conclusion, I hypothesize the WRS ‘Fall’-assigned NORs are actually
-F1 hybrids of WRS and some other population (possibly GRF, or maybe
-local Puyallup River fall), and the ‘Unknown’ WRS NORs are progeny of
-the F1 hybrids that backcrossed with WRS. I would like to test this
-hypothesis with a Parentage Based Tagging (PBT) study of WRS NORs and
-HORs together with GRF.
+### Final thoughts
+
+I hypothesize the WRS ‘Fall’-assigned NORs are actually F1 hybrids of
+WRS and some other population (possibly GRF, or maybe local Puyallup
+River fall), and the ‘Unknown’ WRS NORs are progeny of the F1 hybrids
+that backcrossed with WRS. I would like to test this hypothesis with a
+Parentage Based Tagging (PBT) study of WRS NORs and HORs together with
+GRF. Furthermore, I’d like to compare genetic diversity of the
+*GREB1L/ROCK1* region (33 linked SNPs) to the neutral genetic background
+(~250 SNPs).
