@@ -294,4 +294,6 @@ Spring Chinook Salmon is unsampled.
 In conclusion, I hypothesize the WRS ‘Fall’-assigned NORs are actually
 F1 hybrids of WRS and some other population (possibly GRF, or maybe
 local Puyallup River fall), and the ‘Unknown’ WRS NORs are progeny of
-the F1 hybrids that backcrossed with WRS.
+the F1 hybrids that backcrossed with WRS. I would like to test this
+hypothesis with a Parentage Based Tagging (PBT) study of WRS NORs and
+HORs together with GRF.

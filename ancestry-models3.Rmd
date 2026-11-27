@@ -468,4 +468,4 @@ Hmmm.... there might be a pattern in the NOR-only ${K} = 2$ barplot. When I look
 
 It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled.  
 
-In conclusion, I hypothesize the WRS 'Fall'-assigned NORs are actually F1 hybrids of WRS and some other population (possibly GRF, or maybe local Puyallup River fall), and the 'Unknown' WRS NORs are progeny of the F1 hybrids that backcrossed with WRS.  
+In conclusion, I hypothesize the WRS 'Fall'-assigned NORs are actually F1 hybrids of WRS and some other population (possibly GRF, or maybe local Puyallup River fall), and the 'Unknown' WRS NORs are progeny of the F1 hybrids that backcrossed with WRS. I would like to test this hypothesis with a Parentage Based Tagging (PBT) study of WRS NORs and HORs together with GRF.    
