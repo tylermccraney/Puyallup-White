@@ -2,7 +2,7 @@ Ancestry Model for Classifying White River Spring Chinook Salmon
 ================
 Tyler McCraney, Northwest Indian Fisheries Commission
 
-### Genetic Management of White River Spring (WRS) Chinook Salmon
+### White River Spring (WRS) Chinook Salmon
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
@@ -169,8 +169,8 @@ Let’s take a closer look at the baseline samples.
     ##   White_R_Spring_25NI_Baseline            40      1    0
 
 Okay, it looks like the Hupp Springs ‘Spring’ and Minter Creek ‘Fall’
-baseline samples might contain more hybrid individuals relative to the
-other baseline samples.
+baseline samples might contain more hybrid individuals than the other
+baseline samples.
 
 ### Ancestry classification of WRS NORs
 
