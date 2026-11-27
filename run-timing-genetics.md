@@ -2,6 +2,8 @@ Exploratory Analysis of Run Timing Genetics
 ================
 Tyler McCraney, Northwest Indian Fisheries Commission
 
+Statistical phasing of haplotypes with `haplo.stats::haplo.em()`.
+
 ![](run-timing-genetics_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 #### Comparing the temporal distribution of *GREB1L/ROCK1* Region (GRR) alleles and genotypes with respect to genetic stock assignments

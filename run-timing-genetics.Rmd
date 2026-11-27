@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
-
+Statistical phasing of haplotypes with `haplo.stats::haplo.em()`.  
 
 ```{r, echo=FALSE}
 library(tidyverse)
