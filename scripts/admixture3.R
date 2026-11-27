@@ -180,17 +180,80 @@ tbl2s$ASSIGNMENT <-
     levels=c("SPRING", "UNKNOWN", "FALL"), 
     ordered=TRUE)
 
-table(tbl2s$ASSIGNMENT, tbl2s$Q)
+tibl2s <- 
+  as_tibble(tbl2s) |>
+  filter(!is.na(pop)) |>
+  mutate(collection=factor(pop), year=factor(pop))
 
-table(filter(tbl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tbl2s, BASELINE==TRUE)$Q)[-2, ]
+tibl2s$collection <- 
+  factor(
+    tibl2s$collection, 
+    levels=c(
+      "Green_R_Fall_98HB_Baseline", "White_R_Spring_06KK_Baseline", 
+      "Voights_C_H_Fall_08HZ_Baseline", "Soos_C_H_Fall_10JX_Baseline", 
+      "Green_R_Soos_C_H_Fall_12IP_Baseline", 
+      "White_R_Spring_21LC", "White_R_Unknown_21LC", "White_R_Fall_21LC", 
+      "White_R_Spring_22LL", "White_R_Unknown_22LL", "White_R_Fall_22LL", 
+      "White_R_Spring_23LI", "White_R_Unknown_23LI", "White_R_Fall_23LI", 
+      "Hupp_S_Spring_23LQ_Baseline", "Minter_C_Fall_23LR_Baseline", 
+      "White_R_Spring_24ND", "White_R_Unknown_24ND", "White_R_Fall_24ND", 
+      "White_R_Spring_24ND_Baseline", 
+      "White_R_Spring_25NI", "White_R_Unknown_25NI", "White_R_Fall_25NI", 
+      "White_R_Spring_25NI_Baseline", 
+      "White_R_Spring_26ON", "White_R_Unknown_26ON", "White_R_Fall_26ON"), 
+    ordered=TRUE)
+  
+tibl2s$year <- 
+  factor(
+    tibl2s$collection, 
+    levels=c(
+      "Green_R_Fall_98HB_Baseline", "White_R_Spring_06KK_Baseline", 
+      "Voights_C_H_Fall_08HZ_Baseline", "Soos_C_H_Fall_10JX_Baseline", 
+      "Green_R_Soos_C_H_Fall_12IP_Baseline", 
+      "White_R_Spring_21LC", "White_R_Unknown_21LC", "White_R_Fall_21LC", 
+      "White_R_Spring_22LL", "White_R_Unknown_22LL", "White_R_Fall_22LL", 
+      "White_R_Spring_23LI", "White_R_Unknown_23LI", "White_R_Fall_23LI", 
+      "Hupp_S_Spring_23LQ_Baseline", "Minter_C_Fall_23LR_Baseline", 
+      "White_R_Spring_24ND", "White_R_Unknown_24ND", "White_R_Fall_24ND", 
+      "White_R_Spring_24ND_Baseline", 
+      "White_R_Spring_25NI", "White_R_Unknown_25NI", "White_R_Fall_25NI", 
+      "White_R_Spring_25NI_Baseline", 
+      "White_R_Spring_26ON", "White_R_Unknown_26ON", "White_R_Fall_26ON"), 
+    labels=c(
+      1998, 2006, 2008, 2010, 2012, 
+      2021, 2021, 2021, 
+      2022, 2022, 2022, 
+      2023, 2023, 2023, 2023, 2023, 
+      2024, 2024, 2024, 2024, 
+      2025, 2025, 2025, 2025, 
+      2026, 2026, 2026)) |> 
+  as.character() |> 
+  as.numeric()
 
-table(filter(tbl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tbl2s, BASELINE==FALSE)$Q)
+
+table(tibl2s$collection, tibl2s$BASELINE, useNA="ifany")
+
+table(tibl2s$year, tibl2s$Q, useNA="ifany")
+
+table(tibl2s$ASSIGNMENT, tibl2s$Q, useNA="ifany")
+table(tibl2s$collection, tibl2s$Q, useNA="ifany")
+
+table(filter(tibl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tibl2s, BASELINE==TRUE)$Q, useNA="ifany")[-2, ]
+
+table(filter(tibl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tibl2s, BASELINE==FALSE)$Q, useNA="ifany")
+
+table(filter(tibl2s, BASELINE==TRUE)$collection |> fct_drop(), filter(tibl2s, BASELINE==TRUE)$Q, useNA="ifany")[-2, ]
+
+table(filter(tibl2s, BASELINE==FALSE)$collection |> fct_drop(), filter(tibl2s, BASELINE==FALSE)$Q, useNA="ifany")
+
+saveRDS(tibl2s, file="../admixture/3-tibl2s.RDS")
+
 
 pdf("../admixture/gdatw3_k2_sorted.pdf", width=13, height=3)
 par(mar=c(7, 4, 4, 2) + 0.1)
 barplot(t(as.matrix(tbl2s[1:2])), col=terrain.colors(4)[c(1, 3)], ylab="Ancestry", border=NA, names.arg=tbl2s$pop, las=2, cex.names=0.3, space=0, main=expression(italic(K)==2*`*`), font.main=1)
 # abline(h=0.5, v=1026, col="white", lty=3)
-abline(h=c(0.4, 0.6), v=c(952.5, 1062.5), , col="white", lty=2)
+abline(h=c(0.4, 0.6), v=c(952.5, 1062.5), col="white", lty=1)
 mtext(text="'Spring'", adj=0.37)
 mtext(text="'Hybrid'", adj=0.76)
 mtext(text="'Fall'", adj=0.87)

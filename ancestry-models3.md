@@ -164,6 +164,17 @@ and ‘Fall’ ancestry classes reasonably well. For example, only one
 ancestry. On the other hand, several fish were classified as ‘Hybrid’
 although they are from the ‘Spring’ or ‘Fall’ baseline reporting group.
 
+    ##                                      
+    ##                                       Spring Hybrid Fall
+    ##   Green_R_Fall_98HB_Baseline               0      1   38
+    ##   Voights_C_H_Fall_08HZ_Baseline           0      3   39
+    ##   Soos_C_H_Fall_10JX_Baseline              0      2   37
+    ##   Green_R_Soos_C_H_Fall_12IP_Baseline      0      3   38
+    ##   Hupp_S_Spring_23LQ_Baseline             89      7    0
+    ##   Minter_C_Fall_23LR_Baseline              1      9   85
+    ##   White_R_Spring_24ND_Baseline            40      2    0
+    ##   White_R_Spring_25NI_Baseline            40      1    0
+
 #### Ancestry classification of 100% WRS NORs
 
 Let’s compare results for the White River Spring (WRS) NOR fish with the
@@ -190,6 +201,27 @@ Results for the n=58 ‘Fall’-assigned fish are interesting. We see that
 most of the ‘Fall’-assigned fish are classified as either ‘Hybrid’
 (n=33) or pure ‘Spring’ (n=10) by their ancestry.
 
+    ##                       
+    ##                        Spring Hybrid Fall
+    ##   White_R_Spring_21LC     117      5    0
+    ##   White_R_Unknown_21LC      1      2    0
+    ##   White_R_Fall_21LC         0      0    3
+    ##   White_R_Spring_22LL     149      2    0
+    ##   White_R_Unknown_22LL      5      1    0
+    ##   White_R_Fall_22LL         4      2    1
+    ##   White_R_Spring_23LI      90      5    0
+    ##   White_R_Unknown_23LI      2      4    0
+    ##   White_R_Fall_23LI         0      3    3
+    ##   White_R_Spring_24ND     145      4    0
+    ##   White_R_Unknown_24ND      4      5    1
+    ##   White_R_Fall_24ND         4     16    5
+    ##   White_R_Spring_25NI      83      2    0
+    ##   White_R_Unknown_25NI      3      5    1
+    ##   White_R_Fall_25NI         2      9    1
+    ##   White_R_Spring_26ON     128     11    0
+    ##   White_R_Unknown_26ON      0      2    0
+    ##   White_R_Fall_26ON         0      3    2
+
 #### Ancestry Model of White River NORs
 
 Let’s see if ADMIXTURE can put the White River NORs into 2 ancestral
@@ -197,7 +229,7 @@ populations. In other words, lets see if there’s any support for
 splitting these phenotypically spring-run fish (i.e., all returned
 between Jun-01 and Aug-09) into ‘Spring’ and ‘Fall’ populations.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` bash
 plink --file NOR3 --make-bed --out NOR3
@@ -210,12 +242,12 @@ grep -h CV NOR3_log*  > NOR3_log.txt
 When the GRO fall fish are excluded, there is little support for White
 River NORs having ancestry from more than one ancestral population.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 But let’s plot ${K} = 2$ barplot just in case there’s some interesting
 pattern to see.
 
-![](ancestry-models3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](ancestry-models3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Hmmm…. there might be a pattern in the NOR-only ${K} = 2$ barplot. When
 I look at the ‘Spring’-assigned fish, I see individuals with 0.0–1.0

@@ -237,29 +237,87 @@ mtext(text="'Fall'", adj=0.87)
 
   
 
-```{r, echo=FALSE, eval=FALSE}
-# table(tbl2s$ASSIGNMENT, tbl2s$Q)
-```
-
 #### Ancestry classification of 100% baseline samples
 
 Let's cross-tabulate the GSI assignments with the ancestry classifications. We start by comparing the baseline reporting groupings ('Spring' or 'Fall') with the ancestry classes ('Spring', 'Hybrid', or 'Fall').  The baseline reporting group counts are in rows and the ancestry classes in columns. So for example, 214 fish from the 'Spring' baseline reporting group were also classified as 'Spring' by ancestry, whereas 11 of the fish from the 'Spring' baseline reporting group were classified as 'Hybrid' by their ancestry. Keep in mind, these are 100% baseline fish in this case (the reference samples which we base GSI of mixtures on).  
 
 
 ```{r, echo=FALSE}
-table(filter(tbl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tbl2s, BASELINE==TRUE)$Q)[-2, ]
+tibl2s <- 
+  as_tibble(tbl2s) |>
+  filter(!is.na(pop)) |>
+  mutate(collection=factor(pop), year=factor(pop))
+
+tibl2s$collection <- 
+  factor(
+    tibl2s$collection, 
+    levels=c(
+      "Green_R_Fall_98HB_Baseline", "White_R_Spring_06KK_Baseline", 
+      "Voights_C_H_Fall_08HZ_Baseline", "Soos_C_H_Fall_10JX_Baseline", 
+      "Green_R_Soos_C_H_Fall_12IP_Baseline", 
+      "White_R_Spring_21LC", "White_R_Unknown_21LC", "White_R_Fall_21LC", 
+      "White_R_Spring_22LL", "White_R_Unknown_22LL", "White_R_Fall_22LL", 
+      "White_R_Spring_23LI", "White_R_Unknown_23LI", "White_R_Fall_23LI", 
+      "Hupp_S_Spring_23LQ_Baseline", "Minter_C_Fall_23LR_Baseline", 
+      "White_R_Spring_24ND", "White_R_Unknown_24ND", "White_R_Fall_24ND", 
+      "White_R_Spring_24ND_Baseline", 
+      "White_R_Spring_25NI", "White_R_Unknown_25NI", "White_R_Fall_25NI", 
+      "White_R_Spring_25NI_Baseline", 
+      "White_R_Spring_26ON", "White_R_Unknown_26ON", "White_R_Fall_26ON"), 
+    ordered=TRUE)
+  
+tibl2s$year <- 
+  factor(
+    tibl2s$collection, 
+    levels=c(
+      "Green_R_Fall_98HB_Baseline", "White_R_Spring_06KK_Baseline", 
+      "Voights_C_H_Fall_08HZ_Baseline", "Soos_C_H_Fall_10JX_Baseline", 
+      "Green_R_Soos_C_H_Fall_12IP_Baseline", 
+      "White_R_Spring_21LC", "White_R_Unknown_21LC", "White_R_Fall_21LC", 
+      "White_R_Spring_22LL", "White_R_Unknown_22LL", "White_R_Fall_22LL", 
+      "White_R_Spring_23LI", "White_R_Unknown_23LI", "White_R_Fall_23LI", 
+      "Hupp_S_Spring_23LQ_Baseline", "Minter_C_Fall_23LR_Baseline", 
+      "White_R_Spring_24ND", "White_R_Unknown_24ND", "White_R_Fall_24ND", 
+      "White_R_Spring_24ND_Baseline", 
+      "White_R_Spring_25NI", "White_R_Unknown_25NI", "White_R_Fall_25NI", 
+      "White_R_Spring_25NI_Baseline", 
+      "White_R_Spring_26ON", "White_R_Unknown_26ON", "White_R_Fall_26ON"), 
+    labels=c(
+      1998, 2006, 2008, 2010, 2012, 
+      2021, 2021, 2021, 
+      2022, 2022, 2022, 
+      2023, 2023, 2023, 2023, 2023, 
+      2024, 2024, 2024, 2024, 
+      2025, 2025, 2025, 2025, 
+      2026, 2026, 2026)) |> 
+  as.character() |> 
+  as.numeric()
+
+# table(tibl2s$year, tibl2s$Q, useNA="ifany")
+# 
+# table(tibl2s$ASSIGNMENT, tibl2s$Q, useNA="ifany")
+# 
+# table(tibl2s$collection, tibl2s$Q, useNA="ifany")
+```
+
+
+```{r, echo=FALSE}
+table(filter(tibl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tibl2s, BASELINE==TRUE)$Q, useNA="ifany")[-2, ]
 ```
 
 
 It looks like the two baseline reporting groups correspond to 'Spring' and 'Fall' ancestry classes reasonably well. For example, only one 'Fall' reporting group baseline fish was classified as 'Spring' by it's ancestry.  On the other hand, several fish were classified as 'Hybrid' although they are from the 'Spring' or 'Fall' baseline reporting group.
 
+```{r, echo=FALSE}
+table(filter(tibl2s, BASELINE==TRUE)$collection |> fct_drop(), filter(tibl2s, BASELINE==TRUE)$Q, useNA="ifany")[-2, ]
+```
 
 #### Ancestry classification of 100% WRS NORs
 
 Let's compare results for the White River Spring (WRS) NOR fish with the ancestry classes (same as above).      
 
 ```{r, echo=FALSE}
-table(filter(tbl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tbl2s, BASELINE==FALSE)$Q)
+table(filter(tibl2s, BASELINE==FALSE)$ASSIGNMENT, filter(tibl2s, BASELINE==FALSE)$Q, useNA="ifany")
 ```
 
 White River NOR assignment counts (Rubias) are in rows and the ancestry classification counts (ADMIXTURE) are in columns.  We see n=712 'Spring'-assigned fish are also classified as 'Spring' by their ancestry, whereas n=29 of the 'Spring'-assigned fish are classified as 'Hybrid' by their ancestry.  
@@ -268,6 +326,9 @@ For the n=36 'Unknown' fish (i.e., fish with posterior probability of GSI assign
 
 Results for the n=58 'Fall'-assigned fish are interesting. We see that most of the 'Fall'-assigned fish are classified as either 'Hybrid' (n=33) or pure 'Spring' (n=10) by their ancestry.    
 
+```{r, echo=FALSE}
+table(filter(tibl2s, BASELINE==FALSE)$collection |> fct_drop(), filter(tibl2s, BASELINE==FALSE)$Q, useNA="ifany")
+```
 
 ```{r, echo=FALSE}
 # saveRDS(gdatw, file="../admixture/gdatw3.RDS")
@@ -277,6 +338,8 @@ Results for the n=58 'Fall'-assigned fish are interesting. We see that most of t
 # saveRDS(tbl2, file="../admixture/3-tbl2.RDS")
 # 
 # saveRDS(tbl3, file="../admixture/3-tbl3.RDS")
+# 
+# saveRDS(tibl2s, file="../admixture/3-tibl2s.RDS")
 ```
 
 #### Ancestry Model of White River NORs
