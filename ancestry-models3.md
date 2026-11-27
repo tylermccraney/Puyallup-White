@@ -87,14 +87,12 @@ probability of GSI assignment to ‘Spring’ or ‘Fall’ reporting groups
 
 Now the question becomes, *what evolutionary or demographic processes
 could have produced this pattern?*. One possible answer is
-*hybridization*.
-
-However, a mixed-color bar plot does not uniquely prove recent
-hybridization. The STRUCTURE/ADMIXTURE clustering algorithms reconstruct
-allele frequencies by simply minimizing Hardy-Weinberg and Linkage
-Disequilibrium (LD). Therefore, several different evolutionary and
-demographic scenarios can produce the same pattern of mixed ancestry.
-Here are a few common examples for White River Spring (WRS)
+hybridization. However, a mixed-color bar plot does not uniquely prove
+recent hybridization. The STRUCTURE/ADMIXTURE clustering algorithms
+reconstruct allele frequencies by simply minimizing Hardy-Weinberg and
+Linkage Disequilibrium (LD). Therefore, several different evolutionary
+and demographic scenarios can produce the same pattern of mixed
+ancestry. Here are a few common examples for White River Spring (WRS)
 baseline+NORs and Green River Fall (GRF) baseline samples that could be
 difficult to distinguish:
 
@@ -234,7 +232,4 @@ NORs with ‘Unknown’ and ‘Fall’ run GSI assignments appears more
 fall-like when the phenotypically-fall run baseline fish are included. I
 wonder if that could be an artifact of incomplete sampling ancestral
 population genetic diversity, where the closest ancestor of White River
-Spring Chinook Salmon is unsampled. For instance, there’s a scenario in
-phylogenetics known as long branch attraction (LBA), where using an
-outgroup that’s too divergent from your ingroup can bias inference due
-to homoplasy.
+Spring Chinook Salmon is unsampled.

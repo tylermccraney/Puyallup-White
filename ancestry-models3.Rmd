@@ -184,9 +184,7 @@ The barplot for ${K} = 2^*$ shows the best statistical fit, and I don't see any 
 
 At ${K} = 2^*$, Baseline Spring and 'Spring'-assigned NORs have _Spring-like_ ancestry, whereas the Baseline Fall has _Fall-like_ ancestry. The 'Fall'-assigned NOR ancestry appears intermediary to _Spring-_ and _Fall-like_. The 'Unknown' fish (i.e., fish with posterior probability of GSI assignment to ‘Spring’ or ‘Fall’ reporting groups <0.8) appear to have ancestry intermediate to the 'Spring'- and 'Fall'-assigned NORs. 
 
-Now the question becomes, _what evolutionary or demographic processes could have produced this pattern?_. One possible answer is _hybridization_.          
-
-However, a mixed-color bar plot does not uniquely prove recent hybridization. The STRUCTURE/ADMIXTURE clustering algorithms reconstruct allele frequencies by simply minimizing Hardy-Weinberg and Linkage Disequilibrium (LD). Therefore, several different evolutionary and demographic scenarios can produce the same pattern of mixed ancestry. Here are a few common examples for White River Spring (WRS) baseline+NORs and Green River Fall (GRF) baseline samples that could be difficult to distinguish:  
+Now the question becomes, _what evolutionary or demographic processes could have produced this pattern?_. One possible answer is hybridization. However, a mixed-color bar plot does not uniquely prove recent hybridization. The STRUCTURE/ADMIXTURE clustering algorithms reconstruct allele frequencies by simply minimizing Hardy-Weinberg and Linkage Disequilibrium (LD). Therefore, several different evolutionary and demographic scenarios can produce the same pattern of mixed ancestry. Here are a few common examples for White River Spring (WRS) baseline+NORs and Green River Fall (GRF) baseline samples that could be difficult to distinguish:  
 
 1. If recent admixture occurred (true hybridization), then WRS and GRF were historically isolated, genetically differentiated parental populations that came into secondary contact and interbred. In this case, WRS and GRF parental populations would appear as solid purple and yellow bars, respectively, while the hybrid population appears as a mosaic of those colors proportional to their genetic contribution.  
 
@@ -375,4 +373,4 @@ Hmmm.... there might be a pattern in the NOR-only ${K} = 2$ barplot. When I look
 
 #### Questions
 
-It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled. For instance, there's a scenario in phylogenetics known as long branch attraction (LBA), where using an outgroup that's too divergent from your ingroup can bias inference due to homoplasy.  
+It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled. 
