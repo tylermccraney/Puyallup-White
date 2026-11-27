@@ -1,97 +1,76 @@
-
-# $\Delta{F}_{ST}$ White River NORs 2021-2026 vs Green River Origin Fall (3rd Version)
-
+Statistical Hypothesis Test for Hybridization w/ Introgression
+================
 Tyler McCraney, Northwest Indian Fisheries Commission
 
-### Removed 1 SNP
+This is a revised version of a statistical hypothesis test for
+hybridization w/ introgression of White River Spring (WRS) and
+Puyallup/Green River Fall (GRF) populations of Chinook salmon.
 
-$\Delta F_{ST}$
+The WRS and GRF populations exhibit a moderate degree of genetic
+structure (e.g., $F_{ST}=0.03$) and individual fish can be assigned with
+a high degree of certainty in GSI applications. The WRS population is
+supplemented by conservation hatcheries while the GRF population is
+supplemented by production hatcheries.
 
-``` r
-library(tidyverse)
-library(pegas)
-library(hierfstat)
+Concerns have been raised about the potential risk of hybridization w/
+introgression of the smaller WRS and the larger GRF populations. A
+genetics-based test is desired to determine if hybridization w/
+introgression is happening because of GRF hatchery production.
 
-gdatw <- 
-  readRDS("../admixture/gdatw3.RDS")
+When hybridization w/ introgression happens, differences in allele
+frequencies between populations are lost. So after this happens there
+are no differences in allele frequencies between ‘population’ samples
+that are greater than would be expected to happen by chance alone.
 
-gdatw$pop <- 
-  gsub(pattern="River", replacement="R", gdatw$pop) |> 
-  gsub(pattern="Creek", replacement="C") |> 
-  gsub(pattern="Hatchery", replacement="H") |> 
-  gsub(pattern="Chinook_", replacement="") |> 
-  gsub(pattern="Buckley_Trap_", replacement="") |> 
-  gsub(pattern="at_", replacement="_") |> 
-  gsub(pattern="unclipped", replacement="Fall") |>
-  gsub(pattern="_PBT", replacement="Fall") |>
-  gsub(pattern="WDFW_FH", replacement="Fall") |>
-  gsub(pattern="Spring_Fall_06KK", replacement="Spring_06KK_Baseline") |>
-  gsub(pattern="R_24ND", replacement="R_Spring_24ND_Baseline") |>
-  gsub(pattern="R_25NI", replacement="R_Spring_25NI_Baseline") |>
-  gsub(pattern="fall", replacement="Fall") |>
-  gsub(pattern="08HZ", replacement="08HZ_Baseline") |>
-  gsub(pattern="98HB", replacement="98HB_Baseline") |>
-  gsub(pattern="10JX", replacement="10JX_Baseline") |>
-  gsub(pattern="12IP", replacement="12IP_Baseline") |>
-  gsub(pattern="__", replacement="_") |>
-  gsub(pattern="Hupp_Springs_23LQ", replacement="Hupp_S_Spring_23LQ_Baseline") |>
-  gsub(pattern="Minter_C_23LR", replacement="Minter_C_Fall_23LR_Baseline")
+$F_{ST}$ measures allele frequency differences between samples. It
+ranges from $F_{ST}=0$, indicating no genetic difference between two
+samples, to $F_{ST}=1$, indicating complete genetic difference between
+the two samples (i.e., when $F_{ST}=1$, sample 1 is completely
+homozygous for allele 1 and sample 2 is completely homozygous for allele
+2).
 
-gdatw_loci <- 
-  reduce(
-    names(gdatw) |> 
-      grep("_a[12]$", x=_, value=TRUE) |> 
-      sub("_a[12]$", "", x=_) |> 
-      unique(),
-    \(df, prefix){
-      unite(
-        df,
-        col=!!prefix,
-        matches(paste0("^", prefix, "_a[12]$")),
-        sep="/",
-        na.rm=TRUE)},
-    .init=gdatw) |>
-  mutate(across(7:257, ~na_if(., "")), across(.cols=c(7:257), ~factor(.))) |>
-  select(-2:-6) |>
-  rename(population=pop)
+If hybridization w/ introgression is happening, then one would expect
+$F_{ST}$ estimates for WRS and GRF to decrease, eventually becoming 0.
+Therefore, the test statistic is the difference in $F_{ST}$
+($\Delta F_{ST}$) estimated at time 1 (t1) and t2. For instance, if
+$F_{ST}=0.025$ at t1 and $F_{ST}=0.005$ at t2, then our test statistic
+is $\Delta F_{ST}=0.005-0.025=-0.02$. Alternatively, $\Delta F_{ST}$
+could be positive, which would indicate an increase in $F_{ST}$
+estimated at t1 and t2.
 
-White_R_NOR <- 
-  filter(gdatw_loci, !grepl(pattern="Baseline", population)) |>
-  mutate(code=str_extract(string=population, pattern="\\w{4}$")) |>
-  relocate(code, .before=1)
+We need a robust statistical hypothesis test to determine if our test
+statistic is significantly greater than would be expected to occur by
+chance alone. Permutation can be used to determine if $\Delta F_{ST}$ is
+greater than would be expected by chance alone. This is similar to a
+non-parameteric version of the classic two-way t test: a statistical
+hypothesis test that checks whether a difference between means is
+statistically significant or likely due to chance. This framework is
+appropriate because $F_{ST}$ is actually the mean of many independent
+$F_{ST}$ estimated from multiple loci, so we want to determine if the
+mean $F_{ST}$ is significantly different at 2 sampling points.
 
-table(White_R_NOR$code)
-```
+To demonstrate the test, I analyze WRS NOR genetic data sampled
+2021–2026 with two GRF baseline populations: (1) *n*=122 GRF fish from
+Soos (Voights) Creek 2008–2012, and (2) *n*=95 GRF fish from Minter
+Creek 2023.
 
-    ## 
-    ## 21LC 22LL 23LI 24ND 25NI 26ON 
-    ##  128  164  107  184  106  146
+I wrote 2 functions for this analysis.
 
-``` r
-Baseline_FALL <- 
-  filter(gdatw_loci, grepl(pattern="Baseline", population)) |>
-  filter(!grepl(pattern="Spring", population)) |>
-  mutate(code=str_extract(string=population, pattern="\\d{2}\\w{2}")) |>
-  relocate(code, .before=1)
+1.  `nor_fall` is a helper function to prepare the genotype matrices for
+    input to `perm_boot_fst`.
 
-table(Baseline_FALL$population)
-```
+2.  `perm_boot_fst` is the main function that estimates the population
+    genetic parameters, and generates bootstrap CIs and
+    permutation-based P-values *in parallel* with functions from
+    `pegas`, `hierfstat`, and `parallel` packages.
 
-    ## 
-    ##          Green_R_Fall_98HB_Baseline Green_R_Soos_C_H_Fall_12IP_Baseline 
-    ##                                  39                                  41 
-    ##         Minter_C_Fall_23LR_Baseline         Soos_C_H_Fall_10JX_Baseline 
-    ##                                  95                                  39 
-    ##      Voights_C_H_Fall_08HZ_Baseline 
-    ##                                  42
+`perm_boot_fst` performs both stratified permutation and paired-locus
+bootstrapping to generate P-value and 95% confidence intervals for
+$\Delta F_{ST}$. The permutation algorithm is different than the
+previous version shared Nov 20, 2026 for technical reasons I won’t go
+into here.
 
 ``` r
-GRO_Fall <- 
-  filter(Baseline_FALL, !code %in% c("98HB", "23LR")) 
-
-Minter_C_Fall_23LR <- 
-  filter(Baseline_FALL, code=="23LR")
-
 nor_fall <- function(nor.code, fall){
   require(pegas)
   bind_rows(
@@ -102,20 +81,6 @@ nor_fall <- function(nor.code, fall){
     rename(population=group) |>
     mutate(population=factor(population)) |>
     as.loci()}
-
-y21a <- nor_fall(nor.code="21LC", fall=GRO_Fall)
-y22a <- nor_fall(nor.code="22LL", fall=GRO_Fall)
-y23a <- nor_fall(nor.code="23LI", fall=GRO_Fall)
-y24a <- nor_fall(nor.code="24ND", fall=GRO_Fall)
-y25a <- nor_fall(nor.code="25NI", fall=GRO_Fall)
-y26a <- nor_fall(nor.code="26ON", fall=GRO_Fall)
-
-y21b <- nor_fall(nor.code="21LC", fall=Minter_C_Fall_23LR)
-y22b <- nor_fall(nor.code="22LL", fall=Minter_C_Fall_23LR)
-y23b <- nor_fall(nor.code="23LI", fall=Minter_C_Fall_23LR)
-y24b <- nor_fall(nor.code="24ND", fall=Minter_C_Fall_23LR)
-y25b <- nor_fall(nor.code="25NI", fall=Minter_C_Fall_23LR)
-y26b <- nor_fall(nor.code="26ON", fall=Minter_C_Fall_23LR)
 
 perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(1, detectCores()/2)){
   require(pegas)
@@ -130,11 +95,11 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
     stop("Population labels must match between Year 1 and Year 2.")}
   if (!identical(names(hf1)[-1], names(hf2)[-1])){
     stop("Both years must contain the exact same SNPs in the same order.")}
-  # Observed Fst and test statistic
+  # Observed Fsts and test statistic
   fst1 <- wc(hf1)$FST
   fst2 <- wc(hf2)$FST
   obs_diff <- fst2-fst1
-  # Stratified Permutation (shuffle individuals between years within pops)
+  # Stratified permutation (shuffle individuals between years within pops)
   hf_combined <- rbind(hf1, hf2)
   yr_vec <- c(rep(1, nrow(hf1)), rep(2, nrow(hf2)))
   pop_vec <- hf_combined[, 1]
@@ -148,7 +113,7 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
     p_fst2 <- wc(cbind(pop_vec[perm_yr==2], snp_mat[perm_yr==2, , drop=FALSE]))$FST
     p_fst2 - p_fst1}, 
     mc.cores=cores))
-  # Paired Locus Bootstrap to generate 95% CI for the test statistic
+  # Paired locus bootstrap to generate 95% CI for the test statistic
   nloci <- ncol(hf1)-1
   pop1 <- hf1[, 1]; snps1 <- hf1[, -1, drop=FALSE]
   pop2 <- hf2[, 1]; snps2 <- hf2[, -1, drop=FALSE]
@@ -176,77 +141,37 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
       P_value=round(p_val_two_sided, 4)),
     null_differences=null_diffs,
     boot_differences=boot_diffs)}
-
-# y21a_y22a <- perm_boot_fst(loci_yr1=y21a, loci_yr2=y22a, cores=10)
-# y22a_y23a <- perm_boot_fst(loci_yr1=y22a, loci_yr2=y23a, cores=10)
-# y23a_y24a <- perm_boot_fst(loci_yr1=y23a, loci_yr2=y24a, cores=10)
-# y24a_y25a <- perm_boot_fst(loci_yr1=y24a, loci_yr2=y25a, cores=10)
-# y25a_y26a <- perm_boot_fst(loci_yr1=y25a, loci_yr2=y26a, cores=10)
-# y21b_y22b <- perm_boot_fst(loci_yr1=y21b, loci_yr2=y22b, cores=10)
-# y22b_y23b <- perm_boot_fst(loci_yr1=y22b, loci_yr2=y23b, cores=10)
-# y23b_y24b <- perm_boot_fst(loci_yr1=y23b, loci_yr2=y24b, cores=10)
-# y24b_y25b <- perm_boot_fst(loci_yr1=y24b, loci_yr2=y25b, cores=10)
-# y25b_y26b <- perm_boot_fst(loci_yr1=y25b, loci_yr2=y26b, cores=10)
-# 
-# saveRDS(y21a_y22a, "../data/y21a_y22a.RDS")
-# saveRDS(y22a_y23a, "../data/y22a_y23a.RDS")
-# saveRDS(y23a_y24a, "../data/y23a_y24a.RDS")
-# saveRDS(y24a_y25a, "../data/y24a_y25a.RDS")
-# saveRDS(y25a_y26a, "../data/y25a_y26a.RDS")
-# saveRDS(y21b_y22b, "../data/y21b_y22b.RDS")
-# saveRDS(y22b_y23b, "../data/y22b_y23b.RDS")
-# saveRDS(y23b_y24b, "../data/y23b_y24b.RDS")
-# saveRDS(y24b_y25b, "../data/y24b_y25b.RDS")
-# saveRDS(y25b_y26b, "../data/y25b_y26b.RDS")
-
-y21a_y22a <- readRDS("../data/y21a_y22a.RDS")
-y22a_y23a <- readRDS("../data/y22a_y23a.RDS")
-y23a_y24a <- readRDS("../data/y23a_y24a.RDS")
-y24a_y25a <- readRDS("../data/y24a_y25a.RDS")
-y25a_y26a <- readRDS("../data/y25a_y26a.RDS")
-y21b_y22b <- readRDS("../data/y21b_y22b.RDS")
-y22b_y23b <- readRDS("../data/y22b_y23b.RDS")
-y23b_y24b <- readRDS("../data/y23b_y24b.RDS")
-y24b_y25b <- readRDS("../data/y24b_y25b.RDS")
-y25b_y26b <- readRDS("../data/y25b_y26b.RDS")
-
-dat <-
-  rbind(
-    y21a_y22a=y21a_y22a$summary, 
-    y21b_y22b=y21b_y22b$summary, 
-    y22a_y23a=y22a_y23a$summary, 
-    y22b_y23b=y22b_y23b$summary, 
-    y23a_y24a=y23a_y24a$summary, 
-    y23b_y24b=y23b_y24b$summary, 
-    y24a_y25a=y24a_y25a$summary, 
-    y24b_y25b=y24b_y25b$summary, 
-    y25a_y26a=y25a_y26a$summary, 
-    y25b_y26b=y25b_y26b$summary) |>
-  as.data.frame() |>
-  rownames_to_column(var="Set") |>
-  mutate(
-    Fall_pop=ifelse(
-      grepl(pattern="a$", Set), 
-      yes="08HZ_10JX_12IP", 
-      no="23LR"),
-    Year1=factor(
-      Set, 
-      levels=c("y21a_y22a", "y22a_y23a", "y23a_y24a", "y24a_y25a", "y25a_y26a", "y21b_y22b", "y22b_y23b", "y23b_y24b", "y24b_y25b", "y25b_y26b"),
-      labels=c("2021", "2022", "2023", "2024", "2025", "2021", "2022", "2023", "2024", "2025")) |> as.character() |> as.numeric(),
-    Year2=factor(
-      Set, 
-      levels=c("y21a_y22a", "y22a_y23a", "y23a_y24a", "y24a_y25a", "y25a_y26a", "y21b_y22b", "y22b_y23b", "y23b_y24b", "y24b_y25b", "y25b_y26b"),
-      labels=c("2022", "2023", "2024", "2025", "2026", "2022", "2023", "2024", "2025", "2026")) |> as.character() |> as.numeric(),
-    Year=(Year1+Year2)/2)
-
-ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper)) + 
-  geom_hline(yintercept=0, colour="white", linewidth=1) +
-  geom_pointrange(position=position_dodge(width=0.2), shape=1) + 
-  geom_path(position=position_dodge(width=0.2), linetype=2) + 
-  facet_wrap(vars(Fall_pop), ncol=1) +
-  labs(
-    y=expression(Delta~italic(F[ST])), 
-    title=expression(Delta~italic(F[ST])~varies~with~respect~to~baseline~data~source))
 ```
 
-![](delta-fst-white-gro3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+### How much variability in allele frequencies can we expect between years just by chance alone?
+
+Let’s use permutation to answer that. We use a 4 step permutation
+algorithm: (1) shuffle individuals between years within their
+populations, (2) compute the mean $F_{ST}$ from shuffled samples, (3)
+compute the difference of the mean $F_{ST}$ (i.e., the permuted
+$\Delta F_{ST}$), and (4) repeat steps 1-3 999 times. The non-parametric
+“P-value” is simply the proportion of the permuted test statistics that
+are more extreme than our observed test statistic. We use the absolute
+values of $\Delta F_{ST}$ to make it 2-way, since we expect $F_{ST}$ to
+increase and decrease just by chance alone in nature.
+
+### “How much does the variation in the particular SNPs that we genotyped influence the uncertainty we observe in $F_{ST}$ and $\Delta F_{ST}$?”
+
+Let’s use bootstrapping to answer that. For bootstrapping, we use a 4
+step algoirthm: (1) random sample *n*=251 loci with replacement, (2)
+compute the mean $F_{ST}$ from bootstrapped loci, (3) compute the
+difference of the mean $F_{ST}$ (i.e., the bootstrap $\Delta F_{ST}$),
+and (4) repeat steps 1-3 999 times. The non-parametric 95% CIs are
+simply 2.5% and 97.5% quantiles of the distribution of bootstrap
+$\Delta F_{ST}$.
+
+![](delta-fst-white-gro3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+In the figure above, $\Delta F_{ST}$ is plotted with bootstrap 95% CIs
+and permutation P-values for two GRF baseline populations. In other
+words, there are the same NORs in top and bottom panes, but the GRFs are
+different.
+
+We see overall conguence of results among the two different GRF baseline
+populations. Furthermore, the swings qwe observe 2021–2022 and 2022–2023
+appear to have stabilized.
