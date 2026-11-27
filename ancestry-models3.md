@@ -11,7 +11,7 @@ version](https://github.com/tylermccraney/Puyallup-White/blob/main/scripts/delta
 of $\Delta{F}_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3
 look identical, but the classifications changed by a few counts.
 
-#### Genetic Management of White River Spring (WRS) Chinook Salmon
+### Genetic Management of White River Spring (WRS) Chinook Salmon
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
@@ -20,7 +20,7 @@ free y-scale to get sense of patterns.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-#### Ancestry Model
+### Ancestry Model
 
 ADMIXTURE is a command-line application that estimates individual
 ancestry proportions from large SNP datasets. It uses the same model as
@@ -38,7 +38,7 @@ predict the masked genotypes. This *CV error* is then plotted to see the
 ${K}$ value that produced the most accurate analysis, which should give
 us the best statistical fit.
 
-#### WRS NOR & Baseline (WRS + Green River Fall)
+### WRS NOR & Baseline (WRS + Green River Fall)
 
 We convert the genotype matrix into binary PLINK format
 (.bed/.bim/.fam), run ADMIXTURE, and then import the .Q files
@@ -75,7 +75,7 @@ The barplot for ${K} = 2^*$ shows the best statistical fit, and I don’t
 see any patterns in the ${K} = 3$ barplot that would suggest the
 presence of more than two ancestral populations.
 
-#### Interpretation of mixed-color barplots
+### Interpretation of mixed-color barplots
 
 At ${K} = 2^*$, Baseline Spring and ‘Spring’-assigned NORs have
 *Spring-like* ancestry, whereas the Baseline Fall has *Fall-like*
@@ -127,7 +127,7 @@ hybridization, ghost admixture, and population bottleneck—have occurred
 with respect to WRS and GRF Chinook Salmon, further complicating the
 interpretation of results.
 
-#### Classify fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
+### Classify fish as ‘Spring’, ‘Fall’, or ‘Hybrid’ based on their proportional ancestry
 
 In this section I apply a 80% threshold to classify fish as ‘Spring’,
 ‘Fall’, or ‘Hybrid’ by their proportional ancestry. Then I compare the
@@ -140,7 +140,7 @@ and the ‘Fall’ class by 0.4–0.0 spring ancestry.
 
 ![](ancestry-models3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-#### Ancestry classification of 100% baseline samples
+### Ancestry classification of 100% baseline samples
 
 Let’s cross-tabulate the GSI assignments with the ancestry
 classifications. We start by comparing the baseline reporting groupings
@@ -164,6 +164,8 @@ and ‘Fall’ ancestry classes reasonably well. For example, only one
 ancestry. On the other hand, several fish were classified as ‘Hybrid’
 although they are from the ‘Spring’ or ‘Fall’ baseline reporting group.
 
+Let’s take a closer look at the baseline samples.
+
     ##                                      
     ##                                       Spring Hybrid Fall
     ##   Green_R_Fall_98HB_Baseline               0      1   38
@@ -175,7 +177,11 @@ although they are from the ‘Spring’ or ‘Fall’ baseline reporting group.
     ##   White_R_Spring_24ND_Baseline            40      2    0
     ##   White_R_Spring_25NI_Baseline            40      1    0
 
-#### Ancestry classification of 100% WRS NORs
+Okay, it looks like the Hupp Springs ‘Spring’ and Minter Creek ‘Fall’
+baseline samples might contain more hybrid individuals relative to the
+other baseline samples.
+
+### Ancestry classification of 100% WRS NORs
 
 Let’s compare results for the White River Spring (WRS) NOR fish with the
 ancestry classes (same as above).
@@ -197,9 +203,13 @@ GSI assignment to ‘Spring’ or ‘Fall’ reporting groups \<0.8), we see
 that almost half (n=17) of these fish are classified as either pure
 ‘Spring’ (n=15) or pure ‘Fall’ (n=2).
 
-Results for the n=58 ‘Fall’-assigned fish are interesting. We see that
-most of the ‘Fall’-assigned fish are classified as either ‘Hybrid’
-(n=33) or pure ‘Spring’ (n=10) by their ancestry.
+Results for the n=58 ‘Fall’-assigned fish interest me. We see that most
+of the ‘Fall’-assigned fish are classified as either ‘Hybrid’ (n=33) or
+pure ‘Spring’ (n=10) by their ancestry. This result is consistent with
+my observation of these individuals in the ${K} = 2^*$ barplot.
+
+Let’s see how these assignment-X-ancestry cross-comparisons vary by year
+for WRS NORs.
 
     ##                       
     ##                        Spring Hybrid Fall
@@ -222,7 +232,19 @@ most of the ‘Fall’-assigned fish are classified as either ‘Hybrid’
     ##   White_R_Unknown_26ON      0      2    0
     ##   White_R_Fall_26ON         0      3    2
 
-#### Ancestry Model of White River NORs
+I’m going to say it looks like something might have happened behind the
+scenes of GSI assignments around 2024–2025, and then again in 2026. For
+instance, the cross-tab counts appear relatively stable for 2021–2023,
+but then there’s a big jump in ‘Fall’ assignments 2024–2025 which are
+predominantly classified ‘Hybrid’ by ancestry (some are ‘Spring’ by
+ancestry as well). Then in 2026, it looks like an abrupt increase in
+‘Spring’ GSI assignments that are ‘Hybrid’ by ancestry, however the
+relative frequency of fish classified ‘Spring’, ‘Hybrid’, and ‘Fall’
+appears stable over all these years. I’d say this warrants further
+investigation, but at least this demonstrates how valuable it can be to
+repeat analyses using alternative methods.
+
+### Ancestry Model of White River NORs
 
 Let’s see if ADMIXTURE can put the White River NORs into 2 ancestral
 populations. In other words, lets see if there’s any support for
@@ -257,7 +279,7 @@ with 1.0 *Spring* ancestry. Finally, when look at the ‘Fall’-asigned
 fish, I see many individuals with 0.0 *Spring* ancestry and no
 individuals with 1.0 *Spring* ancestry.
 
-#### Questions
+### Final thoughts
 
 It’s interesting how ancestry of these phenotypically-spring White River
 NORs with ‘Unknown’ and ‘Fall’ run GSI assignments appears more

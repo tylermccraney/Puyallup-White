@@ -10,7 +10,7 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 
 This is the 3rd version of the (NOR + baseline) ancestry modeling analysis. It is very similar to the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models2.md) except for a single locus *Ots_u07-07.161* that was removed because of null alleles detected in the [2nd version](https://github.com/tylermccraney/Puyallup-White/blob/main/scripts/delta-fst-test2.R) of $\Delta{F}_{ST}$ analyses. The ADMIXTURE plots from version 2 and 3 look identical, but the classifications changed by a few counts.  
 
-#### Genetic Management of White River Spring (WRS) Chinook Salmon
+### Genetic Management of White River Spring (WRS) Chinook Salmon
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -44,13 +44,13 @@ ggplot(rdat |> filter(!is.na(day)), aes(x=day, fill=assignment)) +
   facet_wrap(vars(assignment), ncol=1, scales="free_y")
 ```
 
-#### Ancestry Model
+### Ancestry Model
 
 ADMIXTURE is a command-line application that estimates individual ancestry proportions from large SNP datasets. It uses the same model as STRUCTURE, but replaces MCMC sampling with ML optimization, so runs finish in just minutes instead of hours.  
 
 Just like STRUCTURE, ADMIXTURE requires you to specify ${K}$ (the assumed number of ancestral populations) in advance, although it uses cross-validation (CV) to help pick the best ${K}$. In this analysis we will run ${K}=1-4$. For each value of ${K}=1-4$, ADMIXTURE randomly partitions the genotype matrix into 10 folds, hides 10% of the genotype calls in each fold, fits parameters of the ancestry and allele-frequency model on the remaining 90%, and measures how accurately those parameters predict the masked genotypes. This _CV error_ is then plotted to see the ${K}$ value that produced the most accurate analysis, which should give us the best statistical fit.  
 
-#### WRS NOR & Baseline (WRS + Green River Fall)
+### WRS NOR & Baseline (WRS + Green River Fall)
 
 We convert the genotype matrix into binary PLINK format (.bed/.bim/.fam), run ADMIXTURE, and then import the .Q files (containing estimated ancestry proportions per individual) into R for plotting and summary.    
 
@@ -180,7 +180,7 @@ mtext(text="Baseline Fall", adj=0.90)
 
 The barplot for ${K} = 2^*$ shows the best statistical fit, and I don't see any patterns in the ${K} = 3$ barplot that would suggest the presence of more than two ancestral populations.   
 
-#### Interpretation of mixed-color barplots
+### Interpretation of mixed-color barplots
 
 At ${K} = 2^*$, Baseline Spring and 'Spring'-assigned NORs have _Spring-like_ ancestry, whereas the Baseline Fall has _Fall-like_ ancestry. The 'Fall'-assigned NOR ancestry appears intermediary to _Spring-_ and _Fall-like_. The 'Unknown' fish (i.e., fish with posterior probability of GSI assignment to ‘Spring’ or ‘Fall’ reporting groups <0.8) appear to have ancestry intermediate to the 'Spring'- and 'Fall'-assigned NORs. 
 
@@ -195,7 +195,7 @@ Now the question becomes, _what evolutionary or demographic processes could have
 
 It would be reasonable to assume all three of these scenarios---recent hybridization, ghost admixture, and population bottleneck---have occurred with respect to WRS and GRF Chinook Salmon, further complicating the interpretation of results.  
 
-#### Classify fish as 'Spring', 'Fall', or 'Hybrid' based on their proportional ancestry  
+### Classify fish as 'Spring', 'Fall', or 'Hybrid' based on their proportional ancestry  
 
 In this section I apply a 80% threshold to classify fish as 'Spring', 'Fall', or 'Hybrid' by their proportional ancestry. Then I compare the classes to the assignments.      
 
@@ -237,7 +237,7 @@ mtext(text="'Fall'", adj=0.87)
 
   
 
-#### Ancestry classification of 100% baseline samples
+### Ancestry classification of 100% baseline samples
 
 Let's cross-tabulate the GSI assignments with the ancestry classifications. We start by comparing the baseline reporting groupings ('Spring' or 'Fall') with the ancestry classes ('Spring', 'Hybrid', or 'Fall').  The baseline reporting group counts are in rows and the ancestry classes in columns. So for example, 214 fish from the 'Spring' baseline reporting group were also classified as 'Spring' by ancestry, whereas 11 of the fish from the 'Spring' baseline reporting group were classified as 'Hybrid' by their ancestry. Keep in mind, these are 100% baseline fish in this case (the reference samples which we base GSI of mixtures on).  
 
@@ -306,13 +306,17 @@ table(filter(tibl2s, BASELINE==TRUE)$ASSIGNMENT, filter(tibl2s, BASELINE==TRUE)$
 ```
 
 
-It looks like the two baseline reporting groups correspond to 'Spring' and 'Fall' ancestry classes reasonably well. For example, only one 'Fall' reporting group baseline fish was classified as 'Spring' by it's ancestry.  On the other hand, several fish were classified as 'Hybrid' although they are from the 'Spring' or 'Fall' baseline reporting group.
+It looks like the two baseline reporting groups correspond to 'Spring' and 'Fall' ancestry classes reasonably well. For example, only one 'Fall' reporting group baseline fish was classified as 'Spring' by it's ancestry.  On the other hand, several fish were classified as 'Hybrid' although they are from the 'Spring' or 'Fall' baseline reporting group.  
+
+Let's take a closer look at the baseline samples.   
 
 ```{r, echo=FALSE}
 table(filter(tibl2s, BASELINE==TRUE)$collection |> fct_drop(), filter(tibl2s, BASELINE==TRUE)$Q, useNA="ifany")[-2, ]
 ```
 
-#### Ancestry classification of 100% WRS NORs
+Okay, it looks like the Hupp Springs 'Spring' and Minter Creek 'Fall' baseline samples might contain more hybrid individuals relative to the other baseline samples.  
+
+### Ancestry classification of 100% WRS NORs
 
 Let's compare results for the White River Spring (WRS) NOR fish with the ancestry classes (same as above).      
 
@@ -324,11 +328,15 @@ White River NOR assignment counts (Rubias) are in rows and the ancestry classifi
 
 For the n=36 'Unknown' fish (i.e., fish with posterior probability of GSI assignment to 'Spring' or 'Fall' reporting groups <0.8), we see that almost half (n=17) of these fish are classified as either pure 'Spring' (n=15) or pure 'Fall' (n=2).  
 
-Results for the n=58 'Fall'-assigned fish are interesting. We see that most of the 'Fall'-assigned fish are classified as either 'Hybrid' (n=33) or pure 'Spring' (n=10) by their ancestry.    
+Results for the n=58 'Fall'-assigned fish interest me. We see that most of the 'Fall'-assigned fish are classified as either 'Hybrid' (n=33) or pure 'Spring' (n=10) by their ancestry. This result is consistent with my observation of these individuals in the ${K} = 2^*$ barplot.      
+
+Let's see how these assignment-X-ancestry cross-comparisons vary by year for WRS NORs.  
 
 ```{r, echo=FALSE}
 table(filter(tibl2s, BASELINE==FALSE)$collection |> fct_drop(), filter(tibl2s, BASELINE==FALSE)$Q, useNA="ifany")
 ```
+
+I'm going to say it looks like something might have happened behind the scenes of GSI assignments around 2024--2025, and then again in 2026. For instance, the cross-tab counts appear relatively stable for 2021--2023, but then there's a big jump in 'Fall' assignments 2024--2025 which are predominantly classified 'Hybrid' by ancestry (some are 'Spring' by ancestry as well). Then in 2026, it looks like an abrupt increase in 'Spring' GSI assignments that are 'Hybrid' by ancestry, however the relative frequency of fish classified 'Spring', 'Hybrid', and 'Fall' appears stable over all these years. I'd say this warrants further investigation, but at least this demonstrates how valuable it can be to repeat analyses using alternative methods.        
 
 ```{r, echo=FALSE}
 # saveRDS(gdatw, file="../admixture/gdatw3.RDS")
@@ -342,7 +350,7 @@ table(filter(tibl2s, BASELINE==FALSE)$collection |> fct_drop(), filter(tibl2s, B
 # saveRDS(tibl2s, file="../admixture/3-tibl2s.RDS")
 ```
 
-#### Ancestry Model of White River NORs
+### Ancestry Model of White River NORs
 
 Let's see if ADMIXTURE can put the White River NORs into 2 ancestral populations. In other words, lets see if there's any support for splitting these phenotypically spring-run fish (i.e., all returned between Jun-01 and Aug-09) into 'Spring' and 'Fall' populations.     
 
@@ -434,6 +442,6 @@ mtext(text="'Fall'", adj=0.94)
 Hmmm.... there might be a pattern in the NOR-only ${K} = 2$ barplot. When I look at the 'Spring'-assigned fish, I see individuals with 0.0--1.0 _Spring_ ancestry. However, when I look at the 'Unknown' (Unassigned), I see several individuals with 0.0 _Spring_ ancestry and only 1 individual with 1.0 _Spring_ ancestry. Finally, when look at the 'Fall'-asigned fish, I see many individuals with 0.0 _Spring_ ancestry and no individuals with 1.0 _Spring_ ancestry.         
 
 
-#### Questions
+### Final thoughts
 
 It's interesting how ancestry of these phenotypically-spring White River NORs with 'Unknown' and 'Fall' run GSI assignments appears more fall-like when the phenotypically-fall run baseline fish are included. I wonder if that could be an artifact of incomplete sampling ancestral population genetic diversity, where the closest ancestor of White River Spring Chinook Salmon is unsampled. 
