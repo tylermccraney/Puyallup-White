@@ -172,6 +172,11 @@ and permutation P-values for two GRF baseline populations. In other
 words, there are the same NORs in top and bottom panes, but the GRFs are
 different.
 
-We see overall conguence of results among the two different GRF baseline
-populations. Furthermore, the swings qwe observe 2021–2022 and 2022–2023
-appear to have stabilized.
+We see overall congruence of results among the two different GRF
+baseline populations. Furthermore, the swings we observe 2021–2022 and
+2022–2023 appear to have stabilized.
+
+I completed an ancestry analysis that estimate ancestry of all samples
+and compares the GSI assignments with ancestry classifications,
+available
+[here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.md).
