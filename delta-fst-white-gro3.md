@@ -87,8 +87,9 @@ I wrote 2 functions to automate this analysis.
 `perm_boot_fst` performs both stratified permutation and paired-locus
 bootstrapping to generate P-value and 95% confidence intervals for
 $\Delta F_{ST}$. The permutation algorithm is different than the
-previous version shared Nov 20, 2026 for technical reasons I won’t go
-into here.
+[previous version shared Nov 20,
+2026](https://github.com/tylermccraney/Puyallup-White/blob/main/Puyallup-conservation-measures.md)
+for technical reasons I won’t get into.
 
 ``` r
 nor_fall <- function(nor.code, fall){
@@ -162,6 +163,9 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
     null_differences=null_diffs,
     boot_differences=boot_diffs)}
 ```
+
+The rest of the R code is hidden in this page but it can be viewed
+[here](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-white-gro3.md).
 
 In the figure below, $\Delta F_{ST}$ is plotted with bootstrap 95% CIs
 and permutation P-values for two GRF baseline populations (same NORs in
