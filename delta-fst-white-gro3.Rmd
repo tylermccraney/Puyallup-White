@@ -20,15 +20,27 @@ $F_{ST}$ measures allele frequency differences between samples. It ranges from $
 
 If hybridization w/ introgression is happening, then one would expect $F_{ST}$ estimates for WRS and GRF to decrease, eventually becoming 0. Therefore, the test statistic is the difference in $F_{ST}$ ($\Delta F_{ST}$) estimated at time 1 (t1) and t2. For instance, if $F_{ST}=0.025$ at t1 and $F_{ST}=0.005$ at t2, then our test statistic is $\Delta F_{ST}=0.005-0.025=-0.02$. Alternatively, $\Delta F_{ST}$ could be positive, which would indicate an increase in $F_{ST}$ estimated at t1 and t2.  
 
-We need a robust statistical hypothesis test to determine if our test statistic is significantly greater than would be expected to occur by chance alone. Permutation can be used to determine if $\Delta F_{ST}$ is greater than would be expected by chance alone. This is similar to a non-parameteric version of the classic two-way t test: a statistical hypothesis test that checks whether a difference between means is statistically significant or likely due to chance. This framework is appropriate because $F_{ST}$ is actually the mean of many independent $F_{ST}$ estimated from multiple loci, so we want to determine if the mean $F_{ST}$ is significantly different at 2 sampling points.  
+We need a robust statistical hypothesis test to determine if our test statistic is significantly greater than would be expected to occur by chance alone. Permutation can be used to determine if $\Delta F_{ST}$ is greater than would be expected by chance alone. Additionally, it would be nice to have some way to assess how the particular SNP loci that we used infuenced the test statistic, and for that we can use the bootstrap.  
+
+Permutation and bootstrapping are solutions to the 2 following questions:  
+
+#### How much variability in allele frequencies can we expect between years just by chance alone?
+
+We use a 4 step permutation algorithm: (1) shuffle individuals between years within their populations, (2) compute the mean $F_{ST}$ from shuffled samples, (3) compute the difference of the mean $F_{ST}$ (i.e., the permuted $\Delta F_{ST}$), and (4) repeat steps 1-3 999 times. The non-parametric "P-value" is simply the proportion of the permuted test statistics that are more extreme than our observed test statistic. We use the absolute values of $\Delta F_{ST}$ to make it 2-way, since we expect $F_{ST}$ to increase and decrease just by chance alone in nature.    
+
+#### "How much does the variation in the particular SNPs that we genotyped influence the uncertainty we observe in $F_{ST}$ and $\Delta F_{ST}$?"
+
+We use a 4 step bootstrap routine: (1) random sample loci with replacement, (2) compute the mean $F_{ST}$ from bootstrapped loci (some losi will be duplicated, other loci will be missing), (3) compute the difference of the mean $F_{ST}$ (i.e., the bootstrap $\Delta F_{ST}$), and (4) repeat steps 1-3 999 times. The non-parametric 95% CI bounds are simply 2.5% and 97.5% quantiles of the bootstrapped $\Delta F_{ST}$.
+
+
 
 To demonstrate the test, I analyze WRS NOR genetic data sampled 2021--2026 with two GRF baseline populations: (1) _n_=122 GRF fish from Soos (Voights) Creek 2008--2012, and (2) _n_=95 GRF fish from Minter Creek 2023.
 
-I wrote 2 functions for this analysis.
+I wrote 2 functions to automate this analysis.
 
 1. `nor_fall` is a helper function to prepare the genotype matrices for input to `perm_boot_fst`.
 
-2. `perm_boot_fst` is the main function that estimates the population genetic parameters, and generates bootstrap CIs and permutation-based P-values _in parallel_ with functions from `pegas`, `hierfstat`, and `parallel` packages.
+2. `perm_boot_fst` is the main function that estimates $F_{ST, t=1}$, $F_{ST, t=2}$ and generates bootstrap CIs and permutation-based P-values for $\Delta F_{ST}$ _in parallel_ with functions from `pegas`, `hierfstat`, and `parallel` packages.
 
 `perm_boot_fst` performs both stratified permutation and paired-locus bootstrapping to generate P-value and 95% confidence intervals for $\Delta F_{ST}$. The permutation algorithm is different than the previous version shared Nov 20, 2026 for technical reasons I won't go into here.  
 
@@ -178,14 +190,7 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
     boot_differences=boot_diffs)}
 ```
 
-### How much variability in allele frequencies can we expect between years just by chance alone?
-
-Let's use permutation to answer that. We use a 4 step permutation algorithm: (1) shuffle individuals between years within their populations, (2) compute the mean $F_{ST}$ from shuffled samples, (3) compute the difference of the mean $F_{ST}$ (i.e., the permuted $\Delta F_{ST}$), and (4) repeat steps 1-3 999 times. The non-parametric "P-value" is simply the proportion of the permuted test statistics that are more extreme than our observed test statistic. We use the absolute values of $\Delta F_{ST}$ to make it 2-way, since we expect $F_{ST}$ to increase and decrease just by chance alone in nature.    
-
-### "How much does the variation in the particular SNPs that we genotyped influence the uncertainty we observe in $F_{ST}$ and $\Delta F_{ST}$?"
-
-Let's use bootstrapping to answer that. For bootstrapping, we use a 4 step algoirthm: (1) random sample _n_=251 loci with replacement, (2) compute the mean $F_{ST}$ from bootstrapped loci, (3) compute the difference of the mean $F_{ST}$ (i.e., the bootstrap $\Delta F_{ST}$), and (4) repeat steps 1-3 999 times. The non-parametric 95% CIs are simply 2.5% and 97.5% quantiles of the distribution of bootstrap $\Delta F_{ST}$.
-
+In the figure below, $\Delta F_{ST}$ is plotted with bootstrap 95% CIs and permutation P-values for two GRF baseline populations (same NORs in top and bottom panes but GRFs are different).  
 
 
 ```{r, echo=FALSE, eval=TRUE, fig.height=8}
@@ -276,8 +281,6 @@ ggplot(dat, aes(x=Year, y=Delta_Fst, ymin=CI_Lower, ymax=CI_Upper, label=paste("
     y=expression(Delta~italic(F[ST])))
 ```
 
-In the figure above, $\Delta F_{ST}$ is plotted with bootstrap 95% CIs and permutation P-values for two GRF baseline populations. In other words, there are the same NORs in top and bottom panes, but the GRFs are different.  
-
 We see overall congruence of results among the two different GRF baseline populations. Furthermore, the swings we observe 2021--2022 and 2022--2023 appear to have stabilized.  
 
-I completed an ancestry analysis that estimate ancestry of all samples and compares the GSI assignments with ancestry classifications, available [here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.md).  
+I completed an ancestry analysis that estimates fractional ancestry of all samples and compares the GSI assignments with ancestry classifications, available [here](https://github.com/tylermccraney/Puyallup-White/blob/main/ancestry-models3.md).  
