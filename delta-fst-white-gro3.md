@@ -165,7 +165,7 @@ perm_boot_fst <- function(loci_yr1, loci_yr2, nperm=1000, nboot=1000, cores=max(
 ```
 
 The rest of the R code is hidden in this page but it can be viewed
-[here](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-white-gro3.md).
+[here](https://github.com/tylermccraney/Puyallup-White/blob/main/delta-fst-white-gro3.Rmd).
 
 In the figure below, $\Delta F_{ST}$ is plotted with bootstrap 95% CIs
 and permutation P-values for two GRF baseline populations (same NORs in
